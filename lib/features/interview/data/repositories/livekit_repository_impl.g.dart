@@ -54,4 +54,4 @@ final class LiveKitRepositoryProvider
   }
 }
 
-String _$liveKitRepositoryHash() => r'4e81e47bed36944392ce622e551a8d8c5c7913fb';
+String _$liveKitRepositoryHash() => r'02341922345c2e20805272292e31861f9332f750';

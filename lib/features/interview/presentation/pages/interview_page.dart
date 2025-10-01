@@ -3,18 +3,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/constants/app_config.dart';
 import '../../application/interview_notifier.dart';
+import '../../data/models/room_connection_params.dart';
 import '../widgets/connection_status_widget.dart';
 import '../widgets/interview_controls_widget.dart';
-import '../widgets/video_preview_widget.dart';
 import '../widgets/transcription_panel.dart';
+import '../widgets/video_preview_widget.dart';
 
 class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
 
   Future<void> _connectToInterview(WidgetRef ref) async {
-    await ref.read(interviewProvider.notifier).connect(
-          roomName: AppConfig.defaultRoomName,
-          participantName: AppConfig.defaultParticipantPrefix,
+    await ref
+        .read(interviewProvider.notifier)
+        .connect(
+          params: RoomConnectionParams(
+            roomName: AppConfig.defaultRoomName,
+            participantName: AppConfig.defaultParticipantPrefix,
+          ),
         );
   }
 
@@ -35,7 +40,6 @@ class InterviewPage extends HookConsumerWidget {
         children: [
           // Left side: Video and controls
           Expanded(
-            flex: 1,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -45,12 +49,11 @@ class InterviewPage extends HookConsumerWidget {
                     // Video Preview
                     VideoPreviewWidget(state: interviewState),
 
-                    const SizedBox(height: 20),
-
                     // Connection Status
-                    ConnectionStatusWidget(state: interviewState),
-
-                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: ConnectionStatusWidget(state: interviewState),
+                    ),
 
                     // Interview Controls
                     InterviewControlsWidget(
@@ -65,10 +68,7 @@ class InterviewPage extends HookConsumerWidget {
           ),
 
           // Right side: Transcription panel
-          Expanded(
-            flex: 1,
-            child: const TranscriptionPanel(),
-          ),
+          Expanded(child: const TranscriptionPanel()),
         ],
       ),
     );

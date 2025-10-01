@@ -6,10 +6,7 @@ import '../../application/interview_state.dart';
 class VideoPreviewWidget extends StatelessWidget {
   final InterviewState state;
 
-  const VideoPreviewWidget({
-    super.key,
-    required this.state,
-  });
+  const VideoPreviewWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +27,7 @@ class VideoPreviewWidget extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: VideoTrackRenderer(
-            videoTrack,
-            fit: VideoViewFit.cover,
-          ),
+          child: VideoTrackRenderer(videoTrack),
         ),
       );
     }
@@ -53,10 +47,7 @@ class VideoPreviewWidget extends StatelessWidget {
           children: [
             Icon(Icons.mic, size: 64, color: Colors.grey),
             SizedBox(height: 8),
-            Text(
-              'Audio Only',
-              style: TextStyle(color: Colors.grey),
-            ),
+            Text('Audio Only', style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),

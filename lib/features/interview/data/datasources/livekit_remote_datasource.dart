@@ -6,14 +6,13 @@ import '../../../../core/constants/app_config.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_request.dart';
 import '../../../../core/network/network_retry.dart';
+import '../models/room_connection_params.dart';
 import '../models/token_response_dto.dart';
 
 part 'livekit_remote_datasource.g.dart';
 
 @riverpod
-LiveKitRemoteDataSource liveKitRemoteDataSource(
-  Ref ref,
-) {
+LiveKitRemoteDataSource liveKitRemoteDataSource(Ref ref) {
   return LiveKitRemoteDataSourceImpl(
     networkRequest: ref.watch(networkRequestProvider),
     networkRetry: ref.watch(networkRetryProvider),
@@ -21,10 +20,7 @@ LiveKitRemoteDataSource liveKitRemoteDataSource(
 }
 
 abstract class LiveKitRemoteDataSource {
-  Future<TokenResponseDto> getToken({
-    required String roomName,
-    required String participantName,
-  });
+  Future<TokenResponseDto> getToken(RoomConnectionParams params);
 
   Future<Room> connectToRoom(String token);
 
@@ -43,30 +39,26 @@ class LiveKitRemoteDataSourceImpl implements LiveKitRemoteDataSource {
   });
 
   @override
-  Future<TokenResponseDto> getToken({
-    required String roomName,
-    required String participantName,
-  }) async {
-    return networkRetry.networkRetry(() async {
-      final url = Endpoints.getLiveKitToken(roomName, participantName);
-      final response = await networkRequest.get(url);
+  Future<TokenResponseDto> getToken(RoomConnectionParams params) async {
+    final url = Endpoints.getLiveKitToken(params.roomName, params.participantName);
 
-      if (response.statusCode != 200) {
-        throw ServerException(
-            'Token request failed with status ${response.statusCode}');
-      }
+    final response = await networkRetry.networkRetry(
+      () => networkRequest.get(url),
+    );
 
-      return TokenResponseDto.fromJson(response.data);
-    });
+    if (!response.isSuccess) {
+      throw ServerException(
+        'Token request failed with status ${response.statusCode}',
+      );
+    }
+
+    return TokenResponseDto.fromJson(response.data);
   }
 
   @override
   Future<Room> connectToRoom(String token) async {
     try {
-      final roomOptions = RoomOptions(
-        adaptiveStream: true,
-        dynacast: true,
-      );
+      final roomOptions = RoomOptions(adaptiveStream: true, dynacast: true);
 
       final room = Room(roomOptions: roomOptions);
       await room.connect(AppConfig.livekitUrl, token);

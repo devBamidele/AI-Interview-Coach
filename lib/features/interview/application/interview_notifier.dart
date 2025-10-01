@@ -1,6 +1,7 @@
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../data/models/room_connection_params.dart';
 import '../data/repositories/livekit_repository_impl.dart';
 import '../domain/repositories/livekit_repository.dart';
 import 'interview_state.dart';
@@ -22,19 +23,13 @@ class InterviewNotifier extends _$InterviewNotifier {
     return const InterviewState.disconnected();
   }
 
-  Future<void> connect({
-    required String roomName,
-    required String participantName,
-  }) async {
+  Future<void> connect({required RoomConnectionParams params}) async {
     final repository = ref.read(liveKitRepositoryProvider);
 
     // Step 1: Get token
     state = const InterviewState.connecting('Requesting token...');
 
-    final tokenResult = await repository.getToken(
-      roomName: roomName,
-      participantName: participantName,
-    );
+    final tokenResult = await repository.getToken(params);
 
     await tokenResult.fold(
       (failure) async {

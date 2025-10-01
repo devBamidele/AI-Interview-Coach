@@ -2,14 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:livekit_client/livekit_client.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../data/models/room_connection_params.dart';
 
 /// Repository interface for LiveKit operations
 abstract class LiveKitRepository {
   /// Fetches an authentication token for the specified room and participant
-  Future<Either<Failure, String>> getToken({
-    required String roomName,
-    required String participantName,
-  });
+  Future<Either<Failure, String>> getToken(RoomConnectionParams params);
 
   /// Connects to a LiveKit room with the provided token
   Future<Either<Failure, Room>> connectToRoom(String token);
