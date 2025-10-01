@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/repositories/livekit_repository_impl.dart';
 import '../domain/repositories/livekit_repository.dart';
 import 'interview_state.dart';
+import 'transcription_notifier.dart';
 
 part 'interview_notifier.g.dart';
 
@@ -83,11 +84,47 @@ class InterviewNotifier extends _$InterviewNotifier {
     // Enable microphone
     await repository.enableMicrophone(_room!.localParticipant);
 
+    // Start transcription service
+    await _startTranscription();
+
     // Update to connected state
     state = InterviewState.connected(localVideoTrack: videoTrack);
   }
 
+  Future<void> _startTranscription() async {
+    if (_room == null) return;
+
+    try {
+      final transcriptionNotifier = ref.read(transcriptionProvider.notifier);
+
+      // Connect to transcription service
+      await transcriptionNotifier.connect();
+
+      // Start transcription for this room and participant
+      final identity = _room?.localParticipant?.identity;
+      if (identity != null) {
+        transcriptionNotifier.startTranscription(
+          roomName: _room!.name ?? '',
+          participantIdentity: identity,
+        );
+      }
+    } catch (e) {
+      // Transcription is not critical, continue without it
+      // ignore: avoid_print
+      print('Failed to start transcription: $e');
+    }
+  }
+
   Future<void> disconnect() async {
+    // Stop transcription
+    try {
+      final transcriptionNotifier = ref.read(transcriptionProvider.notifier);
+      transcriptionNotifier.stopTranscription();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Failed to stop transcription: $e');
+    }
+
     final repository = ref.read(liveKitRepositoryProvider);
     await repository.disconnect(_room);
     _room = null;

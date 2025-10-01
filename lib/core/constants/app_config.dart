@@ -9,6 +9,9 @@ class AppConfig {
   // LiveKit configuration
   static const String livekitUrl = "wss://aiinterviewmvp-4o1z3ma6.livekit.cloud";
 
+  // Transcription service configuration
+  static const String transcriptionWsUrl = "ws://localhost:3000";
+
   // Default room settings
   static const String defaultRoomName = "quickstart-room";
   static const String defaultParticipantPrefix = "flutter-user";
