@@ -13,23 +13,24 @@ part 'interview_notifier.g.dart';
 @riverpod
 class InterviewNotifier extends _$InterviewNotifier {
   Room? _room;
+  late final LiveKitRepository _repository;
 
   @override
   InterviewState build() {
+    _repository = ref.read(liveKitRepositoryProvider);
+
     // Register cleanup on dispose
-    ref.onDispose(() => _disposeRoom());
+    ref.onDispose(_disposeRoom);
 
     // Return initial disconnected state
     return const InterviewState.disconnected();
   }
 
-  Future<void> connect({required RoomConnectionParams params}) async {
-    final repository = ref.read(liveKitRepositoryProvider);
-
+  Future<void> connect(RoomConnectionParams params) async {
     // Step 1: Get token
     state = const InterviewState.connecting('Requesting token...');
 
-    final tokenResult = await repository.getToken(params);
+    final tokenResult = await _repository.getToken(params);
 
     await tokenResult.fold(
       (failure) async {
@@ -39,7 +40,7 @@ class InterviewNotifier extends _$InterviewNotifier {
         // Step 2: Connect to room
         state = const InterviewState.connecting('Connecting to LiveKit...');
 
-        final roomResult = await repository.connectToRoom(token);
+        final roomResult = await _repository.connectToRoom(token.token);
 
         await roomResult.fold(
           (failure) async {
@@ -50,21 +51,23 @@ class InterviewNotifier extends _$InterviewNotifier {
 
             // Step 3: Setup media
             state = const InterviewState.connecting('Setting up media...');
-            await _setupMedia(repository);
+            await _setupMedia();
           },
         );
       },
     );
   }
 
-  Future<void> _setupMedia(LiveKitRepository repository) async {
+  Future<void> _setupMedia() async {
     if (_room == null) {
       state = const InterviewState.failed('Room not connected');
       return;
     }
 
     // Enable camera
-    final cameraResult = await repository.enableCamera(_room!.localParticipant);
+    final cameraResult = await _repository.enableCamera(
+      _room!.localParticipant,
+    );
 
     LocalVideoTrack? videoTrack;
     await cameraResult.fold(
@@ -77,7 +80,7 @@ class InterviewNotifier extends _$InterviewNotifier {
     );
 
     // Enable microphone
-    await repository.enableMicrophone(_room!.localParticipant);
+    await _repository.enableMicrophone(_room!.localParticipant);
 
     // Start transcription service
     await _startTranscription();
@@ -120,8 +123,7 @@ class InterviewNotifier extends _$InterviewNotifier {
       print('Failed to stop transcription: $e');
     }
 
-    final repository = ref.read(liveKitRepositoryProvider);
-    await repository.disconnect(_room);
+    await _repository.disconnect(_room);
     _room = null;
     state = const InterviewState.disconnected();
   }

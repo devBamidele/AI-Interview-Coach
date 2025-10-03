@@ -1,3 +1,4 @@
+import 'package:ai_interview_mvp/features/interview/data/models/token_response_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,16 +22,15 @@ class LiveKitRepositoryImpl extends ServiceRunner implements LiveKitRepository {
   final LiveKitRemoteDataSource _remoteDataSource;
 
   LiveKitRepositoryImpl(Ref ref)
-      : _remoteDataSource = ref.read(liveKitRemoteDataSourceProvider),
-        super(ref.read(networkInfoProvider));
+    : _remoteDataSource = ref.read(liveKitRemoteDataSourceProvider),
+      super(ref.read(networkInfoProvider));
 
   @override
-  Future<Either<Failure, String>> getToken(RoomConnectionParams params) {
+  Future<Either<Failure, TokenResponseDto>> getToken(
+    RoomConnectionParams params,
+  ) {
     return run(
-      () async {
-        final dto = await _remoteDataSource.getToken(params);
-        return dto.token;
-      },
+      () => _remoteDataSource.getToken(params),
       errorTitle: 'Token Request Failed',
     );
   }
@@ -54,14 +54,11 @@ class LiveKitRepositoryImpl extends ServiceRunner implements LiveKitRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> enableMicrophone(
+  Future<Either<Failure, void>> enableMicrophone(
     LocalParticipant? participant,
   ) {
     return run(
-      () async {
-        await _remoteDataSource.enableMicrophone(participant);
-        return unit;
-      },
+      () => _remoteDataSource.enableMicrophone(participant),
       errorTitle: 'Microphone Error',
     );
   }
@@ -76,8 +73,9 @@ class LiveKitRepositoryImpl extends ServiceRunner implements LiveKitRepository {
       await room.disconnect();
       return right(unit);
     } catch (e) {
-      return left(Failure.connection(
-          message: 'Failed to disconnect: ${e.toString()}'));
+      return left(
+        Failure.connection(message: 'Failed to disconnect: ${e.toString()}'),
+      );
     }
   }
 }

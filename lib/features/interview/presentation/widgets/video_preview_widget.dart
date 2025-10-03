@@ -18,16 +18,12 @@ class VideoPreviewWidget extends StatelessWidget {
     }
 
     if (videoTrack != null) {
-      return Container(
-        width: 300,
+      return SizedBox(
+        width: 600,
         height: 400,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: VideoTrackRenderer(videoTrack),
+          borderRadius: BorderRadius.circular(16),
+          child: VideoTrackRenderer(videoTrack, fit: VideoViewFit.cover),
         ),
       );
     }

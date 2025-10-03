@@ -16,7 +16,7 @@ class InterviewPage extends HookConsumerWidget {
     await ref
         .read(interviewProvider.notifier)
         .connect(
-          params: RoomConnectionParams(
+          RoomConnectionParams(
             roomName: AppConfig.defaultRoomName,
             participantName: AppConfig.defaultParticipantPrefix,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../application/transcription_notifier.dart';
 
 /// Widget displaying live transcription with analysis
@@ -36,8 +37,8 @@ class TranscriptionPanel extends ConsumerWidget {
                 Text(
                   state.isTranscribing ? 'Live Transcription' : 'Transcription',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Spacer(),
                 if (state.isTranscribing)
@@ -73,12 +74,12 @@ class TranscriptionPanel extends ConsumerWidget {
                         state.isTranscribing
                             ? 'Listening...'
                             : 'No transcript yet',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Colors.grey,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
                       ),
                     )
-                  : Text(
+                  : SelectableText(
                       state.fullTranscript,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
@@ -91,9 +92,7 @@ class TranscriptionPanel extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300]!),
-                ),
+                border: Border(top: BorderSide(color: Colors.grey[300]!)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,8 +100,8 @@ class TranscriptionPanel extends ConsumerWidget {
                   Text(
                     'Analysis',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   _AnalysisItem(
@@ -128,7 +127,8 @@ class TranscriptionPanel extends ConsumerWidget {
                   _AnalysisItem(
                     icon: Icons.timer,
                     label: 'Duration',
-                    value: '${state.latestAnalysis!.duration.toStringAsFixed(1)}s',
+                    value:
+                        '${state.latestAnalysis!.duration.toStringAsFixed(1)}s',
                   ),
                 ],
               ),
@@ -159,6 +159,7 @@ class TranscriptionPanel extends ConsumerWidget {
 }
 
 /// Widget for displaying individual analysis items
+// ...existing code...
 class _AnalysisItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -178,18 +179,18 @@ class _AnalysisItem extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 8),
-          Text(
+          SelectableText(
             '$label:',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(width: 8),
-          Text(
+          SelectableText(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

@@ -13,8 +13,10 @@ import '../models/transcript_event_model.dart';
 /// Implementation of the transcription repository
 class TranscriptionRepositoryImpl implements TranscriptionRepository {
   final TranscriptionWebSocketDataSource dataSource;
+
   final StreamController<Either<Failure, TranscriptEvent>>
   _transcriptController = StreamController.broadcast();
+
   final StreamController<Either<Failure, AnalysisEvent>> _analysisController =
       StreamController.broadcast();
 
