@@ -27,6 +27,10 @@ class InterviewPage extends HookConsumerWidget {
     await ref.read(interviewProvider.notifier).disconnect();
   }
 
+  Future<void> _completeInterview(WidgetRef ref) async {
+    await ref.read(interviewProvider.notifier).completeInterview();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final interviewState = ref.watch(interviewProvider);
@@ -60,6 +64,7 @@ class InterviewPage extends HookConsumerWidget {
                       state: interviewState,
                       onConnect: () => _connectToInterview(ref),
                       onDisconnect: () => _disconnectFromInterview(ref),
+                      onComplete: () => _completeInterview(ref),
                     ),
                   ],
                 ),

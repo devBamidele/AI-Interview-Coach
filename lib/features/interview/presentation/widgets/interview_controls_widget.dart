@@ -6,18 +6,56 @@ class InterviewControlsWidget extends StatelessWidget {
   final InterviewState state;
   final VoidCallback onConnect;
   final VoidCallback onDisconnect;
+  final VoidCallback? onComplete;
 
   const InterviewControlsWidget({
     super.key,
     required this.state,
     required this.onConnect,
     required this.onDisconnect,
+    this.onComplete,
   });
 
   @override
   Widget build(BuildContext context) {
     final isConnected = state.isConnected;
+    final isCompleting = state.isCompleting;
+    final isAnalyzing = state.isAnalyzing;
 
+    // Show nothing during completion/analysis
+    if (isCompleting || isAnalyzing) {
+      return Column(
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text(
+            state.statusText,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      );
+    }
+
+    // Show analysis complete state
+    if (state.isAnalysisComplete) {
+      return Column(
+        children: [
+          const Icon(Icons.check_circle, color: Colors.green, size: 48),
+          const SizedBox(height: 16),
+          Text(
+            'Interview Complete!',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Your analysis is ready',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      );
+    }
+
+    // Show connect button
     if (!isConnected) {
       return ElevatedButton.icon(
         onPressed: onConnect,
@@ -29,15 +67,33 @@ class InterviewControlsWidget extends StatelessWidget {
       );
     }
 
-    return ElevatedButton.icon(
-      onPressed: onDisconnect,
-      icon: const Icon(Icons.call_end),
-      label: const Text("End Call"),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      ),
+    // Show complete and disconnect buttons when connected
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Complete Interview Button (Primary action)
+        ElevatedButton.icon(
+          onPressed: onComplete,
+          icon: const Icon(Icons.check_circle_outline),
+          label: const Text("Complete Interview"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          ),
+        ),
+        const SizedBox(width: 16),
+        // Disconnect Button (Secondary action)
+        OutlinedButton.icon(
+          onPressed: onDisconnect,
+          icon: const Icon(Icons.call_end),
+          label: const Text("Cancel"),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.red,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          ),
+        ),
+      ],
     );
   }
 }
