@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import '../error/exceptions.dart';
-import '../error/failure.dart';
+import '../error/failures.dart';
 import '../network/network_info.dart';
 
 class ServiceRunner {
@@ -18,30 +18,33 @@ class ServiceRunner {
     required String errorTitle,
   }) async {
     if (!await networkInfo.isConnected) {
-      return Left(Failure.network(message: 'No internet connection'));
+      return const Left(NetworkFailure('No internet connection'));
     }
 
     try {
       final result = await action();
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure.token(message: e.message));
+      return Left(ServerFailure(e.message));
     } on DioException catch (e) {
       return Left(_handleDioError(e, errorTitle));
     } on SocketException {
-      return Left(Failure.network(
-          message: 'Connection failed. Check your internet connection.'));
+      return const Left(
+        NetworkFailure('Connection failed. Check your internet connection.'),
+      );
     } on FormatException catch (e) {
-      return Left(Failure.token(message: e.message));
+      return Left(DataParsingFailure(e.message));
     } catch (e) {
-      return Left(Failure.token(message: _formatException(e)));
+      return Left(UnexpectedFailure(_formatException(e)));
     }
   }
 
   Failure _handleDioError(DioException e, String title) {
     final data = e.response?.data;
     final statusCode = e.response?.statusCode;
-    final message = data is Map ? (data['message'] ?? 'Unknown error') : 'Unknown error';
+    final message = data is Map
+        ? (data['message'] ?? 'Unknown error')
+        : 'Unknown error';
 
     switch (e.type) {
       case DioExceptionType.badResponse:
@@ -49,46 +52,45 @@ class ServiceRunner {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return Failure.network(message: 'Request timeout. Please try again.');
+        return const NetworkFailure('Request timeout. Please try again.');
       case DioExceptionType.connectionError:
-        return Failure.network(
-            message: 'Connection failed. Check your internet.');
+        return const NetworkFailure('Connection failed. Check your internet.');
       case DioExceptionType.cancel:
-        return Failure.connection(message: 'Request was cancelled.');
+        return const NetworkFailure('Request was cancelled.');
       default:
-        return Failure.network(
-            message: 'Server unreachable. Please try again later.');
+        return const NetworkFailure(
+          'Server unreachable. Please try again later.',
+        );
     }
   }
 
   Failure _handleHttpError(int? statusCode, String message) {
     if (statusCode == null) {
-      return Failure.token(message: message);
+      return ServerFailure(message);
     }
 
     switch (statusCode) {
       case 401:
       case 403:
-        return Failure.token(message: message);
+        return ServerFailure(message);
       case 400:
       case 422:
-        return Failure.token(message: message);
+        return ServerFailure(message);
       case 404:
-        return Failure.token(message: 'Resource not found');
+        return const ServerFailure('Resource not found');
       case 429:
-        return Failure.token(
-            message: 'Too many requests. Please wait and try again.');
+        return const ServerFailure(
+          'Too many requests. Please wait and try again.',
+        );
       case 500:
       case 502:
       case 503:
       case 504:
-        return Failure.connection(
-            message: 'Server error. Please try again later.');
+        return const ServerFailure('Server error. Please try again later.');
       default:
         return statusCode >= 500
-            ? Failure.connection(
-                message: 'Server error. Please try again later.')
-            : Failure.token(message: message);
+            ? const ServerFailure('Server error. Please try again later.')
+            : ServerFailure(message);
     }
   }
 

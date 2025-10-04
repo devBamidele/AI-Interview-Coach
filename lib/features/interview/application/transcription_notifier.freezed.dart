@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TranscriptionState {
 
- bool get isConnected; bool get isTranscribing; String get fullTranscript; List<TranscriptEvent> get transcriptEvents; AnalysisEvent? get latestAnalysis; String? get error;
+ bool get isConnected; bool get isTranscribing; String get fullTranscript; List<TranscriptEvent> get transcriptEvents; String? get error;
 /// Create a copy of TranscriptionState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TranscriptionStateCopyWith<TranscriptionState> get copyWith => _$TranscriptionS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TranscriptionState&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.isTranscribing, isTranscribing) || other.isTranscribing == isTranscribing)&&(identical(other.fullTranscript, fullTranscript) || other.fullTranscript == fullTranscript)&&const DeepCollectionEquality().equals(other.transcriptEvents, transcriptEvents)&&(identical(other.latestAnalysis, latestAnalysis) || other.latestAnalysis == latestAnalysis)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TranscriptionState&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.isTranscribing, isTranscribing) || other.isTranscribing == isTranscribing)&&(identical(other.fullTranscript, fullTranscript) || other.fullTranscript == fullTranscript)&&const DeepCollectionEquality().equals(other.transcriptEvents, transcriptEvents)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isConnected,isTranscribing,fullTranscript,const DeepCollectionEquality().hash(transcriptEvents),latestAnalysis,error);
+int get hashCode => Object.hash(runtimeType,isConnected,isTranscribing,fullTranscript,const DeepCollectionEquality().hash(transcriptEvents),error);
 
 @override
 String toString() {
-  return 'TranscriptionState(isConnected: $isConnected, isTranscribing: $isTranscribing, fullTranscript: $fullTranscript, transcriptEvents: $transcriptEvents, latestAnalysis: $latestAnalysis, error: $error)';
+  return 'TranscriptionState(isConnected: $isConnected, isTranscribing: $isTranscribing, fullTranscript: $fullTranscript, transcriptEvents: $transcriptEvents, error: $error)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $TranscriptionStateCopyWith<$Res>  {
   factory $TranscriptionStateCopyWith(TranscriptionState value, $Res Function(TranscriptionState) _then) = _$TranscriptionStateCopyWithImpl;
 @useResult
 $Res call({
- bool isConnected, bool isTranscribing, String fullTranscript, List<TranscriptEvent> transcriptEvents, AnalysisEvent? latestAnalysis, String? error
+ bool isConnected, bool isTranscribing, String fullTranscript, List<TranscriptEvent> transcriptEvents, String? error
 });
 
 
-$AnalysisEventCopyWith<$Res>? get latestAnalysis;
+
 
 }
 /// @nodoc
@@ -62,30 +62,17 @@ class _$TranscriptionStateCopyWithImpl<$Res>
 
 /// Create a copy of TranscriptionState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isConnected = null,Object? isTranscribing = null,Object? fullTranscript = null,Object? transcriptEvents = null,Object? latestAnalysis = freezed,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isConnected = null,Object? isTranscribing = null,Object? fullTranscript = null,Object? transcriptEvents = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 isConnected: null == isConnected ? _self.isConnected : isConnected // ignore: cast_nullable_to_non_nullable
 as bool,isTranscribing: null == isTranscribing ? _self.isTranscribing : isTranscribing // ignore: cast_nullable_to_non_nullable
 as bool,fullTranscript: null == fullTranscript ? _self.fullTranscript : fullTranscript // ignore: cast_nullable_to_non_nullable
 as String,transcriptEvents: null == transcriptEvents ? _self.transcriptEvents : transcriptEvents // ignore: cast_nullable_to_non_nullable
-as List<TranscriptEvent>,latestAnalysis: freezed == latestAnalysis ? _self.latestAnalysis : latestAnalysis // ignore: cast_nullable_to_non_nullable
-as AnalysisEvent?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as List<TranscriptEvent>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
-/// Create a copy of TranscriptionState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$AnalysisEventCopyWith<$Res>? get latestAnalysis {
-    if (_self.latestAnalysis == null) {
-    return null;
-  }
 
-  return $AnalysisEventCopyWith<$Res>(_self.latestAnalysis!, (value) {
-    return _then(_self.copyWith(latestAnalysis: value));
-  });
-}
 }
 
 
@@ -164,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  AnalysisEvent? latestAnalysis,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TranscriptionState() when $default != null:
-return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.latestAnalysis,_that.error);case _:
+return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.error);case _:
   return orElse();
 
 }
@@ -185,10 +172,10 @@ return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  AnalysisEvent? latestAnalysis,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  String? error)  $default,) {final _that = this;
 switch (_that) {
 case _TranscriptionState():
-return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.latestAnalysis,_that.error);}
+return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -202,10 +189,10 @@ return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  AnalysisEvent? latestAnalysis,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isConnected,  bool isTranscribing,  String fullTranscript,  List<TranscriptEvent> transcriptEvents,  String? error)?  $default,) {final _that = this;
 switch (_that) {
 case _TranscriptionState() when $default != null:
-return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.latestAnalysis,_that.error);case _:
+return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_that.transcriptEvents,_that.error);case _:
   return null;
 
 }
@@ -217,7 +204,7 @@ return $default(_that.isConnected,_that.isTranscribing,_that.fullTranscript,_tha
 
 
 class _TranscriptionState implements TranscriptionState {
-  const _TranscriptionState({this.isConnected = false, this.isTranscribing = false, this.fullTranscript = '', final  List<TranscriptEvent> transcriptEvents = const [], this.latestAnalysis, this.error}): _transcriptEvents = transcriptEvents;
+  const _TranscriptionState({this.isConnected = false, this.isTranscribing = false, this.fullTranscript = '', final  List<TranscriptEvent> transcriptEvents = const [], this.error}): _transcriptEvents = transcriptEvents;
   
 
 @override@JsonKey() final  bool isConnected;
@@ -230,7 +217,6 @@ class _TranscriptionState implements TranscriptionState {
   return EqualUnmodifiableListView(_transcriptEvents);
 }
 
-@override final  AnalysisEvent? latestAnalysis;
 @override final  String? error;
 
 /// Create a copy of TranscriptionState
@@ -243,16 +229,16 @@ _$TranscriptionStateCopyWith<_TranscriptionState> get copyWith => __$Transcripti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TranscriptionState&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.isTranscribing, isTranscribing) || other.isTranscribing == isTranscribing)&&(identical(other.fullTranscript, fullTranscript) || other.fullTranscript == fullTranscript)&&const DeepCollectionEquality().equals(other._transcriptEvents, _transcriptEvents)&&(identical(other.latestAnalysis, latestAnalysis) || other.latestAnalysis == latestAnalysis)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TranscriptionState&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.isTranscribing, isTranscribing) || other.isTranscribing == isTranscribing)&&(identical(other.fullTranscript, fullTranscript) || other.fullTranscript == fullTranscript)&&const DeepCollectionEquality().equals(other._transcriptEvents, _transcriptEvents)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isConnected,isTranscribing,fullTranscript,const DeepCollectionEquality().hash(_transcriptEvents),latestAnalysis,error);
+int get hashCode => Object.hash(runtimeType,isConnected,isTranscribing,fullTranscript,const DeepCollectionEquality().hash(_transcriptEvents),error);
 
 @override
 String toString() {
-  return 'TranscriptionState(isConnected: $isConnected, isTranscribing: $isTranscribing, fullTranscript: $fullTranscript, transcriptEvents: $transcriptEvents, latestAnalysis: $latestAnalysis, error: $error)';
+  return 'TranscriptionState(isConnected: $isConnected, isTranscribing: $isTranscribing, fullTranscript: $fullTranscript, transcriptEvents: $transcriptEvents, error: $error)';
 }
 
 
@@ -263,11 +249,11 @@ abstract mixin class _$TranscriptionStateCopyWith<$Res> implements $Transcriptio
   factory _$TranscriptionStateCopyWith(_TranscriptionState value, $Res Function(_TranscriptionState) _then) = __$TranscriptionStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isConnected, bool isTranscribing, String fullTranscript, List<TranscriptEvent> transcriptEvents, AnalysisEvent? latestAnalysis, String? error
+ bool isConnected, bool isTranscribing, String fullTranscript, List<TranscriptEvent> transcriptEvents, String? error
 });
 
 
-@override $AnalysisEventCopyWith<$Res>? get latestAnalysis;
+
 
 }
 /// @nodoc
@@ -280,31 +266,18 @@ class __$TranscriptionStateCopyWithImpl<$Res>
 
 /// Create a copy of TranscriptionState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isConnected = null,Object? isTranscribing = null,Object? fullTranscript = null,Object? transcriptEvents = null,Object? latestAnalysis = freezed,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isConnected = null,Object? isTranscribing = null,Object? fullTranscript = null,Object? transcriptEvents = null,Object? error = freezed,}) {
   return _then(_TranscriptionState(
 isConnected: null == isConnected ? _self.isConnected : isConnected // ignore: cast_nullable_to_non_nullable
 as bool,isTranscribing: null == isTranscribing ? _self.isTranscribing : isTranscribing // ignore: cast_nullable_to_non_nullable
 as bool,fullTranscript: null == fullTranscript ? _self.fullTranscript : fullTranscript // ignore: cast_nullable_to_non_nullable
 as String,transcriptEvents: null == transcriptEvents ? _self._transcriptEvents : transcriptEvents // ignore: cast_nullable_to_non_nullable
-as List<TranscriptEvent>,latestAnalysis: freezed == latestAnalysis ? _self.latestAnalysis : latestAnalysis // ignore: cast_nullable_to_non_nullable
-as AnalysisEvent?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as List<TranscriptEvent>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
 
-/// Create a copy of TranscriptionState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$AnalysisEventCopyWith<$Res>? get latestAnalysis {
-    if (_self.latestAnalysis == null) {
-    return null;
-  }
 
-  return $AnalysisEventCopyWith<$Res>(_self.latestAnalysis!, (value) {
-    return _then(_self.copyWith(latestAnalysis: value));
-  });
-}
 }
 
 // dart format on

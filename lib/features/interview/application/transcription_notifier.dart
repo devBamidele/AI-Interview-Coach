@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../domain/entities/transcript_event.dart';
-import '../domain/entities/analysis_event.dart';
 import '../domain/repositories/transcription_repository.dart';
 import '../data/datasources/transcription_websocket_datasource.dart';
 import '../data/repositories/transcription_repository_impl.dart';
@@ -18,7 +17,6 @@ sealed class TranscriptionState with _$TranscriptionState {
     @Default(false) bool isTranscribing,
     @Default('') String fullTranscript,
     @Default([]) List<TranscriptEvent> transcriptEvents,
-    AnalysisEvent? latestAnalysis,
     String? error,
   }) = _TranscriptionState;
 }
@@ -35,7 +33,6 @@ TranscriptionRepository transcriptionRepository(Ref ref) {
 class TranscriptionNotifier extends _$TranscriptionNotifier {
   TranscriptionRepository? _repository;
   StreamSubscription? _transcriptSubscription;
-  StreamSubscription? _analysisSubscription;
 
   @override
   TranscriptionState build() {
@@ -44,7 +41,6 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
     // Dispose subscriptions when provider is disposed
     ref.onDispose(() {
       _transcriptSubscription?.cancel();
-      _analysisSubscription?.cancel();
       _repository?.dispose();
     });
 
@@ -59,37 +55,21 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
 
     result.fold(
       (failure) {
-        state = state.copyWith(
-          isConnected: false,
-          error: failure.message,
-        );
+        state = state.copyWith(isConnected: false, error: failure.toString());
       },
       (_) {
-        state = state.copyWith(
-          isConnected: true,
-          error: null,
-        );
+        state = state.copyWith(isConnected: true, error: null);
 
         // Subscribe to transcript stream
-        _transcriptSubscription = _repository!.transcriptStream.listen((either) {
+        _transcriptSubscription = _repository!.transcriptStream.listen((
+          either,
+        ) {
           either.fold(
             (failure) {
-              state = state.copyWith(error: failure.message);
+              state = state.copyWith(error: failure.toString());
             },
             (transcript) {
               _handleTranscript(transcript);
-            },
-          );
-        });
-
-        // Subscribe to analysis stream
-        _analysisSubscription = _repository!.analysisStream.listen((either) {
-          either.fold(
-            (failure) {
-              state = state.copyWith(error: failure.message);
-            },
-            (analysis) {
-              _handleAnalysis(analysis);
             },
           );
         });
@@ -103,9 +83,7 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
     required String participantIdentity,
   }) {
     if (_repository == null || !state.isConnected) {
-      state = state.copyWith(
-        error: 'Not connected to transcription service',
-      );
+      state = state.copyWith(error: 'Not connected to transcription service');
       return;
     }
 
@@ -116,32 +94,29 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
 
     result.fold(
       (failure) {
-        state = state.copyWith(error: failure.message);
+        state = state.copyWith(error: failure.toString());
       },
       (_) {
-        state = state.copyWith(
-          isTranscribing: true,
-          error: null,
-        );
+        state = state.copyWith(isTranscribing: true, error: null);
       },
     );
   }
 
-  /// Stop transcription
+  /// Stop transcription (cancel interview)
   void stopTranscription() {
     _repository?.stop();
-    state = state.copyWith(
-      isTranscribing: false,
-    );
+    state = state.copyWith(isTranscribing: false);
+  }
+
+  /// Complete interview (end and trigger analysis)
+  void completeInterview() {
+    _repository?.complete();
+    state = state.copyWith(isTranscribing: false);
   }
 
   /// Clear transcript
   void clearTranscript() {
-    state = state.copyWith(
-      fullTranscript: '',
-      transcriptEvents: [],
-      latestAnalysis: null,
-    );
+    state = state.copyWith(fullTranscript: '', transcriptEvents: []);
   }
 
   void _handleTranscript(TranscriptEvent event) {
@@ -156,11 +131,5 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
         transcriptEvents: [...state.transcriptEvents, event],
       );
     }
-  }
-
-  void _handleAnalysis(AnalysisEvent event) {
-    state = state.copyWith(
-      latestAnalysis: event,
-    );
   }
 }

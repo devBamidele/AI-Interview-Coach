@@ -24,10 +24,7 @@ class InterviewControlsWidget extends StatelessWidget {
         icon: const Icon(Icons.call),
         label: const Text("Join Interview"),
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 32,
-            vertical: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         ),
       );
     }
@@ -39,10 +36,7 @@ class InterviewControlsWidget extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 32,
-          vertical: 16,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       ),
     );
   }

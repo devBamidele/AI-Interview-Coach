@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/error/failure.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/runner/service_runner.dart';
 import '../../domain/repositories/livekit_repository.dart';
@@ -36,9 +36,9 @@ class LiveKitRepositoryImpl extends ServiceRunner implements LiveKitRepository {
   }
 
   @override
-  Future<Either<Failure, Room>> connectToRoom(String token) {
+  Future<Either<Failure, Room>> connectToRoom(String token, String url) {
     return run(
-      () => _remoteDataSource.connectToRoom(token),
+      () => _remoteDataSource.connectToRoom(token, url),
       errorTitle: 'Connection Failed',
     );
   }
@@ -73,9 +73,7 @@ class LiveKitRepositoryImpl extends ServiceRunner implements LiveKitRepository {
       await room.disconnect();
       return right(unit);
     } catch (e) {
-      return left(
-        Failure.connection(message: 'Failed to disconnect: ${e.toString()}'),
-      );
+      return left(NetworkFailure('Failed to disconnect: ${e.toString()}'));
     }
   }
 }

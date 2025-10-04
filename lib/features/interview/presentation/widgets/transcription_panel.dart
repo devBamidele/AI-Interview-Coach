@@ -86,54 +86,6 @@ class TranscriptionPanel extends ConsumerWidget {
             ),
           ),
 
-          // Analysis section
-          if (state.latestAnalysis != null)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                border: Border(top: BorderSide(color: Colors.grey[300]!)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Analysis',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _AnalysisItem(
-                    icon: Icons.speed,
-                    label: 'Pace',
-                    value: state.latestAnalysis!.pace,
-                  ),
-                  _AnalysisItem(
-                    icon: Icons.warning_amber,
-                    label: 'Fillers',
-                    value: '${state.latestAnalysis!.fillers.length} detected',
-                  ),
-                  _AnalysisItem(
-                    icon: Icons.pause_circle_outline,
-                    label: 'Pauses',
-                    value: '${state.latestAnalysis!.pauses.length} detected',
-                  ),
-                  _AnalysisItem(
-                    icon: Icons.abc,
-                    label: 'Words',
-                    value: '${state.latestAnalysis!.totalWords}',
-                  ),
-                  _AnalysisItem(
-                    icon: Icons.timer,
-                    label: 'Duration',
-                    value:
-                        '${state.latestAnalysis!.duration.toStringAsFixed(1)}s',
-                  ),
-                ],
-              ),
-            ),
-
           // Error display
           if (state.error != null)
             Container(
@@ -152,46 +104,6 @@ class TranscriptionPanel extends ConsumerWidget {
                 ],
               ),
             ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Widget for displaying individual analysis items
-// ...existing code...
-class _AnalysisItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _AnalysisItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 8),
-          SelectableText(
-            '$label:',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-          ),
-          const SizedBox(width: 8),
-          SelectableText(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
         ],
       ),
     );

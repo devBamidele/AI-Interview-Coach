@@ -7,7 +7,10 @@ part of 'token_response_dto.dart';
 // **************************************************************************
 
 _TokenResponseDto _$TokenResponseDtoFromJson(Map<String, dynamic> json) =>
-    _TokenResponseDto(token: json['token'] as String);
+    _TokenResponseDto(
+      token: json['token'] as String,
+      url: json['url'] as String,
+    );
 
 Map<String, dynamic> _$TokenResponseDtoToJson(_TokenResponseDto instance) =>
-    <String, dynamic>{'token': instance.token};
+    <String, dynamic>{'token': instance.token, 'url': instance.url};

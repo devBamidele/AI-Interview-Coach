@@ -5,10 +5,7 @@ import '../../application/interview_state.dart';
 class ConnectionStatusWidget extends StatelessWidget {
   final InterviewState state;
 
-  const ConnectionStatusWidget({
-    super.key,
-    required this.state,
-  });
+  const ConnectionStatusWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +30,7 @@ class ConnectionStatusWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Status: $status',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -58,10 +52,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     errorMessage,
-                    style: TextStyle(
-                      color: Colors.red.shade700,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.red.shade700, fontSize: 12),
                   ),
                 ),
               ],

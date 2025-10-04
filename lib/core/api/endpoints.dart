@@ -7,11 +7,13 @@ class Endpoints {
   /// Base URL for LiveKit token service
   static const String base = AppConfig.backendUrl;
 
-  /// Get LiveKit token endpoint
-  static String getLiveKitToken(String roomName, String participantName) {
-    return AppConfig.getTokenUrl(
-      roomName: roomName,
-      participantName: participantName,
-    );
+  /// Get LiveKit token endpoint (POST)
+  static String getLiveKitToken() {
+    return '${AppConfig.backendUrl}/api/livekit/token';
+  }
+
+  /// Get interview analysis by ID (GET)
+  static String getInterviewAnalysis(String interviewId) {
+    return '${AppConfig.backendUrl}/api/interviews/$interviewId';
   }
 }

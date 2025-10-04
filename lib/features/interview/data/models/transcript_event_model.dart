@@ -19,8 +19,8 @@ sealed class TranscriptEventModel with _$TranscriptEventModel {
       _$TranscriptEventModelFromJson(json);
 
   TranscriptEvent toEntity() => TranscriptEvent(
-        text: text,
-        isFinal: isFinal,
-        words: words.map((w) => w.toEntity()).toList(),
-      );
+    text: text,
+    isFinal: isFinal,
+    words: words.map((w) => w.toEntity()).toList(),
+  );
 }

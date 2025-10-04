@@ -26,15 +26,15 @@ class NetworkRequestImpl implements NetworkRequest {
   final Dio _dio;
 
   NetworkRequestImpl()
-      : _dio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 30),
-            receiveTimeout: const Duration(seconds: 30),
-            sendTimeout: const Duration(seconds: 30),
-            validateStatus: (status) =>
-                status != null && status >= 200 && status < 300,
-          ),
-        );
+    : _dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          sendTimeout: const Duration(seconds: 30),
+          validateStatus: (status) =>
+              status != null && status >= 200 && status < 300,
+        ),
+      );
 
   @override
   Future<Response> get(

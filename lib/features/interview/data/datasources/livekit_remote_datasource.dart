@@ -2,7 +2,6 @@ import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/api/endpoints.dart';
-import '../../../../core/constants/app_config.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_request.dart';
 import '../../../../core/network/network_retry.dart';
@@ -22,7 +21,7 @@ LiveKitRemoteDataSource liveKitRemoteDataSource(Ref ref) {
 abstract class LiveKitRemoteDataSource {
   Future<TokenResponseDto> getToken(RoomConnectionParams params);
 
-  Future<Room> connectToRoom(String token);
+  Future<Room> connectToRoom(String token, String url);
 
   Future<LocalVideoTrack?> enableCamera(LocalParticipant? participant);
 
@@ -40,10 +39,16 @@ class LiveKitRemoteDataSourceImpl implements LiveKitRemoteDataSource {
 
   @override
   Future<TokenResponseDto> getToken(RoomConnectionParams params) async {
-    final url = Endpoints.getLiveKitToken(params.roomName, params.participantName);
+    final url = Endpoints.getLiveKitToken();
 
     final response = await networkRetry.networkRetry(
-      () => networkRequest.get(url),
+      () => networkRequest.post(
+        url,
+        body: {
+          'roomName': params.roomName,
+          'participantName': params.participantName,
+        },
+      ),
     );
 
     if (!response.isSuccess) {
@@ -56,12 +61,12 @@ class LiveKitRemoteDataSourceImpl implements LiveKitRemoteDataSource {
   }
 
   @override
-  Future<Room> connectToRoom(String token) async {
+  Future<Room> connectToRoom(String token, String url) async {
     try {
       final roomOptions = RoomOptions(adaptiveStream: true, dynacast: true);
 
       final room = Room(roomOptions: roomOptions);
-      await room.connect(AppConfig.livekitUrl, token);
+      await room.connect(url, token);
       return room;
     } catch (e) {
       throw ServerException('Failed to connect to LiveKit: ${e.toString()}');

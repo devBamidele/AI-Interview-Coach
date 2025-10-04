@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../models/transcript_event_model.dart';
-import '../models/analysis_event_model.dart';
 
 /// WebSocket message types
 enum TranscriptionMessageType {
   transcript,
-  analysis,
   error,
   started,
   stopped,
+  sessionComplete,
   unknown,
 }
 
@@ -20,11 +19,7 @@ class TranscriptionMessage {
   final dynamic data;
   final String? errorMessage;
 
-  TranscriptionMessage({
-    required this.type,
-    this.data,
-    this.errorMessage,
-  });
+  TranscriptionMessage({required this.type, this.data, this.errorMessage});
 
   factory TranscriptionMessage.fromJson(Map<String, dynamic> json) {
     final type = json['type'] as String;
@@ -34,11 +29,6 @@ class TranscriptionMessage {
         return TranscriptionMessage(
           type: TranscriptionMessageType.transcript,
           data: TranscriptEventModel.fromJson(json),
-        );
-      case 'analysis':
-        return TranscriptionMessage(
-          type: TranscriptionMessageType.analysis,
-          data: AnalysisEventModel.fromJson(json['data'] as Map<String, dynamic>),
         );
       case 'error':
         return TranscriptionMessage(
@@ -54,6 +44,14 @@ class TranscriptionMessage {
         return TranscriptionMessage(
           type: TranscriptionMessageType.stopped,
           data: json['data'],
+        );
+      case 'session_complete':
+        return TranscriptionMessage(
+          type: TranscriptionMessageType.sessionComplete,
+          data: {
+            'message': json['message'] as String,
+            'interviewId': json['interviewId'] as String,
+          },
         );
       default:
         // Handle unknown message types gracefully
@@ -79,6 +77,9 @@ abstract class TranscriptionWebSocketDataSource {
   /// Stop transcription
   void stopTranscription();
 
+  /// Complete interview (ends transcription and triggers analysis)
+  void completeInterview();
+
   /// Stream of incoming transcription messages
   Stream<TranscriptionMessage> get messages;
 
@@ -90,9 +91,11 @@ abstract class TranscriptionWebSocketDataSource {
 }
 
 /// Implementation of transcription WebSocket data source
-class TranscriptionWebSocketDataSourceImpl implements TranscriptionWebSocketDataSource {
+class TranscriptionWebSocketDataSourceImpl
+    implements TranscriptionWebSocketDataSource {
   WebSocketChannel? _channel;
-  final StreamController<TranscriptionMessage> _messageController = StreamController.broadcast();
+  final StreamController<TranscriptionMessage> _messageController =
+      StreamController.broadcast();
   bool _isConnected = false;
   StreamSubscription? _channelSubscription;
 
@@ -156,6 +159,16 @@ class TranscriptionWebSocketDataSourceImpl implements TranscriptionWebSocketData
     }
 
     final message = jsonEncode({'action': 'stop'});
+    _channel!.sink.add(message);
+  }
+
+  @override
+  void completeInterview() {
+    if (!_isConnected || _channel == null) {
+      return;
+    }
+
+    final message = jsonEncode({'action': 'complete'});
     _channel!.sink.add(message);
   }
 

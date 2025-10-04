@@ -18,10 +18,6 @@ sealed class WordModel with _$WordModel {
   factory WordModel.fromJson(Map<String, dynamic> json) =>
       _$WordModelFromJson(json);
 
-  Word toEntity() => Word(
-        word: word,
-        start: start,
-        end: end,
-        confidence: confidence,
-      );
+  Word toEntity() =>
+      Word(word: word, start: start, end: end, confidence: confidence);
 }

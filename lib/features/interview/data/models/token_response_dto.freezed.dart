@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TokenResponseDto {
 
- String get token;
+ String get token; String get url;
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TokenResponseDtoCopyWith<TokenResponseDto> get copyWith => _$TokenResponseDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenResponseDto&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenResponseDto&&(identical(other.token, token) || other.token == token)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token);
+int get hashCode => Object.hash(runtimeType,token,url);
 
 @override
 String toString() {
-  return 'TokenResponseDto(token: $token)';
+  return 'TokenResponseDto(token: $token, url: $url)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TokenResponseDtoCopyWith<$Res>  {
   factory $TokenResponseDtoCopyWith(TokenResponseDto value, $Res Function(TokenResponseDto) _then) = _$TokenResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- String token
+ String token, String url
 });
 
 
@@ -65,9 +65,10 @@ class _$TokenResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? url = null,}) {
   return _then(_self.copyWith(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -150,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TokenResponseDto() when $default != null:
-return $default(_that.token);case _:
+return $default(_that.token,_that.url);case _:
   return orElse();
 
 }
@@ -171,10 +172,10 @@ return $default(_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String url)  $default,) {final _that = this;
 switch (_that) {
 case _TokenResponseDto():
-return $default(_that.token);}
+return $default(_that.token,_that.url);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -188,10 +189,10 @@ return $default(_that.token);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String url)?  $default,) {final _that = this;
 switch (_that) {
 case _TokenResponseDto() when $default != null:
-return $default(_that.token);case _:
+return $default(_that.token,_that.url);case _:
   return null;
 
 }
@@ -203,10 +204,11 @@ return $default(_that.token);case _:
 @JsonSerializable()
 
 class _TokenResponseDto implements TokenResponseDto {
-  const _TokenResponseDto({required this.token});
+  const _TokenResponseDto({required this.token, required this.url});
   factory _TokenResponseDto.fromJson(Map<String, dynamic> json) => _$TokenResponseDtoFromJson(json);
 
 @override final  String token;
+@override final  String url;
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -221,16 +223,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenResponseDto&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenResponseDto&&(identical(other.token, token) || other.token == token)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token);
+int get hashCode => Object.hash(runtimeType,token,url);
 
 @override
 String toString() {
-  return 'TokenResponseDto(token: $token)';
+  return 'TokenResponseDto(token: $token, url: $url)';
 }
 
 
@@ -241,7 +243,7 @@ abstract mixin class _$TokenResponseDtoCopyWith<$Res> implements $TokenResponseD
   factory _$TokenResponseDtoCopyWith(_TokenResponseDto value, $Res Function(_TokenResponseDto) _then) = __$TokenResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String token
+ String token, String url
 });
 
 
@@ -258,9 +260,10 @@ class __$TokenResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? url = null,}) {
   return _then(_TokenResponseDto(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
