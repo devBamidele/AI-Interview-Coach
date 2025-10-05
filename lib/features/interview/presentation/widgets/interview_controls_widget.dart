@@ -36,7 +36,7 @@ class InterviewControlsWidget extends StatelessWidget {
       );
     }
 
-    // Show analysis complete state
+    // Show analysis complete state with View Results button
     if (state.isAnalysisComplete) {
       return Column(
         children: [
@@ -50,6 +50,19 @@ class InterviewControlsWidget extends StatelessWidget {
           Text(
             'Your analysis is ready',
             style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, '/analysis');
+            },
+            icon: const Icon(Icons.assessment_rounded),
+            label: const Text('View Results'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            ),
           ),
         ],
       );
