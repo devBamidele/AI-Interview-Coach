@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,6 +10,7 @@ import '../widgets/interview_controls_widget.dart';
 import '../widgets/transcription_panel.dart';
 import '../widgets/video_preview_widget.dart';
 
+@RoutePage()
 class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
 

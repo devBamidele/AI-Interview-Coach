@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'features/interview/presentation/pages/analysis_results_page.dart';
-import 'features/interview/presentation/pages/home_page.dart';
-import 'features/interview/presentation/pages/interview_page.dart';
+import 'config/router/app_router.dart';
+import 'config/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,50 +13,21 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'AI Interview',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        fontFamily: 'SF Pro Display',
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-        ),
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/interview': (context) => const InterviewPage(),
-        '/analysis': (context) => const AnalysisResultsPage(),
-      },
-      onGenerateRoute: (settings) {
-        // Handle '/results' route (for viewing past interviews)
-        if (settings.name == '/results') {
-          // For now, navigate to analysis page
-          // TODO: Create a list of past interviews page
-          return MaterialPageRoute(
-            builder: (context) => const AnalysisResultsPage(),
-          );
-        }
-        return null;
-      },
+      theme: AppTheme.lightTheme,
+      routerConfig: _appRouter.config(),
     );
   }
 }

@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../config/router/app_router.dart';
 
+@RoutePage()
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -18,7 +21,7 @@ class HomePage extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: [
                 Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                 Theme.of(context).colorScheme.secondary,
               ],
             ),
@@ -51,9 +54,8 @@ class HomePage extends StatelessWidget {
                                 Colors.blue.shade600,
                                 Colors.blue.shade400,
                               ],
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                '/interview',
+                              onTap: () => context.router.push(
+                                const InterviewRoute(),
                               ),
                             ),
 
@@ -68,9 +70,8 @@ class HomePage extends StatelessWidget {
                                 Colors.purple.shade600,
                                 Colors.purple.shade400,
                               ],
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                '/results',
+                              onTap: () => context.router.push(
+                                const AnalysisResultsRoute(),
                               ),
                             ),
                           ],
@@ -108,7 +109,7 @@ class HomePage extends StatelessWidget {
           'Practice. Improve. Succeed.',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -139,7 +140,7 @@ class HomePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: gradient.first.withOpacity(0.4),
+                color: gradient.first.withValues(alpha: 0.4),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -152,7 +153,7 @@ class HomePage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -179,7 +180,7 @@ class HomePage extends StatelessWidget {
                         subtitle,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -187,7 +188,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   size: 20,
                 ),
               ],
@@ -202,10 +203,10 @@ class HomePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -220,7 +221,7 @@ class HomePage extends StatelessWidget {
           Container(
             width: 1,
             height: 40,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
           _buildStatItem(
             icon: Icons.trending_up_rounded,
@@ -230,7 +231,7 @@ class HomePage extends StatelessWidget {
           Container(
             width: 1,
             height: 40,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
           _buildStatItem(
             icon: Icons.security_rounded,
@@ -249,7 +250,7 @@ class HomePage extends StatelessWidget {
   }) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withOpacity(0.9), size: 24),
+        Icon(icon, color: Colors.white.withValues(alpha: 0.9), size: 24),
         addHeight(8),
         Text(
           value,
@@ -264,7 +265,7 @@ class HomePage extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
           ),
         ),
       ],

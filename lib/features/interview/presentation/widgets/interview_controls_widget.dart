@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../config/router/app_router.dart';
 import '../../application/interview_state.dart';
 
 class InterviewControlsWidget extends StatelessWidget {
@@ -54,7 +56,7 @@ class InterviewControlsWidget extends StatelessWidget {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, '/analysis');
+              context.router.push(const AnalysisResultsRoute());
             },
             icon: const Icon(Icons.assessment_rounded),
             label: const Text('View Results'),
