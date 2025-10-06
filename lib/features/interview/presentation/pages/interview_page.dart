@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/constants/app_config.dart';
 import '../../application/interview_notifier.dart';
 import '../../data/models/room_connection_params.dart';
-import '../widgets/connection_status_widget.dart';
-import '../widgets/interview_controls_widget.dart';
+import '../widgets/connection_status.dart';
+import '../widgets/interview_controls.dart';
 import '../widgets/transcription_panel.dart';
-import '../widgets/video_preview_widget.dart';
+import '../widgets/video_preview.dart';
 
 @RoutePage()
 class InterviewPage extends HookConsumerWidget {
