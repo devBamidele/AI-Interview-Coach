@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                                 Colors.purple.shade400,
                               ],
                               onTap: () => context.router.push(
-                                const AnalysisResultsRoute(),
+                                const InterviewListRoute(),
                               ),
                             ),
                           ],

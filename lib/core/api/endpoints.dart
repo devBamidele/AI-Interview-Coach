@@ -16,4 +16,9 @@ class Endpoints {
   static String getInterviewAnalysis(String interviewId) {
     return '${AppConfig.backendUrl}/api/interviews/$interviewId';
   }
+
+  /// Get all interviews for a user (GET)
+  static String getUserInterviews(String participantIdentity) {
+    return '${AppConfig.backendUrl}/api/interviews/user/$participantIdentity';
+  }
 }

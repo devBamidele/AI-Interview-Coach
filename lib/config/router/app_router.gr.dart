@@ -43,6 +43,75 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [InterviewDetailPage]
+class InterviewDetailRoute extends PageRouteInfo<InterviewDetailRouteArgs> {
+  InterviewDetailRoute({
+    Key? key,
+    required String interviewId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         InterviewDetailRoute.name,
+         args: InterviewDetailRouteArgs(key: key, interviewId: interviewId),
+         rawPathParams: {'interviewId': interviewId},
+         initialChildren: children,
+       );
+
+  static const String name = 'InterviewDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<InterviewDetailRouteArgs>(
+        orElse: () => InterviewDetailRouteArgs(
+          interviewId: pathParams.getString('interviewId'),
+        ),
+      );
+      return InterviewDetailPage(key: args.key, interviewId: args.interviewId);
+    },
+  );
+}
+
+class InterviewDetailRouteArgs {
+  const InterviewDetailRouteArgs({this.key, required this.interviewId});
+
+  final Key? key;
+
+  final String interviewId;
+
+  @override
+  String toString() {
+    return 'InterviewDetailRouteArgs{key: $key, interviewId: $interviewId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! InterviewDetailRouteArgs) return false;
+    return key == other.key && interviewId == other.interviewId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ interviewId.hashCode;
+}
+
+/// generated route for
+/// [InterviewListPage]
+class InterviewListRoute extends PageRouteInfo<void> {
+  const InterviewListRoute({List<PageRouteInfo>? children})
+    : super(InterviewListRoute.name, initialChildren: children);
+
+  static const String name = 'InterviewListRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const InterviewListPage();
+    },
+  );
+}
+
+/// generated route for
 /// [InterviewPage]
 class InterviewRoute extends PageRouteInfo<void> {
   const InterviewRoute({List<PageRouteInfo>? children})

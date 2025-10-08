@@ -101,7 +101,11 @@ class InterviewNotifier extends _$InterviewNotifier {
     await _startTranscription();
 
     // Update to connected state
-    state = InterviewState.connected(localVideoTrack: videoTrack);
+    final identity = _room?.localParticipant?.identity;
+    state = InterviewState.connected(
+      localVideoTrack: videoTrack,
+      participantIdentity: identity,
+    );
   }
 
   Future<void> _startTranscription() async {
@@ -164,7 +168,7 @@ class InterviewNotifier extends _$InterviewNotifier {
         },
         (analysis) {
           if (analysis.status == 'completed') {
-            state = InterviewState.analysisComplete(analysis);
+            state = InterviewState.analysisComplete(analysis, interviewId);
           } else if (analysis.status == 'failed') {
             state = const InterviewState.analysisFailed(
               'Interview analysis failed. Please try again.',

@@ -40,6 +40,7 @@ class InterviewControlsWidget extends StatelessWidget {
 
     // Show analysis complete state with View Results button
     if (state.isAnalysisComplete) {
+      final interviewId = state.interviewId;
       return Column(
         children: [
           const Icon(Icons.check_circle, color: Colors.green, size: 48),
@@ -55,9 +56,13 @@ class InterviewControlsWidget extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () {
-              context.router.push(const AnalysisResultsRoute());
-            },
+            onPressed: interviewId != null
+                ? () {
+                    context.router.push(
+                      InterviewDetailRoute(interviewId: interviewId),
+                    );
+                  }
+                : null,
             icon: const Icon(Icons.assessment_rounded),
             label: const Text('View Results'),
             style: ElevatedButton.styleFrom(

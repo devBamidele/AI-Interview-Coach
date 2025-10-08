@@ -46,14 +46,31 @@ class AnalysisScoreCardWidget extends StatelessWidget {
             ),
           ),
           addHeight(16),
-          Text(
-            (score * 10).toStringAsFixed(1),
-            style: const TextStyle(
-              fontSize: 56,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                (score * 10).toStringAsFixed(1),
+                style: const TextStyle(
+                  fontSize: 56,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, left: 4),
+                child: Text(
+                  '/ 10',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+                ),
+              ),
+            ],
           ),
           addHeight(8),
           Text(
