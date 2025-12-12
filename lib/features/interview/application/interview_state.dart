@@ -45,10 +45,10 @@ extension InterviewStateX on InterviewState {
   String get statusText => when(
     disconnected: () => 'Disconnected',
     connecting: (status) => status,
-    connected: (_, __) => 'Connected',
+    connected: (_, _) => 'Connected',
     completing: (status) => status,
     analyzing: (_) => 'Analyzing your interview...',
-    analysisComplete: (_, __) => 'Analysis Complete',
+    analysisComplete: (_, _) => 'Analysis Complete',
     analysisFailed: (_) => 'Analysis Failed',
     failed: (_) => 'Connection Failed',
   );
@@ -56,10 +56,10 @@ extension InterviewStateX on InterviewState {
   String get errorMessage => when(
     disconnected: () => '',
     connecting: (_) => '',
-    connected: (_, __) => '',
+    connected: (_, _) => '',
     completing: (_) => '',
     analyzing: (_) => '',
-    analysisComplete: (_, __) => '',
+    analysisComplete: (_, _) => '',
     analysisFailed: (error) => error,
     failed: (error) => error,
   );
@@ -70,7 +70,7 @@ extension InterviewStateX on InterviewState {
     connected: (track, _) => track,
     completing: (_) => null,
     analyzing: (_) => null,
-    analysisComplete: (_, __) => null,
+    analysisComplete: (_, _) => null,
     analysisFailed: (_) => null,
     failed: (_) => null,
   );
@@ -81,7 +81,7 @@ extension InterviewStateX on InterviewState {
     connected: (_, identity) => identity,
     completing: (_) => null,
     analyzing: (_) => null,
-    analysisComplete: (_, __) => null,
+    analysisComplete: (_, _) => null,
     analysisFailed: (_) => null,
     failed: (_) => null,
   );
@@ -89,7 +89,7 @@ extension InterviewStateX on InterviewState {
   InterviewAnalysis? get analysis => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (_, __) => null,
+    connected: (_, _) => null,
     completing: (_) => null,
     analyzing: (_) => null,
     analysisComplete: (analysis, _) => analysis,
@@ -100,7 +100,7 @@ extension InterviewStateX on InterviewState {
   String? get interviewId => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (_, __) => null,
+    connected: (_, _) => null,
     completing: (_) => null,
     analyzing: (id) => id,
     analysisComplete: (_, id) => id,

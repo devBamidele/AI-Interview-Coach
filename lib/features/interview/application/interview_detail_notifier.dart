@@ -17,10 +17,7 @@ class InterviewDetailNotifier extends _$InterviewDetailNotifier {
     // Fetch the analysis immediately
     final result = await _repository.getAnalysis(interviewId);
 
-    return result.fold(
-      (failure) => null,
-      (analysis) => analysis,
-    );
+    return result.fold((_) => null, (analysis) => analysis);
   }
 
   Future<void> refresh(String interviewId) async {
@@ -30,10 +27,7 @@ class InterviewDetailNotifier extends _$InterviewDetailNotifier {
 
     result.fold(
       (failure) {
-        state = AsyncValue.error(
-          failure.message,
-          StackTrace.current,
-        );
+        state = AsyncValue.error(failure.message, StackTrace.current);
       },
       (analysis) {
         state = AsyncValue.data(analysis);

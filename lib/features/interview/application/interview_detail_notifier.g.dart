@@ -53,7 +53,7 @@ final class InterviewDetailNotifierProvider
 }
 
 String _$interviewDetailNotifierHash() =>
-    r'8466393c2872e869871d623e7d3ae99de4499094';
+    r'a9002ee5301e15fb83e42fdcbdf4fe265ad5655e';
 
 final class InterviewDetailNotifierFamily extends $Family
     with
