@@ -7,6 +7,7 @@ import '../../application/interview_notifier.dart';
 import '../../data/models/room_connection_params.dart';
 import '../widgets/connection_status.dart';
 import '../widgets/interview_controls.dart';
+import '../widgets/network_strength_indicator.dart';
 import '../widgets/transcription_panel.dart';
 import '../widgets/video_preview.dart';
 
@@ -41,6 +42,12 @@ class InterviewPage extends HookConsumerWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('AI Interview'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: const NetworkStrengthIndicator(),
+          ),
+        ],
       ),
       body: Row(
         children: [

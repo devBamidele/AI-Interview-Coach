@@ -11,6 +11,7 @@ import '../data/repositories/transcription_repository_impl.dart';
 import '../domain/repositories/interview_analysis_repository.dart';
 import '../domain/repositories/livekit_repository.dart';
 import 'interview_state.dart';
+import 'network_quality_notifier.dart';
 import 'transcription_notifier.dart';
 
 part 'interview_notifier.g.dart';
@@ -106,6 +107,9 @@ class InterviewNotifier extends _$InterviewNotifier {
       localVideoTrack: videoTrack,
       participantIdentity: identity,
     );
+
+    // Start network quality monitoring
+    ref.read(networkQualityProvider.notifier).startMonitoring(_room!);
   }
 
   Future<void> _startTranscription() async {
@@ -220,6 +224,9 @@ class InterviewNotifier extends _$InterviewNotifier {
   }
 
   Future<void> disconnect() async {
+    // Stop network quality monitoring
+    ref.read(networkQualityProvider.notifier).stopMonitoring();
+
     // Stop transcription
     try {
       ref.read(transcriptionProvider.notifier).stopTranscription();
