@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'case_analysis.dart';
 
 part 'interview_analysis.freezed.dart';
 
@@ -12,8 +13,19 @@ sealed class InterviewAnalysis with _$InterviewAnalysis {
     required double duration,
     String? recordingUrl,
     required Metrics metrics,
+    // Generic interview (existing)
     AIAnalysis? aiAnalysis,
+    // Market sizing specific fields
+    String? caseQuestion,
+    String? difficulty,
+    String? candidateAnswer,
+    CaseAnalysis? caseAnalysis,
   }) = _InterviewAnalysis;
+
+  const InterviewAnalysis._();
+
+  /// Check if this is a market sizing interview
+  bool get isMarketSizing => caseAnalysis != null;
 }
 
 /// Metrics calculated from the interview

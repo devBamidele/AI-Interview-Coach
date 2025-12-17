@@ -18,6 +18,12 @@ _InterviewAnalysisDto _$InterviewAnalysisDtoFromJson(
   aiAnalysis: json['aiAnalysis'] == null
       ? null
       : AIAnalysisDto.fromJson(json['aiAnalysis'] as Map<String, dynamic>),
+  caseQuestion: json['caseQuestion'] as String?,
+  difficulty: json['difficulty'] as String?,
+  candidateAnswer: json['candidateAnswer'] as String?,
+  caseAnalysis: json['caseAnalysis'] == null
+      ? null
+      : CaseAnalysisDto.fromJson(json['caseAnalysis'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$InterviewAnalysisDtoToJson(
@@ -30,6 +36,10 @@ Map<String, dynamic> _$InterviewAnalysisDtoToJson(
   'recordingUrl': instance.recordingUrl,
   'metrics': instance.metrics,
   'aiAnalysis': instance.aiAnalysis,
+  'caseQuestion': instance.caseQuestion,
+  'difficulty': instance.difficulty,
+  'candidateAnswer': instance.candidateAnswer,
+  'caseAnalysis': instance.caseAnalysis,
 };
 
 _MetricsDto _$MetricsDtoFromJson(Map<String, dynamic> json) => _MetricsDto(

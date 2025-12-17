@@ -44,7 +44,7 @@ final class InterviewNotifierProvider
   }
 }
 
-String _$interviewNotifierHash() => r'd89371365bfbc2a6015a869f16ae1485ca0099ba';
+String _$interviewNotifierHash() => r'6221ec34a86566527ff48d20d547a455db562fa8';
 
 /// Notifier for managing interview connection state with code generation
 

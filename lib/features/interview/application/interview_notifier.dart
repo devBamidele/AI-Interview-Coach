@@ -24,6 +24,9 @@ class InterviewNotifier extends _$InterviewNotifier {
   late final InterviewAnalysisRepository _analysisRepository;
   StreamSubscription? _transcriptionSubscription;
 
+  /// Public getter for the room
+  Room? get room => _room;
+
   @override
   InterviewState build() {
     _repository = ref.read(liveKitRepositoryProvider);

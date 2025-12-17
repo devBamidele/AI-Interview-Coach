@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/interview_analysis.dart';
+import 'case_analysis_dto.dart';
 
 part 'interview_analysis_dto.freezed.dart';
 part 'interview_analysis_dto.g.dart';
@@ -16,21 +17,31 @@ sealed class InterviewAnalysisDto with _$InterviewAnalysisDto {
     required double duration,
     String? recordingUrl,
     required MetricsDto metrics,
+    // Generic interview (existing)
     AIAnalysisDto? aiAnalysis,
+    // Market sizing specific fields
+    String? caseQuestion,
+    String? difficulty,
+    String? candidateAnswer,
+    CaseAnalysisDto? caseAnalysis,
   }) = _InterviewAnalysisDto;
 
   factory InterviewAnalysisDto.fromJson(Map<String, dynamic> json) =>
       _$InterviewAnalysisDtoFromJson(json);
 
   InterviewAnalysis toEntity() => InterviewAnalysis(
-    id: id,
-    status: status,
-    transcript: transcript,
-    duration: duration,
-    recordingUrl: recordingUrl,
-    metrics: metrics.toEntity(),
-    aiAnalysis: aiAnalysis?.toEntity(),
-  );
+        id: id,
+        status: status,
+        transcript: transcript,
+        duration: duration,
+        recordingUrl: recordingUrl,
+        metrics: metrics.toEntity(),
+        aiAnalysis: aiAnalysis?.toEntity(),
+        caseQuestion: caseQuestion,
+        difficulty: difficulty,
+        candidateAnswer: candidateAnswer,
+        caseAnalysis: caseAnalysis?.toEntity(),
+      );
 }
 
 @freezed

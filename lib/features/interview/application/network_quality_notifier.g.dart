@@ -59,7 +59,7 @@ final class NetworkQualityDataSourceProvider
 }
 
 String _$networkQualityDataSourceHash() =>
-    r'5eb7cb46626a50d299425f7d12c11a334566a971';
+    r'df566d9369e88594841caaedcaee6a4ca043861e';
 
 /// Provider for the network quality repository
 
@@ -112,7 +112,7 @@ final class NetworkQualityRepositoryProvider
 }
 
 String _$networkQualityRepositoryHash() =>
-    r'3d2f613573ba42b672c8ea4ec47c3e52971b97da';
+    r'c06d7bb49269e8cc38378537dd12c121073f0a5d';
 
 /// Notifier that manages network quality monitoring during interviews
 
