@@ -165,10 +165,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CaseAnalysis():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -227,10 +224,7 @@ return $default(_that.structuredProblemSolving,_that.businessJudgment,_that.quan
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StructuredProblemSolving structuredProblemSolving,  BusinessJudgment businessJudgment,  QuantitativeSkills quantitativeSkills,  Communication communication,  SanityCheck sanityCheck,  double overallWeightedScore,  String overallLabel,  List<PriorityImprovement> priorityImprovements,  List<String> highlights)  $default,) {final _that = this;
 switch (_that) {
 case _CaseAnalysis():
-return $default(_that.structuredProblemSolving,_that.businessJudgment,_that.quantitativeSkills,_that.communication,_that.sanityCheck,_that.overallWeightedScore,_that.overallLabel,_that.priorityImprovements,_that.highlights);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.structuredProblemSolving,_that.businessJudgment,_that.quantitativeSkills,_that.communication,_that.sanityCheck,_that.overallWeightedScore,_that.overallLabel,_that.priorityImprovements,_that.highlights);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -499,10 +493,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _StructuredProblemSolving():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -561,10 +552,7 @@ return $default(_that.score,_that.feedback,_that.frameworkDetected,_that.meceApp
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  String feedback,  String frameworkDetected,  bool meceApplied,  bool clarifyingQuestionsAsked)  $default,) {final _that = this;
 switch (_that) {
 case _StructuredProblemSolving():
-return $default(_that.score,_that.feedback,_that.frameworkDetected,_that.meceApplied,_that.clarifyingQuestionsAsked);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.score,_that.feedback,_that.frameworkDetected,_that.meceApplied,_that.clarifyingQuestionsAsked);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -768,10 +756,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _BusinessJudgment():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -830,10 +815,7 @@ return $default(_that.score,_that.feedback,_that.assumptionsStated,_that.assumpt
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  String feedback,  bool assumptionsStated,  bool assumptionsJustified,  String assumptionQuality)  $default,) {final _that = this;
 switch (_that) {
 case _BusinessJudgment():
-return $default(_that.score,_that.feedback,_that.assumptionsStated,_that.assumptionsJustified,_that.assumptionQuality);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.score,_that.feedback,_that.assumptionsStated,_that.assumptionsJustified,_that.assumptionQuality);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1037,10 +1019,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _QuantitativeSkills():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1099,10 +1078,7 @@ return $default(_that.score,_that.feedback,_that.mathShownStepByStep,_that.mathV
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  String feedback,  bool mathShownStepByStep,  bool mathVerbalized,  bool calculationsAccurate)  $default,) {final _that = this;
 switch (_that) {
 case _QuantitativeSkills():
-return $default(_that.score,_that.feedback,_that.mathShownStepByStep,_that.mathVerbalized,_that.calculationsAccurate);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.score,_that.feedback,_that.mathShownStepByStep,_that.mathVerbalized,_that.calculationsAccurate);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1306,10 +1282,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _Communication():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1368,10 +1341,7 @@ return $default(_that.score,_that.feedback,_that.paceAnalysis,_that.fillersCount
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  String feedback,  String? paceAnalysis,  int? fillersCount,  int? pausesCount)  $default,) {final _that = this;
 switch (_that) {
 case _Communication():
-return $default(_that.score,_that.feedback,_that.paceAnalysis,_that.fillersCount,_that.pausesCount);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.score,_that.feedback,_that.paceAnalysis,_that.fillersCount,_that.pausesCount);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1574,10 +1544,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _SanityCheck():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1636,10 +1603,7 @@ return $default(_that.score,_that.feedback,_that.sanityCheckPerformed,_that.sani
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  String feedback,  bool sanityCheckPerformed,  bool sanityCheckVerbalized)  $default,) {final _that = this;
 switch (_that) {
 case _SanityCheck():
-return $default(_that.score,_that.feedback,_that.sanityCheckPerformed,_that.sanityCheckVerbalized);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.score,_that.feedback,_that.sanityCheckPerformed,_that.sanityCheckVerbalized);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1838,10 +1802,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _PriorityImprovement():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1900,10 +1861,7 @@ return $default(_that.timestamp,_that.feedback);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String timestamp,  String feedback)  $default,) {final _that = this;
 switch (_that) {
 case _PriorityImprovement():
-return $default(_that.timestamp,_that.feedback);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.timestamp,_that.feedback);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

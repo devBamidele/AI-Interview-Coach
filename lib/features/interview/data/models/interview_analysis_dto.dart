@@ -12,6 +12,8 @@ sealed class InterviewAnalysisDto with _$InterviewAnalysisDto {
 
   const factory InterviewAnalysisDto({
     required String id,
+    dynamic userId,
+    required String createdAt,
     required String status,
     required String transcript,
     required double duration,
@@ -31,6 +33,8 @@ sealed class InterviewAnalysisDto with _$InterviewAnalysisDto {
 
   InterviewAnalysis toEntity() => InterviewAnalysis(
         id: id,
+        userId: userId,
+        createdAt: createdAt,
         status: status,
         transcript: transcript,
         duration: duration,

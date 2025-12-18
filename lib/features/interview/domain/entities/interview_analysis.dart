@@ -8,6 +8,8 @@ part 'interview_analysis.freezed.dart';
 sealed class InterviewAnalysis with _$InterviewAnalysis {
   const factory InterviewAnalysis({
     required String id,
+    dynamic userId,
+    required String createdAt,
     required String status,
     required String transcript,
     required double duration,

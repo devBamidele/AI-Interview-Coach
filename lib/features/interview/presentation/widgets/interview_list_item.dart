@@ -25,7 +25,7 @@ class InterviewListItemWidget extends StatelessWidget {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${months[dateTime.month - 1]} ${dateTime.day}, ${dateTime.year}';
   }
@@ -42,6 +42,7 @@ class InterviewListItemWidget extends StatelessWidget {
     final formattedDate = _formatDate(dateTime);
     final formattedTime = _formatTime(dateTime);
     final durationMinutes = (interview.duration / 60).round();
+    final isMarketSizing = interview.isMarketSizing;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -57,7 +58,7 @@ class InterviewListItemWidget extends StatelessWidget {
               // Status Indicator
               Container(
                 width: 4,
-                height: 60,
+                height: isMarketSizing ? 80 : 60,
                 decoration: BoxDecoration(
                   color: _getStatusColor(interview.status),
                   borderRadius: BorderRadius.circular(2),
@@ -87,6 +88,31 @@ class InterviewListItemWidget extends StatelessWidget {
                             color: Colors.grey.shade600,
                           ),
                         ),
+                        if (isMarketSizing && interview.difficulty != null) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getDifficultyColor(
+                                interview.difficulty!,
+                              ).withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              interview.difficulty!.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: _getDifficultyColor(
+                                  interview.difficulty!,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -97,7 +123,19 @@ class InterviewListItemWidget extends StatelessWidget {
                         color: Colors.grey.shade600,
                       ),
                     ),
-                    if (interview.aiAnalysis != null) ...[
+                    if (isMarketSizing && interview.caseQuestion != null) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        interview.caseQuestion!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade800,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ] else if (interview.aiAnalysis != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         interview.aiAnalysis!.summary.length > 80
@@ -115,61 +153,88 @@ class InterviewListItemWidget extends StatelessWidget {
                 ),
               ),
 
-              // Score Badge (if available)
-              if (interview.aiAnalysis != null)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: _getScoreColor(interview.aiAnalysis!.overallScore)
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        interview.aiAnalysis!.overallScore.toStringAsFixed(1),
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color:
-                              _getScoreColor(interview.aiAnalysis!.overallScore),
-                        ),
-                      ),
-                      Text(
-                        'Score',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+              // Score Badge
+              if (isMarketSizing && interview.caseAnalysisScore != null)
+                _buildCaseScoreBadge(interview.caseAnalysisScore!)
+              else if (interview.aiAnalysis != null)
+                _buildGenericScoreBadge(interview.aiAnalysis!.overallScore)
               else
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    interview.status == 'processing'
-                        ? 'Processing'
-                        : 'Failed',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+                _buildStatusBadge(interview.status),
 
               const SizedBox(width: 8),
               Icon(Icons.chevron_right, color: Colors.grey.shade400),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCaseScoreBadge(double score) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: _getCaseScoreColor(score).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            score.toStringAsFixed(1),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: _getCaseScoreColor(score),
+            ),
+          ),
+          Text(
+            '/ 5.0',
+            style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenericScoreBadge(double score) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: _getScoreColor(score).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            score.toStringAsFixed(1),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: _getScoreColor(score),
+            ),
+          ),
+          Text(
+            'Score',
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status == 'processing' ? 'Processing' : 'Failed',
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey.shade600,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -193,5 +258,25 @@ class InterviewListItemWidget extends StatelessWidget {
     if (score >= 6) return Colors.blue;
     if (score >= 4) return Colors.orange;
     return Colors.red;
+  }
+
+  Color _getCaseScoreColor(double score) {
+    if (score >= 4.5) return Colors.green;
+    if (score >= 3.5) return Colors.blue;
+    if (score >= 2.5) return Colors.orange;
+    return Colors.red;
+  }
+
+  Color _getDifficultyColor(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return Colors.green;
+      case 'medium':
+        return Colors.orange;
+      case 'hard':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

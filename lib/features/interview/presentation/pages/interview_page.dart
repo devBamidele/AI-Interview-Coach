@@ -62,7 +62,6 @@ class InterviewPage extends HookConsumerWidget {
           // Countdown Timer (shows when connected)
           if (interviewState.isConnected)
             CountdownTimerWidget(
-              durationSeconds: 600, // 10 minutes
               onComplete: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

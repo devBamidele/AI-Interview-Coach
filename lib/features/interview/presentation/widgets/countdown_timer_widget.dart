@@ -8,7 +8,7 @@ class CountdownTimerWidget extends HookWidget {
 
   const CountdownTimerWidget({
     super.key,
-    this.durationSeconds = 600, // 10 minutes default
+    this.durationSeconds = 300, // 5 minutes default
     this.onComplete,
   });
 

@@ -26,6 +26,14 @@ _UserInterviewDto _$UserInterviewDtoFromJson(Map<String, dynamic> json) =>
           : UserInterviewAIAnalysisDto.fromJson(
               json['aiAnalysis'] as Map<String, dynamic>,
             ),
+      caseQuestion: json['caseQuestion'] as String?,
+      difficulty: json['difficulty'] as String?,
+      candidateAnswer: json['candidateAnswer'] as String?,
+      caseAnalysis: json['caseAnalysis'] == null
+          ? null
+          : CaseAnalysisSummaryDto.fromJson(
+              json['caseAnalysis'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$UserInterviewDtoToJson(_UserInterviewDto instance) =>
@@ -38,6 +46,10 @@ Map<String, dynamic> _$UserInterviewDtoToJson(_UserInterviewDto instance) =>
       'userId': instance.userId,
       'metrics': instance.metrics,
       'aiAnalysis': instance.aiAnalysis,
+      'caseQuestion': instance.caseQuestion,
+      'difficulty': instance.difficulty,
+      'candidateAnswer': instance.candidateAnswer,
+      'caseAnalysis': instance.caseAnalysis,
     };
 
 _UserInfoDto _$UserInfoDtoFromJson(Map<String, dynamic> json) =>
@@ -53,6 +65,9 @@ _UserInterviewMetricsDto _$UserInterviewMetricsDtoFromJson(
   totalWords: (json['totalWords'] as num).toInt(),
   fillerCount: (json['fillerCount'] as num).toInt(),
   pauseCount: (json['pauseCount'] as num).toInt(),
+  paceTimeline: (json['paceTimeline'] as List<dynamic>)
+      .map((e) => PacePointDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$UserInterviewMetricsDtoToJson(
@@ -62,6 +77,7 @@ Map<String, dynamic> _$UserInterviewMetricsDtoToJson(
   'totalWords': instance.totalWords,
   'fillerCount': instance.fillerCount,
   'pauseCount': instance.pauseCount,
+  'paceTimeline': instance.paceTimeline,
 };
 
 _UserInterviewAIAnalysisDto _$UserInterviewAIAnalysisDtoFromJson(
@@ -78,6 +94,20 @@ Map<String, dynamic> _$UserInterviewAIAnalysisDtoToJson(
   'overallScore': instance.overallScore,
   'summary': instance.summary,
   'confidenceScore': instance.confidenceScore,
+};
+
+_CaseAnalysisSummaryDto _$CaseAnalysisSummaryDtoFromJson(
+  Map<String, dynamic> json,
+) => _CaseAnalysisSummaryDto(
+  overallWeightedScore: (json['overallWeightedScore'] as num).toDouble(),
+  overallLabel: json['overallLabel'] as String,
+);
+
+Map<String, dynamic> _$CaseAnalysisSummaryDtoToJson(
+  _CaseAnalysisSummaryDto instance,
+) => <String, dynamic>{
+  'overallWeightedScore': instance.overallWeightedScore,
+  'overallLabel': instance.overallLabel,
 };
 
 _UserInterviewsResponseDto _$UserInterviewsResponseDtoFromJson(

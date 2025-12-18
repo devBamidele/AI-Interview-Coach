@@ -17,7 +17,9 @@ UserInterviewsRemoteDataSource userInterviewsRemoteDataSource(Ref ref) {
 }
 
 abstract class UserInterviewsRemoteDataSource {
-  Future<UserInterviewsResponseDto> getUserInterviews(String participantIdentity);
+  Future<UserInterviewsResponseDto> getUserInterviews(
+    String participantIdentity,
+  );
 }
 
 class UserInterviewsRemoteDataSourceImpl

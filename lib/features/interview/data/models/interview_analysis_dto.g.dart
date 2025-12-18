@@ -10,6 +10,8 @@ _InterviewAnalysisDto _$InterviewAnalysisDtoFromJson(
   Map<String, dynamic> json,
 ) => _InterviewAnalysisDto(
   id: json['id'] as String,
+  userId: json['userId'],
+  createdAt: json['createdAt'] as String,
   status: json['status'] as String,
   transcript: json['transcript'] as String,
   duration: (json['duration'] as num).toDouble(),
@@ -30,6 +32,8 @@ Map<String, dynamic> _$InterviewAnalysisDtoToJson(
   _InterviewAnalysisDto instance,
 ) => <String, dynamic>{
   'id': instance.id,
+  'userId': instance.userId,
+  'createdAt': instance.createdAt,
   'status': instance.status,
   'transcript': instance.transcript,
   'duration': instance.duration,

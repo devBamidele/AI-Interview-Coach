@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserInterview {
 
- String get id; String get status; String get createdAt; double get duration; String? get recordingUrl; UserInfo? get userId; UserInterviewMetrics? get metrics; UserInterviewAIAnalysis? get aiAnalysis;
+ String get id; String get status; String get createdAt; double get duration; String? get recordingUrl; UserInfo? get userId; UserInterviewMetrics? get metrics; UserInterviewAIAnalysis? get aiAnalysis;// Market sizing specific fields
+ String? get caseQuestion; String? get difficulty; String? get candidateAnswer; double? get caseAnalysisScore; String? get caseAnalysisLabel;
 /// Create a copy of UserInterview
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $UserInterviewCopyWith<UserInterview> get copyWith => _$UserInterviewCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterview&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterview&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysisScore, caseAnalysisScore) || other.caseAnalysisScore == caseAnalysisScore)&&(identical(other.caseAnalysisLabel, caseAnalysisLabel) || other.caseAnalysisLabel == caseAnalysisLabel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,status,createdAt,duration,recordingUrl,userId,metrics,aiAnalysis);
+int get hashCode => Object.hash(runtimeType,id,status,createdAt,duration,recordingUrl,userId,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysisScore,caseAnalysisLabel);
 
 @override
 String toString() {
-  return 'UserInterview(id: $id, status: $status, createdAt: $createdAt, duration: $duration, recordingUrl: $recordingUrl, userId: $userId, metrics: $metrics, aiAnalysis: $aiAnalysis)';
+  return 'UserInterview(id: $id, status: $status, createdAt: $createdAt, duration: $duration, recordingUrl: $recordingUrl, userId: $userId, metrics: $metrics, aiAnalysis: $aiAnalysis, caseQuestion: $caseQuestion, difficulty: $difficulty, candidateAnswer: $candidateAnswer, caseAnalysisScore: $caseAnalysisScore, caseAnalysisLabel: $caseAnalysisLabel)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $UserInterviewCopyWith<$Res>  {
   factory $UserInterviewCopyWith(UserInterview value, $Res Function(UserInterview) _then) = _$UserInterviewCopyWithImpl;
 @useResult
 $Res call({
- String id, String status, String createdAt, double duration, String? recordingUrl, UserInfo? userId, UserInterviewMetrics? metrics, UserInterviewAIAnalysis? aiAnalysis
+ String id, String status, String createdAt, double duration, String? recordingUrl, UserInfo? userId, UserInterviewMetrics? metrics, UserInterviewAIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, double? caseAnalysisScore, String? caseAnalysisLabel
 });
 
 
@@ -62,7 +63,7 @@ class _$UserInterviewCopyWithImpl<$Res>
 
 /// Create a copy of UserInterview
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? duration = null,Object? recordingUrl = freezed,Object? userId = freezed,Object? metrics = freezed,Object? aiAnalysis = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? duration = null,Object? recordingUrl = freezed,Object? userId = freezed,Object? metrics = freezed,Object? aiAnalysis = freezed,Object? caseQuestion = freezed,Object? difficulty = freezed,Object? candidateAnswer = freezed,Object? caseAnalysisScore = freezed,Object? caseAnalysisLabel = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -72,7 +73,12 @@ as double,recordingUrl: freezed == recordingUrl ? _self.recordingUrl : recording
 as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserInfo?,metrics: freezed == metrics ? _self.metrics : metrics // ignore: cast_nullable_to_non_nullable
 as UserInterviewMetrics?,aiAnalysis: freezed == aiAnalysis ? _self.aiAnalysis : aiAnalysis // ignore: cast_nullable_to_non_nullable
-as UserInterviewAIAnalysis?,
+as UserInterviewAIAnalysis?,caseQuestion: freezed == caseQuestion ? _self.caseQuestion : caseQuestion // ignore: cast_nullable_to_non_nullable
+as String?,difficulty: freezed == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
+as String?,candidateAnswer: freezed == candidateAnswer ? _self.candidateAnswer : candidateAnswer // ignore: cast_nullable_to_non_nullable
+as String?,caseAnalysisScore: freezed == caseAnalysisScore ? _self.caseAnalysisScore : caseAnalysisScore // ignore: cast_nullable_to_non_nullable
+as double?,caseAnalysisLabel: freezed == caseAnalysisLabel ? _self.caseAnalysisLabel : caseAnalysisLabel // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 /// Create a copy of UserInterview
@@ -190,10 +196,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  double? caseAnalysisScore,  String? caseAnalysisLabel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserInterview() when $default != null:
-return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis);case _:
+return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysisScore,_that.caseAnalysisLabel);case _:
   return orElse();
 
 }
@@ -211,10 +217,10 @@ return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recor
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  double? caseAnalysisScore,  String? caseAnalysisLabel)  $default,) {final _that = this;
 switch (_that) {
 case _UserInterview():
-return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis);}
+return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysisScore,_that.caseAnalysisLabel);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -228,10 +234,10 @@ return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recor
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status,  String createdAt,  double duration,  String? recordingUrl,  UserInfo? userId,  UserInterviewMetrics? metrics,  UserInterviewAIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  double? caseAnalysisScore,  String? caseAnalysisLabel)?  $default,) {final _that = this;
 switch (_that) {
 case _UserInterview() when $default != null:
-return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis);case _:
+return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recordingUrl,_that.userId,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysisScore,_that.caseAnalysisLabel);case _:
   return null;
 
 }
@@ -242,8 +248,8 @@ return $default(_that.id,_that.status,_that.createdAt,_that.duration,_that.recor
 /// @nodoc
 
 
-class _UserInterview implements UserInterview {
-  const _UserInterview({required this.id, required this.status, required this.createdAt, required this.duration, this.recordingUrl, this.userId, this.metrics, this.aiAnalysis});
+class _UserInterview extends UserInterview {
+  const _UserInterview({required this.id, required this.status, required this.createdAt, required this.duration, this.recordingUrl, this.userId, this.metrics, this.aiAnalysis, this.caseQuestion, this.difficulty, this.candidateAnswer, this.caseAnalysisScore, this.caseAnalysisLabel}): super._();
   
 
 @override final  String id;
@@ -254,6 +260,12 @@ class _UserInterview implements UserInterview {
 @override final  UserInfo? userId;
 @override final  UserInterviewMetrics? metrics;
 @override final  UserInterviewAIAnalysis? aiAnalysis;
+// Market sizing specific fields
+@override final  String? caseQuestion;
+@override final  String? difficulty;
+@override final  String? candidateAnswer;
+@override final  double? caseAnalysisScore;
+@override final  String? caseAnalysisLabel;
 
 /// Create a copy of UserInterview
 /// with the given fields replaced by the non-null parameter values.
@@ -265,16 +277,16 @@ _$UserInterviewCopyWith<_UserInterview> get copyWith => __$UserInterviewCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterview&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterview&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysisScore, caseAnalysisScore) || other.caseAnalysisScore == caseAnalysisScore)&&(identical(other.caseAnalysisLabel, caseAnalysisLabel) || other.caseAnalysisLabel == caseAnalysisLabel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,status,createdAt,duration,recordingUrl,userId,metrics,aiAnalysis);
+int get hashCode => Object.hash(runtimeType,id,status,createdAt,duration,recordingUrl,userId,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysisScore,caseAnalysisLabel);
 
 @override
 String toString() {
-  return 'UserInterview(id: $id, status: $status, createdAt: $createdAt, duration: $duration, recordingUrl: $recordingUrl, userId: $userId, metrics: $metrics, aiAnalysis: $aiAnalysis)';
+  return 'UserInterview(id: $id, status: $status, createdAt: $createdAt, duration: $duration, recordingUrl: $recordingUrl, userId: $userId, metrics: $metrics, aiAnalysis: $aiAnalysis, caseQuestion: $caseQuestion, difficulty: $difficulty, candidateAnswer: $candidateAnswer, caseAnalysisScore: $caseAnalysisScore, caseAnalysisLabel: $caseAnalysisLabel)';
 }
 
 
@@ -285,7 +297,7 @@ abstract mixin class _$UserInterviewCopyWith<$Res> implements $UserInterviewCopy
   factory _$UserInterviewCopyWith(_UserInterview value, $Res Function(_UserInterview) _then) = __$UserInterviewCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String status, String createdAt, double duration, String? recordingUrl, UserInfo? userId, UserInterviewMetrics? metrics, UserInterviewAIAnalysis? aiAnalysis
+ String id, String status, String createdAt, double duration, String? recordingUrl, UserInfo? userId, UserInterviewMetrics? metrics, UserInterviewAIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, double? caseAnalysisScore, String? caseAnalysisLabel
 });
 
 
@@ -302,7 +314,7 @@ class __$UserInterviewCopyWithImpl<$Res>
 
 /// Create a copy of UserInterview
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? duration = null,Object? recordingUrl = freezed,Object? userId = freezed,Object? metrics = freezed,Object? aiAnalysis = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? duration = null,Object? recordingUrl = freezed,Object? userId = freezed,Object? metrics = freezed,Object? aiAnalysis = freezed,Object? caseQuestion = freezed,Object? difficulty = freezed,Object? candidateAnswer = freezed,Object? caseAnalysisScore = freezed,Object? caseAnalysisLabel = freezed,}) {
   return _then(_UserInterview(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -312,7 +324,12 @@ as double,recordingUrl: freezed == recordingUrl ? _self.recordingUrl : recording
 as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserInfo?,metrics: freezed == metrics ? _self.metrics : metrics // ignore: cast_nullable_to_non_nullable
 as UserInterviewMetrics?,aiAnalysis: freezed == aiAnalysis ? _self.aiAnalysis : aiAnalysis // ignore: cast_nullable_to_non_nullable
-as UserInterviewAIAnalysis?,
+as UserInterviewAIAnalysis?,caseQuestion: freezed == caseQuestion ? _self.caseQuestion : caseQuestion // ignore: cast_nullable_to_non_nullable
+as String?,difficulty: freezed == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
+as String?,candidateAnswer: freezed == candidateAnswer ? _self.candidateAnswer : candidateAnswer // ignore: cast_nullable_to_non_nullable
+as String?,caseAnalysisScore: freezed == caseAnalysisScore ? _self.caseAnalysisScore : caseAnalysisScore // ignore: cast_nullable_to_non_nullable
+as double?,caseAnalysisLabel: freezed == caseAnalysisLabel ? _self.caseAnalysisLabel : caseAnalysisLabel // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -612,7 +629,7 @@ as String,
 /// @nodoc
 mixin _$UserInterviewMetrics {
 
- int get averagePace; int get totalWords; int get fillerCount; int get pauseCount;
+ int get averagePace; int get totalWords; int get fillerCount; int get pauseCount; List<PacePoint> get paceTimeline;
 /// Create a copy of UserInterviewMetrics
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -623,16 +640,16 @@ $UserInterviewMetricsCopyWith<UserInterviewMetrics> get copyWith => _$UserInterv
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewMetrics&&(identical(other.averagePace, averagePace) || other.averagePace == averagePace)&&(identical(other.totalWords, totalWords) || other.totalWords == totalWords)&&(identical(other.fillerCount, fillerCount) || other.fillerCount == fillerCount)&&(identical(other.pauseCount, pauseCount) || other.pauseCount == pauseCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewMetrics&&(identical(other.averagePace, averagePace) || other.averagePace == averagePace)&&(identical(other.totalWords, totalWords) || other.totalWords == totalWords)&&(identical(other.fillerCount, fillerCount) || other.fillerCount == fillerCount)&&(identical(other.pauseCount, pauseCount) || other.pauseCount == pauseCount)&&const DeepCollectionEquality().equals(other.paceTimeline, paceTimeline));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,averagePace,totalWords,fillerCount,pauseCount);
+int get hashCode => Object.hash(runtimeType,averagePace,totalWords,fillerCount,pauseCount,const DeepCollectionEquality().hash(paceTimeline));
 
 @override
 String toString() {
-  return 'UserInterviewMetrics(averagePace: $averagePace, totalWords: $totalWords, fillerCount: $fillerCount, pauseCount: $pauseCount)';
+  return 'UserInterviewMetrics(averagePace: $averagePace, totalWords: $totalWords, fillerCount: $fillerCount, pauseCount: $pauseCount, paceTimeline: $paceTimeline)';
 }
 
 
@@ -643,7 +660,7 @@ abstract mixin class $UserInterviewMetricsCopyWith<$Res>  {
   factory $UserInterviewMetricsCopyWith(UserInterviewMetrics value, $Res Function(UserInterviewMetrics) _then) = _$UserInterviewMetricsCopyWithImpl;
 @useResult
 $Res call({
- int averagePace, int totalWords, int fillerCount, int pauseCount
+ int averagePace, int totalWords, int fillerCount, int pauseCount, List<PacePoint> paceTimeline
 });
 
 
@@ -660,13 +677,14 @@ class _$UserInterviewMetricsCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewMetrics
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? averagePace = null,Object? totalWords = null,Object? fillerCount = null,Object? pauseCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? averagePace = null,Object? totalWords = null,Object? fillerCount = null,Object? pauseCount = null,Object? paceTimeline = null,}) {
   return _then(_self.copyWith(
 averagePace: null == averagePace ? _self.averagePace : averagePace // ignore: cast_nullable_to_non_nullable
 as int,totalWords: null == totalWords ? _self.totalWords : totalWords // ignore: cast_nullable_to_non_nullable
 as int,fillerCount: null == fillerCount ? _self.fillerCount : fillerCount // ignore: cast_nullable_to_non_nullable
 as int,pauseCount: null == pauseCount ? _self.pauseCount : pauseCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,paceTimeline: null == paceTimeline ? _self.paceTimeline : paceTimeline // ignore: cast_nullable_to_non_nullable
+as List<PacePoint>,
   ));
 }
 
@@ -748,10 +766,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount,  List<PacePoint> paceTimeline)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserInterviewMetrics() when $default != null:
-return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount);case _:
+return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount,_that.paceTimeline);case _:
   return orElse();
 
 }
@@ -769,10 +787,10 @@ return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pause
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount,  List<PacePoint> paceTimeline)  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewMetrics():
-return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount);}
+return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount,_that.paceTimeline);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -786,10 +804,10 @@ return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pause
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int averagePace,  int totalWords,  int fillerCount,  int pauseCount,  List<PacePoint> paceTimeline)?  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewMetrics() when $default != null:
-return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount);case _:
+return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pauseCount,_that.paceTimeline);case _:
   return null;
 
 }
@@ -801,13 +819,20 @@ return $default(_that.averagePace,_that.totalWords,_that.fillerCount,_that.pause
 
 
 class _UserInterviewMetrics implements UserInterviewMetrics {
-  const _UserInterviewMetrics({required this.averagePace, required this.totalWords, required this.fillerCount, required this.pauseCount});
+  const _UserInterviewMetrics({required this.averagePace, required this.totalWords, required this.fillerCount, required this.pauseCount, required final  List<PacePoint> paceTimeline}): _paceTimeline = paceTimeline;
   
 
 @override final  int averagePace;
 @override final  int totalWords;
 @override final  int fillerCount;
 @override final  int pauseCount;
+ final  List<PacePoint> _paceTimeline;
+@override List<PacePoint> get paceTimeline {
+  if (_paceTimeline is EqualUnmodifiableListView) return _paceTimeline;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_paceTimeline);
+}
+
 
 /// Create a copy of UserInterviewMetrics
 /// with the given fields replaced by the non-null parameter values.
@@ -819,16 +844,16 @@ _$UserInterviewMetricsCopyWith<_UserInterviewMetrics> get copyWith => __$UserInt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewMetrics&&(identical(other.averagePace, averagePace) || other.averagePace == averagePace)&&(identical(other.totalWords, totalWords) || other.totalWords == totalWords)&&(identical(other.fillerCount, fillerCount) || other.fillerCount == fillerCount)&&(identical(other.pauseCount, pauseCount) || other.pauseCount == pauseCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewMetrics&&(identical(other.averagePace, averagePace) || other.averagePace == averagePace)&&(identical(other.totalWords, totalWords) || other.totalWords == totalWords)&&(identical(other.fillerCount, fillerCount) || other.fillerCount == fillerCount)&&(identical(other.pauseCount, pauseCount) || other.pauseCount == pauseCount)&&const DeepCollectionEquality().equals(other._paceTimeline, _paceTimeline));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,averagePace,totalWords,fillerCount,pauseCount);
+int get hashCode => Object.hash(runtimeType,averagePace,totalWords,fillerCount,pauseCount,const DeepCollectionEquality().hash(_paceTimeline));
 
 @override
 String toString() {
-  return 'UserInterviewMetrics(averagePace: $averagePace, totalWords: $totalWords, fillerCount: $fillerCount, pauseCount: $pauseCount)';
+  return 'UserInterviewMetrics(averagePace: $averagePace, totalWords: $totalWords, fillerCount: $fillerCount, pauseCount: $pauseCount, paceTimeline: $paceTimeline)';
 }
 
 
@@ -839,7 +864,7 @@ abstract mixin class _$UserInterviewMetricsCopyWith<$Res> implements $UserInterv
   factory _$UserInterviewMetricsCopyWith(_UserInterviewMetrics value, $Res Function(_UserInterviewMetrics) _then) = __$UserInterviewMetricsCopyWithImpl;
 @override @useResult
 $Res call({
- int averagePace, int totalWords, int fillerCount, int pauseCount
+ int averagePace, int totalWords, int fillerCount, int pauseCount, List<PacePoint> paceTimeline
 });
 
 
@@ -856,13 +881,14 @@ class __$UserInterviewMetricsCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewMetrics
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? averagePace = null,Object? totalWords = null,Object? fillerCount = null,Object? pauseCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? averagePace = null,Object? totalWords = null,Object? fillerCount = null,Object? pauseCount = null,Object? paceTimeline = null,}) {
   return _then(_UserInterviewMetrics(
 averagePace: null == averagePace ? _self.averagePace : averagePace // ignore: cast_nullable_to_non_nullable
 as int,totalWords: null == totalWords ? _self.totalWords : totalWords // ignore: cast_nullable_to_non_nullable
 as int,fillerCount: null == fillerCount ? _self.fillerCount : fillerCount // ignore: cast_nullable_to_non_nullable
 as int,pauseCount: null == pauseCount ? _self.pauseCount : pauseCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,paceTimeline: null == paceTimeline ? _self._paceTimeline : paceTimeline // ignore: cast_nullable_to_non_nullable
+as List<PacePoint>,
   ));
 }
 

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'interview_analysis.dart';
 
 part 'user_interview.freezed.dart';
 
@@ -14,16 +15,25 @@ sealed class UserInterview with _$UserInterview {
     UserInfo? userId,
     UserInterviewMetrics? metrics,
     UserInterviewAIAnalysis? aiAnalysis,
+    // Market sizing specific fields
+    String? caseQuestion,
+    String? difficulty,
+    String? candidateAnswer,
+    double? caseAnalysisScore,
+    String? caseAnalysisLabel,
   }) = _UserInterview;
+
+  const UserInterview._();
+
+  /// Check if this is a market sizing interview
+  bool get isMarketSizing => caseQuestion != null;
 }
 
 /// User information in interview
 @freezed
 sealed class UserInfo with _$UserInfo {
-  const factory UserInfo({
-    required String email,
-    required String name,
-  }) = _UserInfo;
+  const factory UserInfo({required String email, required String name}) =
+      _UserInfo;
 }
 
 /// Summary of metrics for list view
@@ -34,6 +44,7 @@ sealed class UserInterviewMetrics with _$UserInterviewMetrics {
     required int totalWords,
     required int fillerCount,
     required int pauseCount,
+    required List<PacePoint> paceTimeline,
   }) = _UserInterviewMetrics;
 }
 
