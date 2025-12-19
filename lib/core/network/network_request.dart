@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'network_interceptors.dart';
 
 part 'network_request.g.dart';
 
 @riverpod
-NetworkRequest networkRequest(Ref ref) {
-  return NetworkRequestImpl();
-}
+NetworkRequest networkRequest(_) => NetworkRequestImpl();
 
 abstract class NetworkRequest {
   Future<Response> get(
@@ -34,7 +35,15 @@ class NetworkRequestImpl implements NetworkRequest {
           validateStatus: (status) =>
               status != null && status >= 200 && status < 300,
         ),
-      );
+      ) {
+    // Add the interceptors to the dio instance
+    _dio.interceptors.addAll([
+      AuthInterceptor(),
+      RefreshTokenInterceptor(_dio),
+      ErrorInterceptor(),
+      if (kDebugMode) loggerInterceptor,
+    ]);
+  }
 
   @override
   Future<Response> get(

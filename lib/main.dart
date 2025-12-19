@@ -4,14 +4,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'config/router/app_router.dart';
 import 'config/theme/app_theme.dart';
+import 'features/auth/application/auth_manager.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  // Initialize AuthManager to load stored session
+  await AuthManager.instance.init();
 
   runApp(ProviderScope(child: MyApp()));
 }
