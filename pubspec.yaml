@@ -14,6 +14,7 @@ dependencies:
   http: ^1.5.0
   pretty_dio_logger: ^1.4.0
   flutter_screenutil: ^5.9.3
+  email_validator: ^3.0.0
 
   # State Management
   flutter_riverpod: ^3.0.0

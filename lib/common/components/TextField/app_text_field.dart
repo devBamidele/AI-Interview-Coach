@@ -30,12 +30,14 @@ class AppTextField extends StatelessWidget {
     this.fillColor,
     this.customEnabledBorder,
     this.customFocusedBorder,
+    this.autoValidateMode = AutovalidateMode.onUserInteraction,
   });
 
   final FocusNode focusNode;
   final TextEditingController textController;
   final void Function(String)? onFieldSubmitted;
   final String hintText;
+  final AutovalidateMode autoValidateMode;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -70,7 +72,7 @@ class AppTextField extends StatelessWidget {
       cursorColor: textColor,
       focusNode: focusNode,
       controller: textController,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autoValidateMode,
       obscureText: obscureText,
       textInputAction: action,
       validator: validation,
@@ -93,12 +95,12 @@ class AppTextField extends StatelessWidget {
             (curvierEdges
                 ? focusedBorder.copyWith(borderRadius: curvySide)
                 : null),
-        errorBorder: curvierEdges
+        errorBorder: (curvierEdges
             ? errorBorder.copyWith(borderRadius: curvySide)
-            : null,
-        focusedErrorBorder: curvierEdges
+            : null),
+        focusedErrorBorder: (curvierEdges
             ? focusedErrorBorder.copyWith(borderRadius: curvySide)
-            : null,
+            : null),
         disabledBorder: curvierEdges
             ? inputBorder.copyWith(borderRadius: curvySide)
             : null,

@@ -1,13 +1,17 @@
-import 'package:ai_interview_mvp/features/auth/application/auth_state.dart';
+import 'package:ai_interview_mvp/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../common/components/components.dart';
+import '../../../../common/styles/component_style.dart';
+import '../../../../common/styles/text_style.dart';
 import '../../../../config/router/app_router.dart';
+import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
-import '../widgets/auth_button.dart';
-import '../widgets/auth_text_field.dart';
+import '../../application/auth_state.dart';
 
 @RoutePage()
 class SignupPage extends HookConsumerWidget {
@@ -19,9 +23,46 @@ class SignupPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final confirmPasswordController = useTextEditingController();
-    final formKey = useMemoized(() => GlobalKey<FormState>());
-    final isPasswordVisible = useState(false);
-    final isConfirmPasswordVisible = useState(false);
+
+    final formKey1 = useMemoized(() => GlobalKey<FormState>());
+    final formKey2 = useMemoized(() => GlobalKey<FormState>());
+    final formKey3 = useMemoized(() => GlobalKey<FormState>());
+    final formKey4 = useMemoized(() => GlobalKey<FormState>());
+
+    final isPasswordVisible = useState(true);
+    final isConfirmPasswordVisible = useState(true);
+
+    final nameFocusNode = useFocusNode();
+    final emailFocusNode = useFocusNode();
+    final passwordFocusNode = useFocusNode();
+    final confirmPasswordFocusNode = useFocusNode();
+
+    final shakeState1 = useMemoized(() => GlobalKey<ShakeState>());
+    final shakeState2 = useMemoized(() => GlobalKey<ShakeState>());
+    final shakeState3 = useMemoized(() => GlobalKey<ShakeState>());
+    final shakeState4 = useMemoized(() => GlobalKey<ShakeState>());
+    final shakeStatePasswordRequirements = useMemoized(
+      () => GlobalKey<ShakeState>(),
+    );
+
+    // Reactive password validation states
+    final password = useListenableSelector(
+      passwordController,
+      () => passwordController.text,
+    );
+    final validationStates = useMemoized(() {
+      return [
+        password.length >= 8, // Be at least 8 characters or more
+        RegExp(r'[A-Z]').hasMatch(password) &&
+            RegExp(
+              r'[a-z]',
+            ).hasMatch(password), // At least 1 uppercase and lowercase letter
+        RegExp(r'[0-9]').hasMatch(password), // Must contain a digit or a number
+        RegExp(
+          r'[@$!%*?&#]',
+        ).hasMatch(password), // Must contain a special character
+      ];
+    }, [password]);
 
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
@@ -41,187 +82,311 @@ class SignupPage extends HookConsumerWidget {
       );
     });
 
-    String? validatePassword(String? value) {
-      if (value == null || value.isEmpty) {
-        return 'Password is required';
-      }
-      if (value.length < 8) {
-        return 'Password must be at least 8 characters';
-      }
-      if (!RegExp(r'[A-Z]').hasMatch(value)) {
-        return 'Password must contain at least 1 uppercase letter';
-      }
-      if (!RegExp(r'[a-z]').hasMatch(value)) {
-        return 'Password must contain at least 1 lowercase letter';
-      }
-      if (!RegExp(r'[0-9]').hasMatch(value)) {
-        return 'Password must contain at least 1 number';
-      }
-      return null;
+    void togglePasswordVisibility() {
+      // Unfocus everything first, then focus on password field
+      FocusScope.of(context).unfocus();
+      Future.delayed(const Duration(milliseconds: 10), () {
+        passwordFocusNode.requestFocus();
+      });
+      isPasswordVisible.value = !isPasswordVisible.value;
     }
 
-    void handleSignup() {
-      if (formKey.currentState?.validate() ?? false) {
+    void togglePasswordVisibility2() {
+      // Unfocus everything first, then focus on confirm password field
+      FocusScope.of(context).unfocus();
+      Future.delayed(const Duration(milliseconds: 10), () {
+        confirmPasswordFocusNode.requestFocus();
+      });
+      isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+    }
+
+    void validate() {
+      final isNameValid = formKey1.currentState?.validate() ?? false;
+      final isEmailValid = formKey2.currentState?.validate() ?? false;
+      final isPasswordValid = formKey3.currentState?.validate() ?? false;
+      final isConfirmPasswordValid = formKey4.currentState?.validate() ?? false;
+
+      // Check if password meets all requirements
+      final allPasswordRequirementsMet = validationStates.every(
+        (state) => state,
+      );
+
+      if (isNameValid &&
+          isEmailValid &&
+          isPasswordValid &&
+          isConfirmPasswordValid &&
+          allPasswordRequirementsMet) {
         authNotifier.signup(
           email: emailController.text.trim(),
           name: nameController.text.trim(),
           password: passwordController.text,
         );
+        return;
       }
+
+      if (!isNameValid) shakeState1.currentState?.shake();
+      if (!isEmailValid) shakeState2.currentState?.shake();
+      if (!isPasswordValid) shakeState3.currentState?.shake();
+      if (!allPasswordRequirementsMet) {
+        shakeState3.currentState?.shake();
+        shakeStatePasswordRequirements.currentState?.shake();
+      }
+      if (!isConfirmPasswordValid) shakeState4.currentState?.shake();
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Logo/Title
-                    Icon(
-                      Icons.person_add_outlined,
-                      size: 80,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Create Account',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Sign up to get started',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 48),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              surfaceTintColor: Colors.transparent,
+              backgroundColor: Colors.white,
+              expandedHeight: 84,
+              floating: false,
+              pinned: true,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              // leading: IconButton(
+              //   icon: const Icon(Icons.arrow_back),
+              //   onPressed: () => context.router.pop(),
+              // ),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  'Create Account',
+                  style: TextStyles.text.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
+                titlePadding: EdgeInsets.only(
+                  left: pagePadding.left,
+                  bottom: 8,
+                ),
+                expandedTitleScale: 1.5,
+                centerTitle: false,
+              ),
+            ),
+            SliverPadding(
+              padding: pagePadding,
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  Text(
+                    'Sign up to get started',
+                    style: TextStyles.hintThemeText,
+                  ),
+                  addHeight(48),
 
-                    // Name field
-                    AuthTextField(
-                      controller: nameController,
-                      label: 'Full Name',
-                      hintText: 'Enter your full name',
-                      prefixIcon: Icons.person_outline,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Name is required';
-                        }
-                        return null;
-                      },
+                  // Name field
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Text('Full Name', style: TextStyles.fieldHeader),
+                  ),
+                  Form(
+                    key: formKey1,
+                    child: Shake(
+                      key: shakeState1,
+                      child: AppTextField(
+                        enabled: !authState.isLoading,
+                        focusNode: nameFocusNode,
+                        textController: nameController,
+                        hintText: 'John Doe',
+                        validation: (name) => name?.trim().validateName(),
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                  ),
+                  addHeight(12),
 
-                    // Email field
-                    AuthTextField(
-                      controller: emailController,
-                      label: 'Email',
-                      hintText: 'Enter your email',
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: Icons.email_outlined,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required';
-                        }
-                        if (!value.contains('@')) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
-                      },
+                  // Email field
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Text('Email', style: TextStyles.fieldHeader),
+                  ),
+                  Form(
+                    key: formKey2,
+                    child: Shake(
+                      key: shakeState2,
+                      child: AppTextField(
+                        enabled: !authState.isLoading,
+                        focusNode: emailFocusNode,
+                        textController: emailController,
+                        hintText: 'example@gmail.com',
+                        keyboardType: TextInputType.emailAddress,
+                        autoValidateMode: AutovalidateMode.onUnfocus,
+                        validation: (email) => email?.trim().validateEmail(),
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                  ),
+                  addHeight(12),
 
-                    // Password field
-                    AuthTextField(
-                      controller: passwordController,
-                      label: 'Password',
+                  // Password field
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Text('Password', style: TextStyles.fieldHeader),
+                  ),
+                  Form(
+                    key: formKey3,
+                    child: AppTextField(
+                      enabled: !authState.isLoading,
+                      focusNode: passwordFocusNode,
+                      textController: passwordController,
                       hintText: 'Create a password',
-                      obscureText: !isPasswordVisible.value,
-                      prefixIcon: Icons.lock_outline,
+                      obscureText: isPasswordVisible.value,
+                      autoValidateMode: AutovalidateMode.disabled,
+                      validation: (value) {
+                        if (value == null || value.isEmpty) {
+                          return ''; // Empty string to prevent showing error text
+                        }
+                        return null;
+                      },
                       suffixIcon: IconButton(
                         icon: Icon(
                           isPasswordVisible.value
                               ? Icons.visibility_off
                               : Icons.visibility,
+                          color: passwordFocusNode.hasFocus
+                              ? AppColors.black
+                              : AppColors.hintTextColor,
                         ),
-                        onPressed: () {
-                          isPasswordVisible.value = !isPasswordVisible.value;
-                        },
+                        onPressed: togglePasswordVisibility,
                       ),
-                      validator: validatePassword,
                     ),
-                    const SizedBox(height: 16),
-
-                    // Confirm password field
-                    AuthTextField(
-                      controller: confirmPasswordController,
-                      label: 'Confirm Password',
-                      hintText: 'Re-enter your password',
-                      obscureText: !isConfirmPasswordVisible.value,
-                      prefixIcon: Icons.lock_outline,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          isConfirmPasswordVisible.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          isConfirmPasswordVisible.value =
-                              !isConfirmPasswordVisible.value;
-                        },
+                  ),
+                  Shake(
+                    key: shakeStatePasswordRequirements,
+                    child: Container(
+                      padding: EdgeInsets.all(12.h),
+                      margin: EdgeInsets.only(top: 14.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.inputBackGround.withValues(alpha: .6),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
-                      validator: (value) {
-                        if (value != passwordController.text) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(requirements.length * 2 - 1, (
+                          index,
+                        ) {
+                          if (index.isEven) {
+                            int requirementIndex = index ~/ 2;
+                            return passwordRequirementRow(
+                              requirements[requirementIndex],
+                              checked: validationStates[requirementIndex],
+                              hasStartedTyping: password.isNotEmpty,
+                            );
+                          }
+                          return addHeight(6);
+                        }),
+                      ),
                     ),
-                    const SizedBox(height: 24),
-
-                    // Password requirements hint
-                    Text(
-                      'Password must be at least 8 characters with 1 uppercase, '
-                      '1 lowercase, and 1 number',
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.center,
+                  ),
+                  addHeight(24),
+                  // Confirm password field
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Text(
+                      'Confirm Password',
+                      style: TextStyles.fieldHeader,
                     ),
-                    const SizedBox(height: 24),
-
-                    // Signup button
-                    AuthButton(
-                      text: 'Sign Up',
-                      isLoading: authState.isLoading,
-                      onPressed: handleSignup,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Login link
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Already have an account? '),
-                        TextButton(
-                          onPressed: () {
-                            context.router.pop();
-                          },
-                          child: const Text('Sign In'),
+                  ),
+                  Form(
+                    key: formKey4,
+                    child: Shake(
+                      key: shakeState4,
+                      child: AppTextField(
+                        enabled: !authState.isLoading,
+                        focusNode: confirmPasswordFocusNode,
+                        textController: confirmPasswordController,
+                        action: TextInputAction.done,
+                        hintText: 'Re-enter your password',
+                        obscureText: isConfirmPasswordVisible.value,
+                        onFieldSubmitted: (_) => validate(),
+                        validation: (value) =>
+                            value.validateConfirmPassword(passwordController),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isConfirmPasswordVisible.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: confirmPasswordFocusNode.hasFocus
+                                ? AppColors.black
+                                : AppColors.hintTextColor,
+                          ),
+                          onPressed: togglePasswordVisibility2,
                         ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  addHeight(16),
+
+                  // Signup button
+                  AppButton(
+                    onPress: validate,
+                    text: 'Sign Up',
+                    loading: authState.isLoading,
+                  ),
+                  addHeight(16),
+                ]),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
+}
+
+// Requirements
+const List<String> requirements = [
+  'Be at least 8 characters or more',
+  'At least 1 uppercase and lowercase letter',
+  'Must contain a digit or a number',
+  "Must contain a special character e.g'@\$!%*?&'. ",
+];
+
+Row passwordRequirementRow(
+  String text, {
+  required bool checked,
+  required bool hasStartedTyping,
+}) {
+  TextStyle textStyle = ScreenUtil().screenWidth > 500
+      ? TextStyles.hintThemeText
+      : TextStyles.hintText;
+
+  // Determine icon and color based on state
+  IconData icon;
+  Color iconColor;
+  Color? textColor;
+
+  if (!hasStartedTyping) {
+    // Neutral state - user hasn't started typing
+    icon = Icons.check;
+    iconColor = AppColors.hintTextColor;
+    textColor = null;
+  } else if (checked) {
+    // Success state - requirement is met
+    icon = Icons.check;
+    iconColor = Colors.green.shade300;
+    textColor = Colors.green.shade300;
+  } else {
+    // Error state - requirement is not met
+    icon = Icons.close;
+    iconColor = Colors.red.shade300;
+    textColor = Colors.red.shade300;
+  }
+
+  return Row(
+    children: [
+      Icon(icon, color: iconColor, size: 18),
+      addWidth(8),
+      Expanded(
+        child: Text(
+          text,
+          style: textStyle.copyWith(color: textColor),
+          softWrap: true,
+          overflow: TextOverflow.visible,
+        ),
+      ),
+    ],
+  );
 }
