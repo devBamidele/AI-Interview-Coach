@@ -1,14 +1,18 @@
+import 'dart:io';
+
 import 'package:ai_interview_mvp/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../common/styles/component_style.dart';
 import '../../../../common/styles/text_style.dart';
 import '../../../../config/router/app_router.dart';
+import '../../../../constants/asset_paths.dart';
 import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
 import '../../application/auth_state.dart';
@@ -48,6 +52,10 @@ class LoginPage extends HookConsumerWidget {
         orElse: () {},
       );
     });
+
+    Future<void> loginWithApple() async {}
+
+    Future<void> loginWithGoogle() async {}
 
     void validate() {
       final isEmailValid = formKey1.currentState?.validate() ?? false;
@@ -153,24 +161,57 @@ class LoginPage extends HookConsumerWidget {
                   text: 'Sign In',
                   loading: authState.isLoading,
                 ),
-                addHeight(16),
 
-                // Sign up link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  child: OutlinedAppButton(
+                    onPress: () => context.router.push(const SignupRoute()),
+                    text: 'Create new account',
+                  ),
+                ),
+
+                addHeight(6),
+                Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Text("Don't have an account? ", style: TextStyles.text),
-                    TextButton(
-                      onPressed: () {
-                        context.router.push(const SignupRoute());
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(),
-                      ),
+                    const Divider(color: AppColors.outlinedColor),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      color: Colors.white,
                       child: Text(
-                        'Sign Up',
-                        style: TextStyles.text.copyWith(
-                          fontWeight: FontWeight.bold,
+                        'or sign in with',
+                        style: TextStyles.fieldHeader.copyWith(
+                          color: AppColors.hintTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                addHeight(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (Platform.isIOS) ...[
+                      Expanded(
+                        child: OutlinedAppButton(
+                          onPress: loginWithApple,
+                          child: Icon(
+                            Icons.apple_rounded,
+                            color: Colors.black,
+                            size: 29.r,
+                          ),
+                        ),
+                      ),
+                      addWidth(16),
+                    ],
+
+                    Expanded(
+                      child: OutlinedAppButton(
+                        onPress: loginWithGoogle,
+                        child: Transform.scale(
+                          scale: 0.9,
+                          child: SvgPicture.asset(AppAssets.googleLogo),
                         ),
                       ),
                     ),

@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:ai_interview_mvp/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../common/styles/component_style.dart';
 import '../../../../common/styles/text_style.dart';
 import '../../../../config/router/app_router.dart';
+import '../../../../constants/asset_paths.dart';
 import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
 import '../../application/auth_state.dart';
+import '../widgets/extras.dart';
 
 @RoutePage()
 class SignupPage extends HookConsumerWidget {
@@ -82,6 +87,10 @@ class SignupPage extends HookConsumerWidget {
       );
     });
 
+    void signUpWithGoogle() {}
+
+    void signUpWithApple() {}
+
     void togglePasswordVisibility() {
       // Unfocus everything first, then focus on password field
       FocusScope.of(context).unfocus();
@@ -103,7 +112,6 @@ class SignupPage extends HookConsumerWidget {
     void validate() {
       final isNameValid = formKey1.currentState?.validate() ?? false;
       final isEmailValid = formKey2.currentState?.validate() ?? false;
-      final isPasswordValid = formKey3.currentState?.validate() ?? false;
       final isConfirmPasswordValid = formKey4.currentState?.validate() ?? false;
 
       // Check if password meets all requirements
@@ -113,7 +121,6 @@ class SignupPage extends HookConsumerWidget {
 
       if (isNameValid &&
           isEmailValid &&
-          isPasswordValid &&
           isConfirmPasswordValid &&
           allPasswordRequirementsMet) {
         authNotifier.signup(
@@ -126,7 +133,6 @@ class SignupPage extends HookConsumerWidget {
 
       if (!isNameValid) shakeState1.currentState?.shake();
       if (!isEmailValid) shakeState2.currentState?.shake();
-      if (!isPasswordValid) shakeState3.currentState?.shake();
       if (!allPasswordRequirementsMet) {
         shakeState3.currentState?.shake();
         shakeStatePasswordRequirements.currentState?.shake();
@@ -148,10 +154,6 @@ class SignupPage extends HookConsumerWidget {
               pinned: true,
               elevation: 0,
               automaticallyImplyLeading: false,
-              // leading: IconButton(
-              //   icon: const Icon(Icons.arrow_back),
-              //   onPressed: () => context.router.pop(),
-              // ),
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   'Create Account',
@@ -234,12 +236,6 @@ class SignupPage extends HookConsumerWidget {
                       hintText: 'Create a password',
                       obscureText: isPasswordVisible.value,
                       autoValidateMode: AutovalidateMode.disabled,
-                      validation: (value) {
-                        if (value == null || value.isEmpty) {
-                          return ''; // Empty string to prevent showing error text
-                        }
-                        return null;
-                      },
                       suffixIcon: IconButton(
                         icon: Icon(
                           isPasswordVisible.value
@@ -325,7 +321,56 @@ class SignupPage extends HookConsumerWidget {
                     text: 'Sign Up',
                     loading: authState.isLoading,
                   ),
-                  addHeight(16),
+
+                  addHeight(22),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Divider(color: AppColors.outlinedColor),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        color: Colors.white,
+                        child: Text(
+                          'or continue with',
+                          style: TextStyles.fieldHeader.copyWith(
+                            color: AppColors.hintTextColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  addHeight(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (Platform.isIOS) ...[
+                        Expanded(
+                          child: OutlinedAppButton(
+                            onPress: signUpWithApple,
+                            child: Icon(
+                              Icons.apple_rounded,
+                              color: Colors.black,
+                              size: 29.r,
+                            ),
+                          ),
+                        ),
+                        addWidth(16),
+                      ],
+
+                      Expanded(
+                        child: OutlinedAppButton(
+                          onPress: signUpWithGoogle,
+                          child: Transform.scale(
+                            scale: 0.9,
+                            child: SvgPicture.asset(AppAssets.googleLogo),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  addHeight(MediaQuery.of(context).viewInsets.bottom + 40),
                 ]),
               ),
             ),
@@ -334,59 +379,4 @@ class SignupPage extends HookConsumerWidget {
       ),
     );
   }
-}
-
-// Requirements
-const List<String> requirements = [
-  'Be at least 8 characters or more',
-  'At least 1 uppercase and lowercase letter',
-  'Must contain a digit or a number',
-  "Must contain a special character e.g'@\$!%*?&'. ",
-];
-
-Row passwordRequirementRow(
-  String text, {
-  required bool checked,
-  required bool hasStartedTyping,
-}) {
-  TextStyle textStyle = ScreenUtil().screenWidth > 500
-      ? TextStyles.hintThemeText
-      : TextStyles.hintText;
-
-  // Determine icon and color based on state
-  IconData icon;
-  Color iconColor;
-  Color? textColor;
-
-  if (!hasStartedTyping) {
-    // Neutral state - user hasn't started typing
-    icon = Icons.check;
-    iconColor = AppColors.hintTextColor;
-    textColor = null;
-  } else if (checked) {
-    // Success state - requirement is met
-    icon = Icons.check;
-    iconColor = Colors.green.shade300;
-    textColor = Colors.green.shade300;
-  } else {
-    // Error state - requirement is not met
-    icon = Icons.close;
-    iconColor = Colors.red.shade300;
-    textColor = Colors.red.shade300;
-  }
-
-  return Row(
-    children: [
-      Icon(icon, color: iconColor, size: 18),
-      addWidth(8),
-      Expanded(
-        child: Text(
-          text,
-          style: textStyle.copyWith(color: textColor),
-          softWrap: true,
-          overflow: TextOverflow.visible,
-        ),
-      ),
-    ],
-  );
 }
