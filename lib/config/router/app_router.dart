@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
@@ -14,35 +15,28 @@ part 'app_router.gr.dart';
 
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
-  final _authGuard = AuthGuard();
+  final Ref ref;
+  late final AuthGuard _authGuard;
+
+  AppRouter(this.ref) {
+    _authGuard = AuthGuard(ref);
+  }
 
   @override
   List<AutoRoute> get routes => [
-        // Auth routes (no guard)
-        AutoRoute(page: LoginRoute.page),
-        AutoRoute(page: SignupRoute.page),
+    // Auth routes (no guard)
+    AutoRoute(page: LoginRoute.page),
+    AutoRoute(page: SignupRoute.page),
 
-        // Protected routes (with auth guard)
-        AutoRoute(
-          page: HomeRoute.page,
-          initial: true,
-          guards: [_authGuard],
-        ),
-        AutoRoute(
-          page: InterviewRoute.page,
-          guards: [_authGuard],
-        ),
-        AutoRoute(
-          page: AnalysisResultsRoute.page,
-          guards: [_authGuard],
-        ),
-        AutoRoute(
-          page: InterviewListRoute.page,
-          guards: [_authGuard],
-        ),
-        AutoRoute(
-          page: InterviewDetailRoute.page,
-          guards: [_authGuard],
-        ),
-      ];
+    // Protected routes (with auth guard)
+    AutoRoute(page: HomeRoute.page, initial: true, guards: [_authGuard]),
+    AutoRoute(page: InterviewRoute.page, guards: [_authGuard]),
+    AutoRoute(page: AnalysisResultsRoute.page, guards: [_authGuard]),
+    AutoRoute(page: InterviewListRoute.page, guards: [_authGuard]),
+    AutoRoute(page: InterviewDetailRoute.page, guards: [_authGuard]),
+  ];
 }
+
+final appRouterProvider = Provider<AppRouter>((ref) {
+  return AppRouter(ref);
+});

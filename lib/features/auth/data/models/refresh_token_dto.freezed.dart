@@ -115,10 +115,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _RefreshTokenDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -177,10 +174,7 @@ return $default(_that.refreshToken);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String refreshToken)  $default,) {final _that = this;
 switch (_that) {
 case _RefreshTokenDto():
-return $default(_that.refreshToken);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.refreshToken);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

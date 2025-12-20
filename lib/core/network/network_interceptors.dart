@@ -27,10 +27,14 @@ final loggerInterceptor = PrettyDioLogger(
 );
 
 class AuthInterceptor extends Interceptor {
+  final AuthManager authManager;
+
+  AuthInterceptor(this.authManager);
+
   @override
   void onRequest(options, handler) async {
     if (options.uri.toString().startsWith(Endpoints.base)) {
-      final accessToken = AuthManager.instance.accessToken;
+      final accessToken = authManager.accessToken;
 
       if (accessToken != null) {
         options.headers['Authorization'] = 'Bearer $accessToken';
@@ -43,8 +47,9 @@ class AuthInterceptor extends Interceptor {
 
 class RefreshTokenInterceptor extends Interceptor {
   final Dio _dio;
+  final AuthManager authManager;
 
-  RefreshTokenInterceptor(this._dio);
+  RefreshTokenInterceptor(this._dio, this.authManager);
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -53,7 +58,7 @@ class RefreshTokenInterceptor extends Interceptor {
     // Only handle 401 errors
     if (statusCode == 401) {
       try {
-        final refreshToken = AuthManager.instance.refreshToken;
+        final refreshToken = authManager.refreshToken;
 
         if (refreshToken == null) {
           throw Exception('No refresh token available');
@@ -66,7 +71,7 @@ class RefreshTokenInterceptor extends Interceptor {
         );
 
         final newAccessToken = response.data['accessToken'];
-        await AuthManager.instance.saveAccessToken(newAccessToken);
+        await authManager.saveAccessToken(newAccessToken);
 
         // Retry the original request
         final options = err.requestOptions;
@@ -82,7 +87,7 @@ class RefreshTokenInterceptor extends Interceptor {
         return handler.resolve(clonedRequest);
       } catch (e) {
         // Clear auth if refresh fails
-        await AuthManager.instance.clearAuthenticatedUser();
+        await authManager.clearAuthenticatedUser();
         return handler.next(err);
       }
     }

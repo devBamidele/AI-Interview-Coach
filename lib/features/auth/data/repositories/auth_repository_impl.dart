@@ -26,7 +26,7 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
 
   AuthRepositoryImpl(Ref ref)
     : _remoteDataSource = ref.read(authRemoteDataSourceProvider),
-      _localDataSource = AuthLocalDataSourceImpl(),
+      _localDataSource = ref.read(authLocalDataSourceProvider),
       super(ref.read(networkInfoProvider));
 
   @override

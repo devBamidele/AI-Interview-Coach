@@ -1,3 +1,4 @@
+import 'package:ai_interview_mvp/features/auth/application/auth_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,7 +8,13 @@ import 'network_interceptors.dart';
 part 'network_request.g.dart';
 
 @riverpod
-NetworkRequest networkRequest(_) => NetworkRequestImpl();
+NetworkRequest networkRequest(Ref ref) {
+  final request = NetworkRequestImpl(ref.read(authManagerProvider.notifier));
+
+  ref.onDispose(() => request.dispose());
+
+  return request;
+}
 
 abstract class NetworkRequest {
   Future<Response> get(
@@ -25,8 +32,9 @@ abstract class NetworkRequest {
 
 class NetworkRequestImpl implements NetworkRequest {
   final Dio _dio;
+  final AuthManager authManager;
 
-  NetworkRequestImpl()
+  NetworkRequestImpl(this.authManager)
     : _dio = Dio(
         BaseOptions(
           connectTimeout: const Duration(seconds: 30),
@@ -38,8 +46,8 @@ class NetworkRequestImpl implements NetworkRequest {
       ) {
     // Add the interceptors to the dio instance
     _dio.interceptors.addAll([
-      AuthInterceptor(),
-      RefreshTokenInterceptor(_dio),
+      AuthInterceptor(authManager),
+      RefreshTokenInterceptor(_dio, authManager),
       ErrorInterceptor(),
       if (kDebugMode) loggerInterceptor,
     ]);
@@ -70,6 +78,8 @@ class NetworkRequestImpl implements NetworkRequest {
       options: Options(headers: headers),
     );
   }
+
+  void dispose() => _dio.close(force: true);
 }
 
 extension ResponseExtension on Response {

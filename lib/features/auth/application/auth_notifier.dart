@@ -23,8 +23,9 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> _checkAuthStatus() async {
-    if (AuthManager.instance.isLoggedIn) {
-      final user = AuthManager.instance.user;
+    final authManager = ref.read(authManagerProvider.notifier);
+    if (authManager.isLoggedIn) {
+      final user = authManager.user;
       if (user != null) {
         state = AuthState.authenticated(user);
       }
@@ -49,7 +50,7 @@ class AuthNotifier extends _$AuthNotifier {
         state = AuthState.error(failure.message);
       },
       (session) {
-        AuthManager.instance.saveAuthSession(session);
+        ref.read(authManagerProvider.notifier).saveAuthSession(session);
         state = AuthState.authenticated(session.user);
       },
     );
@@ -73,7 +74,7 @@ class AuthNotifier extends _$AuthNotifier {
         state = AuthState.error(failure.message);
       },
       (session) {
-        AuthManager.instance.saveAuthSession(session);
+        ref.read(authManagerProvider.notifier).saveAuthSession(session);
         state = AuthState.authenticated(session.user);
       },
     );
@@ -82,17 +83,18 @@ class AuthNotifier extends _$AuthNotifier {
   Future<void> logout() async {
     state = const AuthState.loading();
 
-    final refreshToken = AuthManager.instance.refreshToken;
+    final authManager = ref.read(authManagerProvider.notifier);
+    final refreshToken = authManager.refreshToken;
     final result = await _repository.logout(refreshToken);
 
     result.fold(
       (failure) {
         // Even if API call fails, clear local session
-        AuthManager.instance.logout();
+        authManager.logout();
         state = const AuthState.unauthenticated();
       },
       (_) {
-        AuthManager.instance.logout();
+        authManager.logout();
         state = const AuthState.unauthenticated();
       },
     );

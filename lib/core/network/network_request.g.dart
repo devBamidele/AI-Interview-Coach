@@ -48,4 +48,4 @@ final class NetworkRequestProvider
   }
 }
 
-String _$networkRequestHash() => r'657eca3fbe2637630835ad5f01662a337a7937cf';
+String _$networkRequestHash() => r'a8c6f9838ef833e23d26fb7c3426e756ae356ce2';

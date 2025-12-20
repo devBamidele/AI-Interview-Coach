@@ -37,7 +37,7 @@ class LoginPage extends HookConsumerWidget {
     final authNotifier = ref.read(authProvider.notifier);
 
     // Listen to auth state changes
-    ref.listen(authProvider, (previous, next) {
+    ref.listen(authProvider, (_, next) {
       next.maybeWhen(
         authenticated: (user) {
           context.router.replaceAll([const HomeRoute()]);

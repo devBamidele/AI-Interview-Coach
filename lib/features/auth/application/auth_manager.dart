@@ -1,43 +1,73 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../data/datasources/auth_local_datasource.dart';
 import '../data/models/auth_session_dto.dart';
 import '../domain/entities/auth_session.dart';
 import '../domain/entities/user.dart';
 
-class AuthManager {
-  static final instance = AuthManager._();
-  final _localSource = AuthLocalDataSourceImpl();
+part 'auth_manager.g.dart';
 
-  User? user;
-  AuthSession? _session;
+/// State for AuthManager
+class AuthManagerState {
+  final User? user;
+  final AuthSession? session;
 
-  AuthManager._() {
-    init();
+  const AuthManagerState({this.user, this.session});
+
+  AuthManagerState copyWith({User? user, AuthSession? session}) {
+    return AuthManagerState(
+      user: user ?? this.user,
+      session: session ?? this.session,
+    );
   }
 
-  Future<void> init() async {
+  String? get accessToken => session?.accessToken;
+  String? get refreshToken => session?.refreshToken;
+  bool get isLoggedIn => session?.accessToken != null;
+}
+
+@Riverpod(keepAlive: true)
+class AuthManager extends _$AuthManager {
+  int _buildId = 0;
+  late final AuthLocalDataSource _localSource;
+
+  @override
+  AuthManagerState build() {
+    _localSource = ref.read(authLocalDataSourceProvider);
+    final currentBuild = ++_buildId;
+    _init(currentBuild);
+    return const AuthManagerState();
+  }
+
+  Future<void> _init(int buildId) async {
     final sessionDto = await _localSource.getAuthSession();
+    if (buildId != _buildId) return;
+
     if (sessionDto != null) {
-      _session = sessionDto.toEntity();
-      user = _session?.user;
+      final session = sessionDto.toEntity();
+      state = AuthManagerState(session: session, user: session.user);
     }
   }
 
   Future<void> saveAuthSession(AuthSession session) async {
     final sessionDto = AuthSessionDto.fromEntity(session);
     await _localSource.saveAuthSession(sessionDto);
-    _session = session;
-    user = session.user;
+    state = AuthManagerState(session: session, user: session.user);
   }
 
   /// Save only the access token (used by network interceptor)
   Future<void> saveAccessToken(String accessToken) async {
     await _localSource.updateAccessToken(accessToken);
-    if (_session != null) {
-      _session = AuthSession(
+    if (state.session != null) {
+      final updatedSession = AuthSession(
         accessToken: accessToken,
-        refreshToken: _session!.refreshToken,
-        user: _session!.user,
-        expiresAt: _session!.expiresAt,
+        refreshToken: state.session!.refreshToken,
+        user: state.session!.user,
+        expiresAt: state.session!.expiresAt,
+      );
+      state = AuthManagerState(
+        session: updatedSession,
+        user: updatedSession.user,
       );
     }
   }
@@ -45,18 +75,15 @@ class AuthManager {
   /// Clear authenticated user and session
   Future<void> clearAuthenticatedUser() async {
     await _localSource.clearAuthSession();
-    _session = null;
-    user = null;
+    state = const AuthManagerState();
   }
 
   Future<void> logout() async {
     await clearAuthenticatedUser();
   }
 
-  String? get accessToken => _session?.accessToken;
-
-  /// Get refresh token (used by network interceptor)
-  String? get refreshToken => _session?.refreshToken;
-
-  bool get isLoggedIn => _session?.accessToken != null;
+  String? get accessToken => state.accessToken;
+  String? get refreshToken => state.refreshToken;
+  bool get isLoggedIn => state.isLoggedIn;
+  User? get user => state.user;
 }

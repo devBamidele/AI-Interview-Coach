@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/datasources/transcription_websocket_datasource.dart';
 import '../data/models/room_connection_params.dart';
 import '../data/repositories/interview_analysis_repository_impl.dart';
 import '../data/repositories/livekit_repository_impl.dart';
-import '../data/repositories/transcription_repository_impl.dart';
 import '../domain/repositories/interview_analysis_repository.dart';
 import '../domain/repositories/livekit_repository.dart';
 import 'interview_state.dart';
@@ -199,20 +197,22 @@ class InterviewNotifier extends _$InterviewNotifier {
     // We need to create a stream listener that waits for it
     final completer = Completer<String?>();
 
-    // Access the websocket datasource directly to listen for session_complete
+    // Listen for session complete events through the repository abstraction
     try {
       final repository = ref.read(transcriptionRepositoryProvider);
-      final dataSource = (repository as TranscriptionRepositoryImpl).dataSource;
 
-      _transcriptionSubscription = dataSource.messages.listen((message) {
-        if (message.type == TranscriptionMessageType.sessionComplete) {
-          final data = message.data as Map<String, dynamic>;
-          final interviewId = data['interviewId'] as String?;
+      _transcriptionSubscription = repository.sessionCompleteStream.listen(
+        (interviewId) {
           if (!completer.isCompleted) {
             completer.complete(interviewId);
           }
-        }
-      });
+        },
+        onError: (_) {
+          if (!completer.isCompleted) {
+            completer.complete(null);
+          }
+        },
+      );
     } catch (e) {
       if (!completer.isCompleted) {
         completer.complete(null);

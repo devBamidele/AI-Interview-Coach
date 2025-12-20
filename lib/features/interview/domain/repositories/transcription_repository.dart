@@ -22,6 +22,9 @@ abstract class TranscriptionRepository {
   /// Stream of transcript events
   Stream<Either<Failure, TranscriptEvent>> get transcriptStream;
 
+  /// Stream of session complete events with interview ID
+  Stream<String?> get sessionCompleteStream;
+
   /// Check if connected
   bool get isConnected;
 

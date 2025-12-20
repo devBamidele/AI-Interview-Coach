@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/auth_session_dto.dart';
+
+part 'auth_local_datasource.g.dart';
 
 /// Local data source for authentication session storage
 abstract class AuthLocalDataSource {
@@ -55,4 +58,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final updatedSession = session.copyWith(accessToken: accessToken);
     await saveAuthSession(updatedSession);
   }
+}
+
+@riverpod
+AuthLocalDataSource authLocalDataSource(_) {
+  return AuthLocalDataSourceImpl();
 }
