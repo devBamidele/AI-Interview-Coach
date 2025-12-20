@@ -1,21 +1,19 @@
-import 'dart:io';
-
 import 'package:ai_interview_mvp/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../common/styles/component_style.dart';
 import '../../../../common/styles/text_style.dart';
 import '../../../../config/router/app_router.dart';
-import '../../../../constants/asset_paths.dart';
 import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
 import '../../application/auth_state.dart';
+import '../widgets/extras.dart';
+import '../widgets/social_auth_buttons.dart';
 
 @RoutePage()
 class LoginPage extends HookConsumerWidget {
@@ -139,16 +137,10 @@ class LoginPage extends HookConsumerWidget {
                       obscureText: isPasswordVisible.value,
                       onFieldSubmitted: (_) => validate(),
                       validation: (pass) => pass?.checkLoginPassword(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          isPasswordVisible.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: passwordFocusNode.hasFocus
-                              ? AppColors.black
-                              : AppColors.hintTextColor,
-                        ),
-                        onPressed: togglePasswordVisibility,
+                      suffixIcon: passwordVisibilityIcon(
+                        isPasswordVisible: isPasswordVisible,
+                        focusNode: passwordFocusNode,
+                        onToggle: togglePasswordVisibility,
                       ),
                     ),
                   ),
@@ -189,33 +181,9 @@ class LoginPage extends HookConsumerWidget {
                 ),
 
                 addHeight(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (Platform.isIOS) ...[
-                      Expanded(
-                        child: OutlinedAppButton(
-                          onPress: loginWithApple,
-                          child: Icon(
-                            Icons.apple_rounded,
-                            color: Colors.black,
-                            size: 29.r,
-                          ),
-                        ),
-                      ),
-                      addWidth(16),
-                    ],
-
-                    Expanded(
-                      child: OutlinedAppButton(
-                        onPress: loginWithGoogle,
-                        child: Transform.scale(
-                          scale: 0.9,
-                          child: SvgPicture.asset(AppAssets.googleLogo),
-                        ),
-                      ),
-                    ),
-                  ],
+                SocialAuthButtons(
+                  onGooglePressed: loginWithGoogle,
+                  onApplePressed: loginWithApple,
                 ),
               ],
             ),

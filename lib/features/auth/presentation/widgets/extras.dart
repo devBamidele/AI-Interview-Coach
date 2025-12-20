@@ -59,3 +59,18 @@ Row passwordRequirementRow(
     ],
   );
 }
+
+/// Password visibility toggle icon button
+IconButton passwordVisibilityIcon({
+  required ValueNotifier<bool> isPasswordVisible,
+  required FocusNode focusNode,
+  required VoidCallback onToggle,
+}) {
+  return IconButton(
+    icon: Icon(
+      isPasswordVisible.value ? Icons.visibility_off : Icons.visibility,
+      color: focusNode.hasFocus ? AppColors.black : AppColors.hintTextColor,
+    ),
+    onPressed: onToggle,
+  );
+}
