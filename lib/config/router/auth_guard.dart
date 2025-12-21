@@ -11,9 +11,10 @@ class AuthGuard extends AutoRouteGuard {
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    final authManager = _ref.read(authManagerProvider.notifier);
+    // Watch the state instead of reading the notifier
+    final authState = _ref.read(authManagerProvider);
 
-    if (authManager.isLoggedIn) {
+    if (authState.isLoggedIn) {
       // User is authenticated, allow navigation
       resolver.next(true);
     } else {

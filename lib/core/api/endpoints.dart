@@ -5,9 +5,9 @@ class Endpoints {
   Endpoints._();
 
   /// Base URL for LiveKit token service
-  static const String base = AppConfig.backendUrl;
+  static String base = AppConfig.backendUrl;
 
-  static const String apiDocs = '$base/api/docs';
+  static String apiDocs = '$base/api/docs';
 
   /// Get LiveKit token endpoint (POST)
   static String getLiveKitToken() {

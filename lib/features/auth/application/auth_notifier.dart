@@ -34,16 +34,10 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     state = const AuthState.loading();
 
-    final result = await _repository.login(
-      email: email,
-      password: password,
-    );
+    final result = await _repository.login(email: email, password: password);
 
     result.fold(
       (failure) {

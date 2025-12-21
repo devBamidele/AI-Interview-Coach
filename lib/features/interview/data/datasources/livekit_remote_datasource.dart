@@ -13,8 +13,8 @@ part 'livekit_remote_datasource.g.dart';
 @riverpod
 LiveKitRemoteDataSource liveKitRemoteDataSource(Ref ref) {
   return LiveKitRemoteDataSourceImpl(
-    networkRequest: ref.watch(networkRequestProvider),
-    networkRetry: ref.watch(networkRetryProvider),
+    networkRequest: ref.read(networkRequestProvider),
+    networkRetry: ref.read(networkRetryProvider),
   );
 }
 

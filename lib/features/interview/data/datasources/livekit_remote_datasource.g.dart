@@ -55,4 +55,4 @@ final class LiveKitRemoteDataSourceProvider
 }
 
 String _$liveKitRemoteDataSourceHash() =>
-    r'cdba443d192af72bcd4cd6bafc9ecc5a3fd32905';
+    r'9b60bb6717ed15ca999c0b65f9524daeb2613b4a';

@@ -14,7 +14,9 @@
       "Bash(dart format:*)",
       "Bash(tree:*)",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(lsof:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

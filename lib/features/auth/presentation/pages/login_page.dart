@@ -36,14 +36,16 @@ class LoginPage extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
-    // Listen to auth state changes
     ref.listen(authProvider, (_, next) {
       next.maybeWhen(
         authenticated: (user) {
           context.router.replaceAll([const HomeRoute()]);
         },
         error: (message) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+
+          messenger.clearSnackBars(); // <- dismiss existing ones
+          messenger.showSnackBar(
             SnackBar(content: Text(message), backgroundColor: Colors.red),
           );
         },

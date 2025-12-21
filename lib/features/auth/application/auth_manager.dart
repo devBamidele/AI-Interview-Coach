@@ -11,13 +11,23 @@ part 'auth_manager.g.dart';
 class AuthManagerState {
   final User? user;
   final AuthSession? session;
+  final bool isInitialized;
 
-  const AuthManagerState({this.user, this.session});
+  const AuthManagerState({
+    this.user,
+    this.session,
+    this.isInitialized = false,
+  });
 
-  AuthManagerState copyWith({User? user, AuthSession? session}) {
+  AuthManagerState copyWith({
+    User? user,
+    AuthSession? session,
+    bool? isInitialized,
+  }) {
     return AuthManagerState(
       user: user ?? this.user,
       session: session ?? this.session,
+      isInitialized: isInitialized ?? this.isInitialized,
     );
   }
 
@@ -45,14 +55,24 @@ class AuthManager extends _$AuthManager {
 
     if (sessionDto != null) {
       final session = sessionDto.toEntity();
-      state = AuthManagerState(session: session, user: session.user);
+      state = AuthManagerState(
+        session: session,
+        user: session.user,
+        isInitialized: true,
+      );
+    } else {
+      state = const AuthManagerState(isInitialized: true);
     }
   }
 
   Future<void> saveAuthSession(AuthSession session) async {
     final sessionDto = AuthSessionDto.fromEntity(session);
     await _localSource.saveAuthSession(sessionDto);
-    state = AuthManagerState(session: session, user: session.user);
+    state = AuthManagerState(
+      session: session,
+      user: session.user,
+      isInitialized: true,
+    );
   }
 
   /// Save only the access token (used by network interceptor)
@@ -68,6 +88,7 @@ class AuthManager extends _$AuthManager {
       state = AuthManagerState(
         session: updatedSession,
         user: updatedSession.user,
+        isInitialized: true,
       );
     }
   }
@@ -75,7 +96,7 @@ class AuthManager extends _$AuthManager {
   /// Clear authenticated user and session
   Future<void> clearAuthenticatedUser() async {
     await _localSource.clearAuthSession();
-    state = const AuthManagerState();
+    state = const AuthManagerState(isInitialized: true);
   }
 
   Future<void> logout() async {

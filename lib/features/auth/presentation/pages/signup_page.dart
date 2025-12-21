@@ -76,7 +76,10 @@ class SignupPage extends HookConsumerWidget {
           context.router.replaceAll([const HomeRoute()]);
         },
         error: (message) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+
+          messenger.clearSnackBars(); // <- dismiss existing ones
+          messenger.showSnackBar(
             SnackBar(content: Text(message), backgroundColor: Colors.red),
           );
         },

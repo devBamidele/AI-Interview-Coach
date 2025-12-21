@@ -58,4 +58,4 @@ final class UserInterviewsRemoteDataSourceProvider
 }
 
 String _$userInterviewsRemoteDataSourceHash() =>
-    r'83f87fb5c0bec5ae47e5216b753d193624bec081';
+    r'70da559e611a3544a2142abf8e40d117473f00c6';

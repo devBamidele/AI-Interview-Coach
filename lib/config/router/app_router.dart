@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../core/presentation/pages/splash_screen.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/interview/presentation/pages/analysis_results_page.dart';
@@ -24,12 +25,15 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
+    // Splash screen (initial route)
+    AutoRoute(page: SplashRoute.page, initial: true),
+
     // Auth routes (no guard)
     AutoRoute(page: LoginRoute.page),
     AutoRoute(page: SignupRoute.page),
 
     // Protected routes (with auth guard)
-    AutoRoute(page: HomeRoute.page, initial: true, guards: [_authGuard]),
+    AutoRoute(page: HomeRoute.page, guards: [_authGuard]),
     AutoRoute(page: InterviewRoute.page, guards: [_authGuard]),
     AutoRoute(page: AnalysisResultsRoute.page, guards: [_authGuard]),
     AutoRoute(page: InterviewListRoute.page, guards: [_authGuard]),

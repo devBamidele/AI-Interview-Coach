@@ -13,7 +13,7 @@ part 'auth_remote_datasource.g.dart';
 @riverpod
 AuthRemoteDataSource authRemoteDataSource(Ref ref) {
   return AuthRemoteDataSourceImpl(
-    networkRequest: ref.watch(networkRequestProvider),
+    networkRequest: ref.read(networkRequestProvider),
   );
 }
 

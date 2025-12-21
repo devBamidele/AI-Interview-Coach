@@ -11,8 +11,8 @@ part 'interview_analysis_remote_datasource.g.dart';
 @riverpod
 InterviewAnalysisRemoteDataSource interviewAnalysisRemoteDataSource(Ref ref) {
   return InterviewAnalysisRemoteDataSourceImpl(
-    networkRequest: ref.watch(networkRequestProvider),
-    networkRetry: ref.watch(networkRetryProvider),
+    networkRequest: ref.read(networkRequestProvider),
+    networkRetry: ref.read(networkRetryProvider),
   );
 }
 

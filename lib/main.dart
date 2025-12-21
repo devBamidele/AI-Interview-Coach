@@ -14,7 +14,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -29,7 +29,7 @@ class MyApp extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp.router(
-        title: 'AI Interview',
+        title: 'Rehearse',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         routerConfig: appRouter.config(),

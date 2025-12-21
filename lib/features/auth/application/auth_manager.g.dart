@@ -41,7 +41,7 @@ final class AuthManagerProvider
   }
 }
 
-String _$authManagerHash() => r'2e46f4cd5113d1793c82db8182ce6def6d4a0a40';
+String _$authManagerHash() => r'0061dd6dca215fb8ccdc81f8c6bc121e142eeab9';
 
 abstract class _$AuthManager extends $Notifier<AuthManagerState> {
   AuthManagerState build();

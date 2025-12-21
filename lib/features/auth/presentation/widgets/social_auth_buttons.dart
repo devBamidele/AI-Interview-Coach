@@ -22,15 +22,11 @@ class SocialAuthButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (Platform.isIOS) ...[
+        if (Platform.isIOS || Platform.isMacOS) ...[
           Expanded(
             child: OutlinedAppButton(
               onPress: onApplePressed,
-              child: Icon(
-                Icons.apple_rounded,
-                color: Colors.black,
-                size: 29.r,
-              ),
+              child: Icon(Icons.apple_rounded, color: Colors.black, size: 29.r),
             ),
           ),
           addWidth(16),

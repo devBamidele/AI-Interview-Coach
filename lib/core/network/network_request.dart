@@ -9,11 +9,7 @@ part 'network_request.g.dart';
 
 @riverpod
 NetworkRequest networkRequest(Ref ref) {
-  final request = NetworkRequestImpl(ref.read(authManagerProvider.notifier));
-
-  ref.onDispose(() => request.dispose());
-
-  return request;
+  return NetworkRequestImpl(ref.read(authManagerProvider.notifier));
 }
 
 abstract class NetworkRequest {
@@ -78,8 +74,6 @@ class NetworkRequestImpl implements NetworkRequest {
       options: Options(headers: headers),
     );
   }
-
-  void dispose() => _dio.close(force: true);
 }
 
 extension ResponseExtension on Response {

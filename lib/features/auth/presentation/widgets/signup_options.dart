@@ -22,7 +22,7 @@ class SignupOptions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (Platform.isIOS) ...[
+        if (Platform.isIOS || Platform.isMacOS) ...[
           OutlinedAppButton(
             onPress: signUpWithApple,
             child: Row(
