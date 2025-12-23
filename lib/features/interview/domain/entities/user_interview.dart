@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'interview_analysis.dart';
 
 part 'user_interview.freezed.dart';
 
-/// Summary of a user's interview
+/// User interview summary entity from backend
+/// Lightweight version for list views (80-90% smaller than full data)
+/// Backend: GET /api/interviews/my-interviews/summary
 @freezed
 sealed class UserInterview with _$UserInterview {
   const factory UserInterview({
@@ -11,51 +12,18 @@ sealed class UserInterview with _$UserInterview {
     required String status,
     required String createdAt,
     required double duration,
-    String? recordingUrl,
-    UserInfo? userId,
-    UserInterviewMetrics? metrics,
-    UserInterviewAIAnalysis? aiAnalysis,
-    // Market sizing specific fields
     String? caseQuestion,
     String? difficulty,
     String? candidateAnswer,
-    double? caseAnalysisScore,
-    String? caseAnalysisLabel,
+    // Summary scores only (not full analysis breakdown)
+    double? overallWeightedScore,
+    String? overallLabel,
   }) = _UserInterview;
 
   const UserInterview._();
 
   /// Check if this is a market sizing interview
-  bool get isMarketSizing => caseQuestion != null;
-}
-
-/// User information in interview
-@freezed
-sealed class UserInfo with _$UserInfo {
-  const factory UserInfo({required String email, required String name}) =
-      _UserInfo;
-}
-
-/// Summary of metrics for list view
-@freezed
-sealed class UserInterviewMetrics with _$UserInterviewMetrics {
-  const factory UserInterviewMetrics({
-    required int averagePace,
-    required int totalWords,
-    required int fillerCount,
-    required int pauseCount,
-    required List<PacePoint> paceTimeline,
-  }) = _UserInterviewMetrics;
-}
-
-/// Summary of AI analysis for list view
-@freezed
-sealed class UserInterviewAIAnalysis with _$UserInterviewAIAnalysis {
-  const factory UserInterviewAIAnalysis({
-    required double overallScore,
-    required String summary,
-    required double confidenceScore,
-  }) = _UserInterviewAIAnalysis;
+  bool get isMarketSizing => overallWeightedScore != null && overallLabel != null;
 }
 
 /// Response containing list of interviews

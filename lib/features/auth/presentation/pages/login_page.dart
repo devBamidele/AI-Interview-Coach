@@ -87,108 +87,139 @@ class LoginPage extends HookConsumerWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: pagePadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                addHeight(40),
-                // Headers
-                Text('Welcome Back', style: TextStyles.title),
-                addHeight(8),
-                Text('Sign in to continue', style: TextStyles.hintThemeText),
-                addHeight(48),
-
-                // Email field
-                Padding(
-                  padding: EdgeInsets.only(bottom: 6.h),
-                  child: Text('Email', style: TextStyles.fieldHeader),
-                ),
-                Form(
-                  key: formKey1,
-                  child: Shake(
-                    key: shakeState1,
-                    child: AppTextField(
-                      enabled: !authState.isLoading,
-                      focusNode: emailFocusNode,
-                      textController: emailController,
-                      autoValidateMode: AutovalidateMode.onUnfocus,
-                      hintText: 'example@gmail.com',
-                      keyboardType: TextInputType.emailAddress,
-                      validation: (email) => email?.trim().validateEmail(),
-                    ),
-                  ),
-                ),
-                addHeight(12),
-
-                // Password field
-                Padding(
-                  padding: EdgeInsets.only(bottom: 6.h),
-                  child: Text('Password', style: TextStyles.fieldHeader),
-                ),
-                Form(
-                  key: formKey2,
-                  child: Shake(
-                    key: shakeState2,
-                    child: AppTextField(
-                      enabled: !authState.isLoading,
-                      focusNode: passwordFocusNode,
-                      textController: passwordController,
-                      action: TextInputAction.done,
-                      hintText: 'Password',
-                      obscureText: isPasswordVisible.value,
-                      onFieldSubmitted: (_) => validate(),
-                      validation: (pass) => pass?.checkLoginPassword(),
-                      suffixIcon: passwordVisibilityIcon(
-                        isPasswordVisible: isPasswordVisible,
-                        focusNode: passwordFocusNode,
-                        onToggle: togglePasswordVisibility,
-                      ),
-                    ),
-                  ),
-                ),
-                addHeight(24),
-
-                // Login button
-                AppButton(
-                  onPress: validate,
-                  text: 'Sign In',
-                  loading: authState.isLoading,
-                ),
-
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: OutlinedAppButton(
-                    onPress: () => context.router.push(const SignupRoute()),
-                    text: 'Create new account',
-                  ),
-                ),
-
-                addHeight(6),
-                Stack(
-                  alignment: Alignment.center,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: pagePadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Divider(color: AppColors.outlinedColor),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      color: Colors.white,
-                      child: Text(
-                        'or sign in with',
-                        style: TextStyles.fieldHeader.copyWith(
-                          color: AppColors.hintTextColor,
+                    addHeight(40),
+                    // Headers
+                    Text('Welcome Back', style: TextStyles.title),
+                    addHeight(8),
+                    Text('Sign in to continue', style: TextStyles.hintThemeText),
+                    addHeight(48),
+
+                    // Email field
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 6.h),
+                      child: Text('Email', style: TextStyles.fieldHeader),
+                    ),
+                    Form(
+                      key: formKey1,
+                      child: Shake(
+                        key: shakeState1,
+                        child: AppTextField(
+                          enabled: !authState.isLoading,
+                          focusNode: emailFocusNode,
+                          textController: emailController,
+                          autoValidateMode: AutovalidateMode.onUnfocus,
+                          hintText: 'example@gmail.com',
+                          keyboardType: TextInputType.emailAddress,
+                          validation: (email) => email?.trim().validateEmail(),
                         ),
                       ),
                     ),
+                    addHeight(12),
+
+                    // Password field
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 6.h),
+                      child: Text('Password', style: TextStyles.fieldHeader),
+                    ),
+                    Form(
+                      key: formKey2,
+                      child: Shake(
+                        key: shakeState2,
+                        child: AppTextField(
+                          enabled: !authState.isLoading,
+                          focusNode: passwordFocusNode,
+                          textController: passwordController,
+                          action: TextInputAction.done,
+                          hintText: 'Password',
+                          obscureText: isPasswordVisible.value,
+                          onFieldSubmitted: (_) => validate(),
+                          validation: (pass) => pass?.checkLoginPassword(),
+                          suffixIcon: passwordVisibilityIcon(
+                            isPasswordVisible: isPasswordVisible,
+                            focusNode: passwordFocusNode,
+                            onToggle: togglePasswordVisibility,
+                          ),
+                        ),
+                      ),
+                    ),
+                    addHeight(24),
+
+                    // Login button
+                    AppButton(
+                      onPress: validate,
+                      text: 'Sign In',
+                      loading: authState.isLoading,
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      child: OutlinedAppButton(
+                        onPress: () => context.router.push(const SignupRoute()),
+                        text: 'Create new account',
+                      ),
+                    ),
+
+                    addHeight(6),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Divider(color: AppColors.outlinedColor),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          color: Colors.white,
+                          child: Text(
+                            'or sign in with',
+                            style: TextStyles.fieldHeader.copyWith(
+                              color: AppColors.hintTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    addHeight(20),
+                    SocialAuthButtons(
+                      onGooglePressed: loginWithGoogle,
+                      onApplePressed: loginWithApple,
+                    ),
                   ],
                 ),
-
-                addHeight(20),
-                SocialAuthButtons(
-                  onGooglePressed: loginWithGoogle,
-                  onApplePressed: loginWithApple,
+              ),
+              // Ghost icon button in top-right corner
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      // TODO: Implement anonymous login
+                      context.router.replaceAll([const HomeRoute()]);
+                    },
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      padding: EdgeInsets.all(8.r),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Image.asset(
+                        'assets/icons/ghost.png',
+                        width: 24.r,
+                        height: 24.r,
+                      ),
+                    ),
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

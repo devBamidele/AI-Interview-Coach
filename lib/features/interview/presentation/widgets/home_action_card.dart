@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../common/styles/text_style.dart';
+import '../../../../constants/colors.dart';
 
 class HomeActionCardWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
-  final List<Color> gradient;
   final VoidCallback onTap;
 
   const HomeActionCardWidget({
@@ -14,78 +16,69 @@ class HomeActionCardWidget extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.gradient,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      clipBehavior: Clip.antiAlias,
-      color: Colors.transparent,
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
       child: InkWell(
         onTap: onTap,
-
-        borderRadius: BorderRadius.circular(24),
-        child: Ink(
+        borderRadius: BorderRadius.circular(12.r),
+        child: Container(
+          padding: EdgeInsets.all(20.w),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: gradient,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: AppColors.inputBackGround,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: AppColors.outlinedColor.withValues(alpha: 0.5),
+              width: 1,
             ),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: gradient.first.withValues(alpha: 0.4),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  color: AppColors.buttonColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(
+                  icon,
+                  size: 28.sp,
+                  color: AppColors.buttonColor,
+                ),
+              ),
+              addWidth(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyles.fieldHeader.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    addHeight(4),
+                    Text(
+                      subtitle,
+                      style: TextStyles.hintThemeText.copyWith(
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.hintTextColor,
+                size: 16.sp,
               ),
             ],
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(32),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(icon, size: 32, color: Colors.white),
-                ),
-                addWidth(24),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      addHeight(4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.white.withValues(alpha: 0.8),
-                  size: 20,
-                ),
-              ],
-            ),
           ),
         ),
       ),

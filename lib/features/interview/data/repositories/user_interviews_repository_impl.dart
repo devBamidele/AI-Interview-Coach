@@ -26,10 +26,10 @@ class UserInterviewsRepositoryImpl extends ServiceRunner
 
   @override
   Future<Either<Failure, UserInterviewsResponse>> getUserInterviews(
-    String participantIdentity,
+    String accessToken,
   ) {
     return run(() async {
-      final dto = await _remoteDataSource.getUserInterviews(participantIdentity);
+      final dto = await _remoteDataSource.getUserInterviews(accessToken);
       return dto.toEntity();
     }, errorTitle: 'Failed to fetch interviews');
   }

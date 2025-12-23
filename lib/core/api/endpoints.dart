@@ -14,14 +14,17 @@ class Endpoints {
     return '${AppConfig.backendUrl}/api/livekit/token';
   }
 
-  /// Get interview analysis by ID (GET)
-  static String getInterviewAnalysis(String interviewId) {
-    return '${AppConfig.backendUrl}/api/interviews/$interviewId';
+  /// Get interview analysis by token (GET)
+  /// Requires x-interview-token header
+  static String get getInterviewAnalysis {
+    return '${AppConfig.backendUrl}/api/interviews/interview';
   }
 
-  /// Get all interviews for a user (GET)
-  static String getUserInterviews(String participantIdentity) {
-    return '${AppConfig.backendUrl}/api/interviews/user/$participantIdentity';
+  /// Get all interviews for a user - SUMMARY ONLY (GET)
+  /// Optimized endpoint with 80-90% smaller payload
+  /// Requires x-interview-token header
+  static String get getUserInterviewsSummary {
+    return '${AppConfig.backendUrl}/api/interviews/my-interviews/summary';
   }
 
   // Authentication endpoints

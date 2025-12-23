@@ -2,6 +2,17 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/transcript_event.dart';
 
+/// Session complete data containing interview ID and access token
+class SessionCompleteData {
+  final String interviewId;
+  final String accessToken;
+
+  const SessionCompleteData({
+    required this.interviewId,
+    required this.accessToken,
+  });
+}
+
 /// Repository interface for transcription operations
 abstract class TranscriptionRepository {
   /// Connect to transcription service
@@ -22,8 +33,8 @@ abstract class TranscriptionRepository {
   /// Stream of transcript events
   Stream<Either<Failure, TranscriptEvent>> get transcriptStream;
 
-  /// Stream of session complete events with interview ID
-  Stream<String?> get sessionCompleteStream;
+  /// Stream of session complete events with interview ID and access token
+  Stream<SessionCompleteData?> get sessionCompleteStream;
 
   /// Check if connected
   bool get isConnected;

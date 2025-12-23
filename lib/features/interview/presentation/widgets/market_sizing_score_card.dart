@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../domain/entities/case_analysis.dart';
 
 class MarketSizingScoreCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class MarketSizingScoreCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.blue.withValues(alpha: .3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -44,31 +45,31 @@ class MarketSizingScoreCard extends StatelessWidget {
           Text(
             '${caseAnalysis.overallWeightedScore.toStringAsFixed(2)}/5.0',
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             caseAnalysis.overallLabel,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: .2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               'MBB Evaluation Score',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           if (caseQuestion != null) ...[
@@ -76,8 +77,8 @@ class MarketSizingScoreCard extends StatelessWidget {
             Text(
               caseQuestion!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
-                  ),
+                color: Colors.white.withValues(alpha: .9),
+              ),
               textAlign: TextAlign.center,
             ),
           ],

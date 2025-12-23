@@ -123,7 +123,7 @@ class InterviewListItemWidget extends StatelessWidget {
                         color: Colors.grey.shade600,
                       ),
                     ),
-                    if (isMarketSizing && interview.caseQuestion != null) ...[
+                    if (interview.caseQuestion != null) ...[
                       const SizedBox(height: 6),
                       Text(
                         interview.caseQuestion!,
@@ -135,29 +135,14 @@ class InterviewListItemWidget extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    ] else if (interview.aiAnalysis != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        interview.aiAnalysis!.summary.length > 80
-                            ? '${interview.aiAnalysis!.summary.substring(0, 80)}...'
-                            : interview.aiAnalysis!.summary,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade700,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ],
                   ],
                 ),
               ),
 
               // Score Badge
-              if (isMarketSizing && interview.caseAnalysisScore != null)
-                _buildCaseScoreBadge(interview.caseAnalysisScore!)
-              else if (interview.aiAnalysis != null)
-                _buildGenericScoreBadge(interview.aiAnalysis!.overallScore)
+              if (isMarketSizing && interview.overallWeightedScore != null)
+                _buildCaseScoreBadge(interview.overallWeightedScore!)
               else
                 _buildStatusBadge(interview.status),
 
@@ -196,32 +181,6 @@ class InterviewListItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildGenericScoreBadge(double score) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: _getScoreColor(score).withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Text(
-            score.toStringAsFixed(1),
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: _getScoreColor(score),
-            ),
-          ),
-          Text(
-            'Score',
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStatusBadge(String status) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -251,13 +210,6 @@ class InterviewListItemWidget extends StatelessWidget {
       default:
         return Colors.grey;
     }
-  }
-
-  Color _getScoreColor(double score) {
-    if (score >= 8) return Colors.green;
-    if (score >= 6) return Colors.blue;
-    if (score >= 4) return Colors.orange;
-    return Colors.red;
   }
 
   Color _getCaseScoreColor(double score) {

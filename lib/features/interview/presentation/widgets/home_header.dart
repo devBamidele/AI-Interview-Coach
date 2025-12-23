@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../common/styles/text_style.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
   const HomeHeaderWidget({super.key});
@@ -10,23 +11,11 @@ class HomeHeaderWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'AI Interview',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: -0.5,
-          ),
-        ),
+        Text('Welcome Back', style: TextStyles.title),
         addHeight(8),
         Text(
           'Practice. Improve. Succeed.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white.withValues(alpha: 0.9),
-            fontWeight: FontWeight.w400,
-          ),
+          style: TextStyles.hintThemeText,
         ),
       ],
     );

@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../config/router/app_router.dart';
-import '../../../../core/constants/app_config.dart';
 import '../../application/user_interviews_notifier.dart';
 import '../widgets/interview_list_item.dart';
 
@@ -22,7 +21,7 @@ class InterviewListPage extends HookConsumerWidget {
         // First load - fetch interviews
         ref
             .read(userInterviewsProvider.notifier)
-            .fetchUserInterviews(AppConfig.defaultParticipantPrefix);
+            .fetchUserInterviews();
       }
     });
 
@@ -45,7 +44,7 @@ class InterviewListPage extends HookConsumerWidget {
             onPressed: () {
               ref
                   .read(userInterviewsProvider.notifier)
-                  .fetchUserInterviews(AppConfig.defaultParticipantPrefix);
+                  .fetchUserInterviews();
             },
           ),
         ],
@@ -57,7 +56,7 @@ class InterviewListPage extends HookConsumerWidget {
             Future.microtask(() {
               ref
                   .read(userInterviewsProvider.notifier)
-                  .fetchUserInterviews(AppConfig.defaultParticipantPrefix);
+                  .fetchUserInterviews();
             });
             return const Center(child: CircularProgressIndicator());
           }

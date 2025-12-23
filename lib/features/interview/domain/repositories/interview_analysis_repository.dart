@@ -5,11 +5,11 @@ import '../entities/interview_analysis.dart';
 
 /// Repository interface for interview analysis operations
 abstract class InterviewAnalysisRepository {
-  /// Get interview analysis by ID with polling support
-  Future<Either<Failure, InterviewAnalysis>> getAnalysis(String interviewId);
+  /// Get interview analysis by access token
+  Future<Either<Failure, InterviewAnalysis>> getAnalysis(String accessToken);
 
   /// Poll for interview analysis with exponential backoff
   Future<Either<Failure, InterviewAnalysis>> pollForAnalysis(
-    String interviewId,
+    String accessToken,
   );
 }

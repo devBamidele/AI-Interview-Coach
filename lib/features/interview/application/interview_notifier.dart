@@ -8,7 +8,9 @@ import '../data/repositories/interview_analysis_repository_impl.dart';
 import '../data/repositories/livekit_repository_impl.dart';
 import '../domain/repositories/interview_analysis_repository.dart';
 import '../domain/repositories/livekit_repository.dart';
+import '../domain/repositories/transcription_repository.dart';
 import 'interview_state.dart';
+import 'interview_token_store.dart';
 import 'network_quality_notifier.dart';
 import 'transcription_notifier.dart';
 
@@ -145,26 +147,33 @@ class InterviewNotifier extends _$InterviewNotifier {
       final transcriptionNotifier = ref.read(transcriptionProvider.notifier);
       transcriptionNotifier.completeInterview();
 
-      // Wait for session_complete message with interviewId
-      final interviewId = await _waitForInterviewId();
+      // Wait for session_complete message with interviewId and accessToken
+      final sessionData = await _waitForSessionComplete();
 
-      if (interviewId == null) {
+      if (sessionData == null) {
         state = const InterviewState.analysisFailed(
           'Failed to complete interview. Please try again.',
         );
         return;
       }
 
+      // Store the access token
+      final tokenStore = ref.read(interviewTokenStoreProvider);
+      await tokenStore.storeToken(
+        sessionData.interviewId,
+        sessionData.accessToken,
+      );
+
       // Disconnect from LiveKit
       await _repository.disconnect(_room);
       _room = null;
 
       // Start analyzing
-      state = InterviewState.analyzing(interviewId);
+      state = InterviewState.analyzing(sessionData.interviewId);
 
-      // Poll for analysis with exponential backoff
+      // Poll for analysis with exponential backoff using the access token
       final analysisResult = await _analysisRepository.pollForAnalysis(
-        interviewId,
+        sessionData.accessToken,
       );
 
       analysisResult.fold(
@@ -173,7 +182,10 @@ class InterviewNotifier extends _$InterviewNotifier {
         },
         (analysis) {
           if (analysis.status == 'completed') {
-            state = InterviewState.analysisComplete(analysis, interviewId);
+            state = InterviewState.analysisComplete(
+              analysis,
+              sessionData.interviewId,
+            );
           } else if (analysis.status == 'failed') {
             state = const InterviewState.analysisFailed(
               'Interview analysis failed. Please try again.',
@@ -192,19 +204,19 @@ class InterviewNotifier extends _$InterviewNotifier {
     }
   }
 
-  Future<String?> _waitForInterviewId() async {
-    // The interviewId will come through the WebSocket message
+  Future<SessionCompleteData?> _waitForSessionComplete() async {
+    // The session complete data will come through the WebSocket message
     // We need to create a stream listener that waits for it
-    final completer = Completer<String?>();
+    final completer = Completer<SessionCompleteData?>();
 
     // Listen for session complete events through the repository abstraction
     try {
       final repository = ref.read(transcriptionRepositoryProvider);
 
       _transcriptionSubscription = repository.sessionCompleteStream.listen(
-        (interviewId) {
+        (sessionData) {
           if (!completer.isCompleted) {
-            completer.complete(interviewId);
+            completer.complete(sessionData);
           }
         },
         onError: (_) {

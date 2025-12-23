@@ -16,7 +16,7 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
   final StreamController<Either<Failure, TranscriptEvent>>
   _transcriptController = StreamController.broadcast();
 
-  final StreamController<String?> _sessionCompleteController =
+  final StreamController<SessionCompleteData?> _sessionCompleteController =
       StreamController.broadcast();
 
   StreamSubscription? _messageSubscription;
@@ -45,7 +45,18 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
             case TranscriptionMessageType.sessionComplete:
               final data = message.data as Map<String, dynamic>;
               final interviewId = data['interviewId'] as String?;
-              _sessionCompleteController.add(interviewId);
+              final accessToken = data['accessToken'] as String?;
+
+              if (interviewId != null && accessToken != null) {
+                _sessionCompleteController.add(
+                  SessionCompleteData(
+                    interviewId: interviewId,
+                    accessToken: accessToken,
+                  ),
+                );
+              } else {
+                _sessionCompleteController.add(null);
+              }
               break;
             case TranscriptionMessageType.started:
             case TranscriptionMessageType.stopped:
@@ -99,7 +110,7 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
       _transcriptController.stream;
 
   @override
-  Stream<String?> get sessionCompleteStream =>
+  Stream<SessionCompleteData?> get sessionCompleteStream =>
       _sessionCompleteController.stream;
 
   @override

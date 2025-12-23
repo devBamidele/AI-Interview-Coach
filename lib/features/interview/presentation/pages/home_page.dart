@@ -1,86 +1,57 @@
 import 'package:ai_interview_mvp/common/components/Box/box.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../common/styles/component_style.dart';
 import '../../../../config/router/app_router.dart';
+import '../../../auth/application/auth_manager.dart';
 import '../widgets/home_action_card.dart';
 import '../widgets/home_header.dart';
 
 @RoutePage()
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authManagerProvider);
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                Theme.of(context).colorScheme.secondary,
-              ],
-            ),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  const HomeHeaderWidget(),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: pagePadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              addHeight(40),
 
-                  addHeight(60),
+              // Header
+              const HomeHeaderWidget(),
 
-                  // Main Actions
-                  Expanded(
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 500),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            HomeActionCardWidget(
-                              title: 'Start New Interview',
-                              subtitle: 'Practice with AI interviewer',
-                              icon: Icons.mic_rounded,
-                              gradient: [
-                                Colors.blue.shade600,
-                                Colors.blue.shade400,
-                              ],
-                              onTap: () =>
-                                  context.router.push(const InterviewRoute()),
-                            ),
+              addHeight(48),
 
-                            addHeight(24),
-
-                            HomeActionCardWidget(
-                              title: 'View Past Interviews',
-                              subtitle: 'Review your performance',
-                              icon: Icons.assessment_rounded,
-                              gradient: [
-                                Colors.purple.shade600,
-                                Colors.purple.shade400,
-                              ],
-                              onTap: () => context.router.push(
-                                const InterviewListRoute(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              // Main Actions
+              HomeActionCardWidget(
+                title: 'Start New Interview',
+                subtitle: 'Practice with AI interviewer',
+                icon: Icons.mic_rounded,
+                onTap: () => context.router.push(const InterviewRoute()),
               ),
-            ),
+
+              addHeight(16),
+
+              // Only show "View Past Interviews" for authenticated users
+              if (authState.isLoggedIn)
+                HomeActionCardWidget(
+                  title: 'View Past Interviews',
+                  subtitle: 'Review your performance',
+                  icon: Icons.assessment_rounded,
+                  onTap: () => context.router.push(const InterviewListRoute()),
+                ),
+
+              addHeight(40),
+            ],
           ),
         ),
       ),

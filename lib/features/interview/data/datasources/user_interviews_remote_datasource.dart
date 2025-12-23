@@ -17,9 +17,7 @@ UserInterviewsRemoteDataSource userInterviewsRemoteDataSource(Ref ref) {
 }
 
 abstract class UserInterviewsRemoteDataSource {
-  Future<UserInterviewsResponseDto> getUserInterviews(
-    String participantIdentity,
-  );
+  Future<UserInterviewsResponseDto> getUserInterviews(String accessToken);
 }
 
 class UserInterviewsRemoteDataSourceImpl
@@ -34,15 +32,25 @@ class UserInterviewsRemoteDataSourceImpl
 
   @override
   Future<UserInterviewsResponseDto> getUserInterviews(
-    String participantIdentity,
+    String accessToken,
   ) async {
-    final url = Endpoints.getUserInterviews(participantIdentity);
+    // Use optimized summary endpoint (80-90% smaller payload)
+    final url = Endpoints.getUserInterviewsSummary;
 
     final response = await networkRetry.networkRetry(
-      () => networkRequest.get(url),
+      () => networkRequest.get(
+        url,
+        headers: {'x-interview-token': accessToken},
+      ),
     );
 
     if (!response.isSuccess) {
+      // Handle 401 Unauthorized (invalid/missing token)
+      if (response.statusCode == 401) {
+        throw ServerException(
+          'Invalid or expired interview access token',
+        );
+      }
       throw ServerException(
         'Failed to get user interviews with status ${response.statusCode}',
       );
