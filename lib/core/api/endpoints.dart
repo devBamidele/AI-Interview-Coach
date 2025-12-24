@@ -41,6 +41,10 @@ class Endpoints {
   /// Logout endpoint (POST)
   static String get logout => '$base/api/auth/logout';
 
+  /// Anonymous session endpoint (POST)
+  /// Creates or retrieves anonymous user session with JWT tokens
+  static String get anonymousSession => '$base/api/auth/anonymous-session';
+
   /// Upgrade account endpoint (POST)
   static String upgradeAccount(String participantIdentity) {
     return '$base/api/auth/upgrade/$participantIdentity';

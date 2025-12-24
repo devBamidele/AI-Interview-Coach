@@ -1,11 +1,17 @@
-import 'package:ai_interview_mvp/features/interview/application/interview_state.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/constants/app_config.dart';
+import '../../../../common/components/components.dart';
+import '../../../../common/styles/component_style.dart';
+import '../../../../common/styles/text_style.dart';
+import '../../../../common/utils/responsive_utils.dart';
+import '../../../../constants/colors.dart';
+import '../../../auth/application/auth_notifier.dart';
+import '../../application/connection_params_builder.dart';
 import '../../application/interview_notifier.dart';
-import '../../data/models/room_connection_params.dart';
+import '../../application/interview_state.dart';
 import '../widgets/case_question_banner.dart';
 import '../widgets/connection_status.dart';
 import '../widgets/countdown_timer_widget.dart';
@@ -19,14 +25,12 @@ class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
 
   Future<void> _connectToInterview(WidgetRef ref) async {
-    await ref
-        .read(interviewProvider.notifier)
-        .connect(
-          RoomConnectionParams(
-            roomName: AppConfig.defaultRoomName,
-            participantName: AppConfig.defaultParticipantPrefix,
-          ),
-        );
+    final authState = ref.read(authProvider);
+    final paramsBuilder = ref.read(connectionParamsBuilderProvider);
+
+    final params = await paramsBuilder.buildParams(authState: authState);
+
+    await ref.read(interviewProvider.notifier).connect(params);
   }
 
   Future<void> _disconnectFromInterview(WidgetRef ref) async {
@@ -41,81 +45,147 @@ class InterviewPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final interviewState = ref.watch(interviewProvider);
     final notifier = ref.read(interviewProvider.notifier);
+    final isMobile = ResponsiveUtils.isMobile(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('AI Interview'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: const NetworkStrengthIndicator(),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Case Question Banner (shows for market sizing interviews)
-          if (interviewState.isConnected)
-            CaseQuestionBanner(room: notifier.room),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _buildAppBar(context),
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Case Question Banner (collapsible)
+              if (interviewState.isConnected)
+                CaseQuestionBanner(room: notifier.room),
 
-          // Countdown Timer (shows when connected)
-          if (interviewState.isConnected)
-            CountdownTimerWidget(
-              onComplete: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Time is up! Please complete your interview.',
-                    ),
-                    backgroundColor: Colors.orange,
-                  ),
-                );
-              },
-            ),
-
-          // Main content
-          Expanded(
-            child: Row(
-              children: [
-                // Left side: Video and controls
-                Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Video Preview
-                          VideoPreviewWidget(state: interviewState),
-
-                          // Connection Status
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: ConnectionStatusWidget(
-                              state: interviewState,
-                            ),
-                          ),
-
-                          // Interview Controls
-                          InterviewControlsWidget(
-                            state: interviewState,
-                            onConnect: () => _connectToInterview(ref),
-                            onDisconnect: () => _disconnectFromInterview(ref),
-                            onComplete: () => _completeInterview(ref),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              // Countdown Timer (collapsible)
+              if (interviewState.isConnected)
+                CountdownTimerWidget(
+                  onComplete: () => _showTimeUpSnackbar(context),
                 ),
 
-                // Right side: Transcription panel
-                Expanded(child: const TranscriptionPanel()),
-              ],
+              // Main content - responsive layout
+              Expanded(
+                child: isMobile
+                    ? _buildMobileLayout(context, interviewState, ref)
+                    : _buildDesktopLayout(context, interviewState, ref),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      title: Text(
+        'AI Interview',
+        style: TextStyles.text.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 16.w),
+          child: const NetworkStrengthIndicator(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(
+    BuildContext context,
+    InterviewState state,
+    WidgetRef ref,
+  ) {
+    return SingleChildScrollView(
+      padding: pagePadding,
+      child: Column(
+        children: [
+          addHeight(16),
+
+          // Video Preview (top on mobile)
+          VideoPreviewWidget(state: state),
+
+          addHeight(20),
+
+          // Connection Status
+          ConnectionStatusWidget(state: state),
+
+          addHeight(20),
+
+          // Interview Controls
+          InterviewControlsWidget(
+            state: state,
+            onConnect: () => _connectToInterview(ref),
+            onDisconnect: () => _disconnectFromInterview(ref),
+            onComplete: () => _completeInterview(ref),
+          ),
+
+          addHeight(24),
+
+          // Transcription Panel (bottom on mobile, full width)
+          SizedBox(
+            height: 400.h,
+            child: const TranscriptionPanel(),
+          ),
+
+          addHeight(24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopLayout(
+    BuildContext context,
+    InterviewState state,
+    WidgetRef ref,
+  ) {
+    return Padding(
+      padding: pagePadding,
+      child: Row(
+        children: [
+          // Left side: Video and controls
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  VideoPreviewWidget(state: state),
+                  addHeight(20),
+                  ConnectionStatusWidget(state: state),
+                  addHeight(20),
+                  InterviewControlsWidget(
+                    state: state,
+                    onConnect: () => _connectToInterview(ref),
+                    onDisconnect: () => _disconnectFromInterview(ref),
+                    onComplete: () => _completeInterview(ref),
+                  ),
+                ],
+              ),
             ),
           ),
+
+          addWidth(24),
+
+          // Right side: Transcription panel
+          Expanded(child: const TranscriptionPanel()),
         ],
+      ),
+    );
+  }
+
+  void _showTimeUpSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Time is up! Please complete your interview.'),
+        backgroundColor: AppColors.errorBorderColor,
       ),
     );
   }

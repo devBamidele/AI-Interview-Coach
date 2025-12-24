@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../features/auth/application/auth_manager.dart';
@@ -38,6 +39,13 @@ class AuthInterceptor extends Interceptor {
 
       if (accessToken != null) {
         options.headers['Authorization'] = 'Bearer $accessToken';
+        if (kDebugMode) {
+          print('[AuthInterceptor] Added Authorization header for ${options.uri}');
+        }
+      } else {
+        if (kDebugMode) {
+          print('[AuthInterceptor] WARNING: No access token available for ${options.uri}');
+        }
       }
     }
 
@@ -54,14 +62,23 @@ class RefreshTokenInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final statusCode = err.response?.statusCode;
+    final requestPath = err.requestOptions.path;
 
-    // Only handle 401 errors
-    if (statusCode == 401) {
+    // Only handle 401 errors, but SKIP if this IS the refresh endpoint
+    // to prevent infinite loops
+    if (statusCode == 401 && !requestPath.contains('/api/auth/refresh')) {
       try {
         final refreshToken = authManager.refreshToken;
 
         if (refreshToken == null) {
+          if (kDebugMode) {
+            print('[RefreshTokenInterceptor] No refresh token available, clearing auth');
+          }
           throw Exception('No refresh token available');
+        }
+
+        if (kDebugMode) {
+          print('[RefreshTokenInterceptor] Attempting to refresh access token');
         }
 
         // Request new access token
@@ -72,6 +89,10 @@ class RefreshTokenInterceptor extends Interceptor {
 
         final newAccessToken = response.data['accessToken'];
         await authManager.saveAccessToken(newAccessToken);
+
+        if (kDebugMode) {
+          print('[RefreshTokenInterceptor] Successfully refreshed token, retrying original request');
+        }
 
         // Retry the original request
         final options = err.requestOptions;
@@ -87,6 +108,9 @@ class RefreshTokenInterceptor extends Interceptor {
         return handler.resolve(clonedRequest);
       } catch (e) {
         // Clear auth if refresh fails
+        if (kDebugMode) {
+          print('[RefreshTokenInterceptor] Refresh failed: $e - clearing authentication');
+        }
         await authManager.clearAuthenticatedUser();
         return handler.next(err);
       }

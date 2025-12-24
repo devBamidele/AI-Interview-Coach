@@ -1,6 +1,7 @@
 import 'package:ai_interview_mvp/config/router/app_router.dart';
 import 'package:ai_interview_mvp/constants/colors.dart';
 import 'package:ai_interview_mvp/features/auth/application/auth_manager.dart';
+import 'package:ai_interview_mvp/features/auth/application/device_id_manager.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -38,13 +39,26 @@ class SplashScreen extends HookConsumerWidget {
     ref.listen(authManagerProvider, (previous, next) {
       if (next.isInitialized) {
         // Wait for animation to complete before navigating
-        Future.delayed(const Duration(milliseconds: 1000), () {
+        Future.delayed(const Duration(milliseconds: 1000), () async {
           if (!context.mounted) return;
 
           if (next.isLoggedIn) {
+            // Authenticated user -> go to home
             context.router.replaceAll([const HomeRoute()]);
           } else {
-            context.router.replaceAll([const LoginRoute()]);
+            // Not authenticated -> check if anonymous user (has device ID)
+            final deviceIdManager = ref.read(deviceIdManagerProvider);
+            final deviceId = await deviceIdManager.getDeviceId();
+
+            if (!context.mounted) return;
+
+            if (deviceId != null) {
+              // Anonymous user with device ID -> go to home
+              context.router.replaceAll([const HomeRoute()]);
+            } else {
+              // No auth and no device ID -> go to login
+              context.router.replaceAll([const LoginRoute()]);
+            }
           }
         });
       }

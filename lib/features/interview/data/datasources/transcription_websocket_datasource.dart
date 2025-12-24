@@ -69,6 +69,15 @@ abstract class TranscriptionWebSocketDataSource {
   /// Connect to the transcription WebSocket server
   Future<void> connect(String url);
 
+  /// Connect to transcription WebSocket with JWT authentication
+  /// Includes token in URL query parameter and starts transcription automatically
+  Future<void> connectWithToken({
+    required String url,
+    required String transcriptionToken,
+    required String roomName,
+    required String participantIdentity,
+  });
+
   /// Start transcription for a room and participant
   void startTranscription({
     required String roomName,
@@ -128,6 +137,60 @@ class TranscriptionWebSocketDataSourceImpl
         onDone: () {
           _isConnected = false;
         },
+      );
+    } catch (e) {
+      _isConnected = false;
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> connectWithToken({
+    required String url,
+    required String transcriptionToken,
+    required String roomName,
+    required String participantIdentity,
+  }) async {
+    if (_isConnected) {
+      return;
+    }
+
+    try {
+      // Add JWT token to URL as query parameter
+      final uri = Uri.parse(url).replace(
+        queryParameters: {'token': transcriptionToken},
+      );
+
+      _channel = WebSocketChannel.connect(uri);
+      _isConnected = true;
+
+      // Listen to messages
+      _channelSubscription = _channel!.stream.listen(
+        (data) {
+          try {
+            final json = jsonDecode(data as String) as Map<String, dynamic>;
+            final message = TranscriptionMessage.fromJson(json);
+            _messageController.add(message);
+          } catch (e) {
+            _messageController.addError(e);
+          }
+        },
+        onError: (error) {
+          _messageController.addError(error);
+          _isConnected = false;
+        },
+        onDone: () {
+          _isConnected = false;
+        },
+      );
+
+      // Wait a bit for connection to establish
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Automatically start transcription with server-provided values
+      startTranscription(
+        roomName: roomName,
+        participantIdentity: participantIdentity,
       );
     } catch (e) {
       _isConnected = false;

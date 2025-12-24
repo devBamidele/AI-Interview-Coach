@@ -41,12 +41,17 @@ class LiveKitRemoteDataSourceImpl implements LiveKitRemoteDataSource {
   Future<TokenResponseDto> getToken(RoomConnectionParams params) async {
     final url = Endpoints.getLiveKitToken();
 
+    // Updated to match backend requirements:
+    // - No longer send roomName (server generates it)
+    // - Authorization header is automatically added by AuthInterceptor
+    // - Optional interviewType can be added if needed
     final response = await networkRetry.networkRetry(
       () => networkRequest.post(
         url,
         body: {
-          'roomName': params.roomName,
           'participantName': params.participantName,
+          // Optional: add interviewType if params support it
+          // 'interviewType': params.interviewType,
         },
       ),
     );

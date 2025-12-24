@@ -15,7 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TokenResponseDto {
 
- String get token; String get url;
+/// LiveKit access token for room connection
+ String get livekitToken;/// JWT token for transcription service WebSocket authentication
+ String get transcriptionToken;/// LiveKit server URL
+ String get url;/// Server-generated room name (MUST be used exactly as provided)
+ String get roomName;/// Server-generated participant identity (MUST be used exactly as provided)
+ String get participantIdentity;
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +33,16 @@ $TokenResponseDtoCopyWith<TokenResponseDto> get copyWith => _$TokenResponseDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenResponseDto&&(identical(other.token, token) || other.token == token)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenResponseDto&&(identical(other.livekitToken, livekitToken) || other.livekitToken == livekitToken)&&(identical(other.transcriptionToken, transcriptionToken) || other.transcriptionToken == transcriptionToken)&&(identical(other.url, url) || other.url == url)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,url);
+int get hashCode => Object.hash(runtimeType,livekitToken,transcriptionToken,url,roomName,participantIdentity);
 
 @override
 String toString() {
-  return 'TokenResponseDto(token: $token, url: $url)';
+  return 'TokenResponseDto(livekitToken: $livekitToken, transcriptionToken: $transcriptionToken, url: $url, roomName: $roomName, participantIdentity: $participantIdentity)';
 }
 
 
@@ -48,7 +53,7 @@ abstract mixin class $TokenResponseDtoCopyWith<$Res>  {
   factory $TokenResponseDtoCopyWith(TokenResponseDto value, $Res Function(TokenResponseDto) _then) = _$TokenResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- String token, String url
+ String livekitToken, String transcriptionToken, String url, String roomName, String participantIdentity
 });
 
 
@@ -65,10 +70,13 @@ class _$TokenResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? url = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? livekitToken = null,Object? transcriptionToken = null,Object? url = null,Object? roomName = null,Object? participantIdentity = null,}) {
   return _then(_self.copyWith(
-token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+livekitToken: null == livekitToken ? _self.livekitToken : livekitToken // ignore: cast_nullable_to_non_nullable
+as String,transcriptionToken: null == transcriptionToken ? _self.transcriptionToken : transcriptionToken // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
+as String,participantIdentity: null == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -151,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String livekitToken,  String transcriptionToken,  String url,  String roomName,  String participantIdentity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TokenResponseDto() when $default != null:
-return $default(_that.token,_that.url);case _:
+return $default(_that.livekitToken,_that.transcriptionToken,_that.url,_that.roomName,_that.participantIdentity);case _:
   return orElse();
 
 }
@@ -172,10 +180,10 @@ return $default(_that.token,_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String url)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String livekitToken,  String transcriptionToken,  String url,  String roomName,  String participantIdentity)  $default,) {final _that = this;
 switch (_that) {
 case _TokenResponseDto():
-return $default(_that.token,_that.url);}
+return $default(_that.livekitToken,_that.transcriptionToken,_that.url,_that.roomName,_that.participantIdentity);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -189,10 +197,10 @@ return $default(_that.token,_that.url);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String url)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String livekitToken,  String transcriptionToken,  String url,  String roomName,  String participantIdentity)?  $default,) {final _that = this;
 switch (_that) {
 case _TokenResponseDto() when $default != null:
-return $default(_that.token,_that.url);case _:
+return $default(_that.livekitToken,_that.transcriptionToken,_that.url,_that.roomName,_that.participantIdentity);case _:
   return null;
 
 }
@@ -204,11 +212,19 @@ return $default(_that.token,_that.url);case _:
 @JsonSerializable()
 
 class _TokenResponseDto implements TokenResponseDto {
-  const _TokenResponseDto({required this.token, required this.url});
+  const _TokenResponseDto({required this.livekitToken, required this.transcriptionToken, required this.url, required this.roomName, required this.participantIdentity});
   factory _TokenResponseDto.fromJson(Map<String, dynamic> json) => _$TokenResponseDtoFromJson(json);
 
-@override final  String token;
+/// LiveKit access token for room connection
+@override final  String livekitToken;
+/// JWT token for transcription service WebSocket authentication
+@override final  String transcriptionToken;
+/// LiveKit server URL
 @override final  String url;
+/// Server-generated room name (MUST be used exactly as provided)
+@override final  String roomName;
+/// Server-generated participant identity (MUST be used exactly as provided)
+@override final  String participantIdentity;
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenResponseDto&&(identical(other.token, token) || other.token == token)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenResponseDto&&(identical(other.livekitToken, livekitToken) || other.livekitToken == livekitToken)&&(identical(other.transcriptionToken, transcriptionToken) || other.transcriptionToken == transcriptionToken)&&(identical(other.url, url) || other.url == url)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,url);
+int get hashCode => Object.hash(runtimeType,livekitToken,transcriptionToken,url,roomName,participantIdentity);
 
 @override
 String toString() {
-  return 'TokenResponseDto(token: $token, url: $url)';
+  return 'TokenResponseDto(livekitToken: $livekitToken, transcriptionToken: $transcriptionToken, url: $url, roomName: $roomName, participantIdentity: $participantIdentity)';
 }
 
 
@@ -243,7 +259,7 @@ abstract mixin class _$TokenResponseDtoCopyWith<$Res> implements $TokenResponseD
   factory _$TokenResponseDtoCopyWith(_TokenResponseDto value, $Res Function(_TokenResponseDto) _then) = __$TokenResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String token, String url
+ String livekitToken, String transcriptionToken, String url, String roomName, String participantIdentity
 });
 
 
@@ -260,10 +276,13 @@ class __$TokenResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of TokenResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? url = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? livekitToken = null,Object? transcriptionToken = null,Object? url = null,Object? roomName = null,Object? participantIdentity = null,}) {
   return _then(_TokenResponseDto(
-token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+livekitToken: null == livekitToken ? _self.livekitToken : livekitToken // ignore: cast_nullable_to_non_nullable
+as String,transcriptionToken: null == transcriptionToken ? _self.transcriptionToken : transcriptionToken // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
+as String,participantIdentity: null == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

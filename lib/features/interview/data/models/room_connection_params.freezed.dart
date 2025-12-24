@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoomConnectionParams {
 
- String get roomName; String get participantName;
+ String get participantName;// Optional interview type for backend to use in room name generation
+ String? get interviewType;
 /// Create a copy of RoomConnectionParams
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $RoomConnectionParamsCopyWith<RoomConnectionParams> get copyWith => _$RoomConnec
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomConnectionParams&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.participantName, participantName) || other.participantName == participantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomConnectionParams&&(identical(other.participantName, participantName) || other.participantName == participantName)&&(identical(other.interviewType, interviewType) || other.interviewType == interviewType));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,roomName,participantName);
+int get hashCode => Object.hash(runtimeType,participantName,interviewType);
 
 @override
 String toString() {
-  return 'RoomConnectionParams(roomName: $roomName, participantName: $participantName)';
+  return 'RoomConnectionParams(participantName: $participantName, interviewType: $interviewType)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $RoomConnectionParamsCopyWith<$Res>  {
   factory $RoomConnectionParamsCopyWith(RoomConnectionParams value, $Res Function(RoomConnectionParams) _then) = _$RoomConnectionParamsCopyWithImpl;
 @useResult
 $Res call({
- String roomName, String participantName
+ String participantName, String? interviewType
 });
 
 
@@ -62,11 +63,11 @@ class _$RoomConnectionParamsCopyWithImpl<$Res>
 
 /// Create a copy of RoomConnectionParams
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? roomName = null,Object? participantName = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? participantName = null,Object? interviewType = freezed,}) {
   return _then(_self.copyWith(
-roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
-as String,participantName: null == participantName ? _self.participantName : participantName // ignore: cast_nullable_to_non_nullable
-as String,
+participantName: null == participantName ? _self.participantName : participantName // ignore: cast_nullable_to_non_nullable
+as String,interviewType: freezed == interviewType ? _self.interviewType : interviewType // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -148,10 +149,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String roomName,  String participantName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String participantName,  String? interviewType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoomConnectionParams() when $default != null:
-return $default(_that.roomName,_that.participantName);case _:
+return $default(_that.participantName,_that.interviewType);case _:
   return orElse();
 
 }
@@ -169,10 +170,10 @@ return $default(_that.roomName,_that.participantName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String roomName,  String participantName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String participantName,  String? interviewType)  $default,) {final _that = this;
 switch (_that) {
 case _RoomConnectionParams():
-return $default(_that.roomName,_that.participantName);}
+return $default(_that.participantName,_that.interviewType);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -186,10 +187,10 @@ return $default(_that.roomName,_that.participantName);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String roomName,  String participantName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String participantName,  String? interviewType)?  $default,) {final _that = this;
 switch (_that) {
 case _RoomConnectionParams() when $default != null:
-return $default(_that.roomName,_that.participantName);case _:
+return $default(_that.participantName,_that.interviewType);case _:
   return null;
 
 }
@@ -201,11 +202,12 @@ return $default(_that.roomName,_that.participantName);case _:
 
 
 class _RoomConnectionParams extends RoomConnectionParams {
-  const _RoomConnectionParams({required this.roomName, required this.participantName}): super._();
+  const _RoomConnectionParams({required this.participantName, this.interviewType}): super._();
   
 
-@override final  String roomName;
 @override final  String participantName;
+// Optional interview type for backend to use in room name generation
+@override final  String? interviewType;
 
 /// Create a copy of RoomConnectionParams
 /// with the given fields replaced by the non-null parameter values.
@@ -217,16 +219,16 @@ _$RoomConnectionParamsCopyWith<_RoomConnectionParams> get copyWith => __$RoomCon
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomConnectionParams&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.participantName, participantName) || other.participantName == participantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomConnectionParams&&(identical(other.participantName, participantName) || other.participantName == participantName)&&(identical(other.interviewType, interviewType) || other.interviewType == interviewType));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,roomName,participantName);
+int get hashCode => Object.hash(runtimeType,participantName,interviewType);
 
 @override
 String toString() {
-  return 'RoomConnectionParams(roomName: $roomName, participantName: $participantName)';
+  return 'RoomConnectionParams(participantName: $participantName, interviewType: $interviewType)';
 }
 
 
@@ -237,7 +239,7 @@ abstract mixin class _$RoomConnectionParamsCopyWith<$Res> implements $RoomConnec
   factory _$RoomConnectionParamsCopyWith(_RoomConnectionParams value, $Res Function(_RoomConnectionParams) _then) = __$RoomConnectionParamsCopyWithImpl;
 @override @useResult
 $Res call({
- String roomName, String participantName
+ String participantName, String? interviewType
 });
 
 
@@ -254,11 +256,11 @@ class __$RoomConnectionParamsCopyWithImpl<$Res>
 
 /// Create a copy of RoomConnectionParams
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? roomName = null,Object? participantName = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? participantName = null,Object? interviewType = freezed,}) {
   return _then(_RoomConnectionParams(
-roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
-as String,participantName: null == participantName ? _self.participantName : participantName // ignore: cast_nullable_to_non_nullable
-as String,
+participantName: null == participantName ? _self.participantName : participantName // ignore: cast_nullable_to_non_nullable
+as String,interviewType: freezed == interviewType ? _self.interviewType : interviewType // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

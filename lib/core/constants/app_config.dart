@@ -21,8 +21,4 @@ class AppConfig {
     }
     return "ws://localhost:3001";
   }
-
-  // Default room settings
-  static const String defaultRoomName = "quickstart-room";
-  static const String defaultParticipantPrefix = "flutter-user";
 }

@@ -98,7 +98,7 @@ final class TranscriptionNotifierProvider
 }
 
 String _$transcriptionNotifierHash() =>
-    r'86709e797c97c86455f8ea947a2c2ad9ae2250a2';
+    r'1e7c36eeb7cc351fc149b77a4285a2bbf7105338';
 
 /// Notifier for managing transcription state
 

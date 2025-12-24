@@ -144,34 +144,33 @@ class SignupPage extends HookConsumerWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  surfaceTintColor: Colors.transparent,
-                  backgroundColor: Colors.white,
-                  expandedHeight: 84,
-                  floating: false,
-                  pinned: true,
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text(
-                      'Create Account',
-                      style: TextStyles.text.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                      ),
-                    ),
-                    titlePadding: EdgeInsets.only(
-                      left: pagePadding.left,
-                      bottom: 8,
-                    ),
-                    expandedTitleScale: 1.5,
-                    centerTitle: false,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              surfaceTintColor: Colors.transparent,
+              backgroundColor: Colors.white,
+              expandedHeight: 84,
+              floating: false,
+              pinned: true,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  'Create Account',
+                  style: TextStyles.text.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
                   ),
                 ),
+                titlePadding: EdgeInsets.only(
+                  left: pagePadding.left,
+                  right: pagePadding.right,
+                  bottom: 8,
+                ),
+                expandedTitleScale: 1.5,
+                centerTitle: false,
+              ),
+            ),
             SliverPadding(
               padding: pagePadding,
               sliver: SliverList(
@@ -338,37 +337,6 @@ class SignupPage extends HookConsumerWidget {
 
                   addHeight(MediaQuery.of(context).viewInsets.bottom + 40),
                 ]),
-              ),
-            ),
-              ],
-            ),
-            // Ghost icon button in top-right corner
-            Positioned(
-              top: 16,
-              right: 16,
-              child: SafeArea(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      // TODO: Implement anonymous login
-                      context.router.replaceAll([const HomeRoute()]);
-                    },
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: Container(
-                      padding: EdgeInsets.all(8.r),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Image.asset(
-                        'assets/icons/ghost.png',
-                        width: 24.r,
-                        height: 24.r,
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ),
           ],

@@ -2,13 +2,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
 
-/// Domain entity representing an authenticated user
+/// Domain entity representing a user (authenticated or anonymous)
 @freezed
 sealed class User with _$User {
   const factory User({
     required String id,
-    required String email,
+    String? email, // Optional - null for anonymous users
     required String name,
+    String? participantIdentity, // For anonymous users
+    String? userType, // "authenticated" or "anonymous"
     DateTime? createdAt,
   }) = _User;
 }

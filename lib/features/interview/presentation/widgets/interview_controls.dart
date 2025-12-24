@@ -1,7 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../common/components/components.dart';
+import '../../../../common/styles/text_style.dart';
+import '../../../../common/utils/responsive_utils.dart';
 import '../../../../config/router/app_router.dart';
+import '../../../../constants/colors.dart';
 import '../../application/interview_state.dart';
 
 class InterviewControlsWidget extends StatelessWidget {
@@ -23,94 +28,212 @@ class InterviewControlsWidget extends StatelessWidget {
     final isConnected = state.isConnected;
     final isCompleting = state.isCompleting;
     final isAnalyzing = state.isAnalyzing;
+    final isMobile = ResponsiveUtils.isMobile(context);
 
-    // Show nothing during completion/analysis
+    // Show loading during completion/analysis
     if (isCompleting || isAnalyzing) {
-      return Column(
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Text(
-            state.statusText,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ],
-      );
+      return _buildLoadingState(context);
     }
 
     // Show analysis complete state with View Results button
     if (state.isAnalysisComplete) {
-      final interviewId = state.interviewId;
+      return _buildCompleteState(context);
+    }
+
+    // Show connect button
+    if (!isConnected) {
+      return _buildConnectButton(isMobile);
+    }
+
+    // Show complete and disconnect buttons when connected
+    return _buildConnectedButtons(isMobile);
+  }
+
+  Widget _buildLoadingState(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 40.h,
+          width: 40.w,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.buttonColor),
+          ),
+        ),
+        addHeight(16),
+        Text(
+          state.statusText,
+          style: TextStyles.text.copyWith(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompleteState(BuildContext context) {
+    final interviewId = state.interviewId;
+
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.check_circle,
+            color: Colors.green,
+            size: 48.sp,
+          ),
+        ),
+        addHeight(16),
+        Text(
+          'Interview Complete!',
+          style: TextStyles.fieldHeader.copyWith(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        addHeight(8),
+        Text(
+          'Your analysis is ready',
+          style: TextStyles.hintThemeText.copyWith(fontSize: 14.sp),
+        ),
+        addHeight(24),
+        AppButton(
+          onPress: interviewId != null
+              ? () {
+                  context.router.push(
+                    InterviewDetailRoute(interviewId: interviewId),
+                  );
+                }
+              : null,
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.assessment_rounded, size: 20.sp),
+              addWidth(8),
+              Text(
+                'View Results',
+                style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConnectButton(bool isMobile) {
+    return AppButton(
+      onPress: onConnect,
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.call, size: 20.sp),
+          addWidth(8),
+          Text(
+            'Join Interview',
+            style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnectedButtons(bool isMobile) {
+    if (isMobile) {
+      // Mobile: Stacked buttons
       return Column(
         children: [
-          const Icon(Icons.check_circle, color: Colors.green, size: 48),
-          const SizedBox(height: 16),
-          Text(
-            'Interview Complete!',
-            style: Theme.of(context).textTheme.titleLarge,
+          AppButton(
+            onPress: onComplete,
+            color: Colors.green,
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.check_circle_outline, size: 20.sp),
+                addWidth(8),
+                Text(
+                  'Complete Interview',
+                  style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Your analysis is ready',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: interviewId != null
-                ? () {
-                    context.router.push(
-                      InterviewDetailRoute(interviewId: interviewId),
-                    );
-                  }
-                : null,
-            icon: const Icon(Icons.assessment_rounded),
-            label: const Text('View Results'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          addHeight(12),
+          OutlinedAppButton(
+            onPress: onDisconnect,
+            borderColor: AppColors.errorBorderColor,
+            textColor: AppColors.errorBorderColor,
+            height: 50,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.call_end,
+                  size: 20.sp,
+                  color: AppColors.errorBorderColor,
+                ),
+                addWidth(8),
+                Text('Cancel'),
+              ],
             ),
           ),
         ],
       );
     }
 
-    // Show connect button
-    if (!isConnected) {
-      return ElevatedButton.icon(
-        onPressed: onConnect,
-        icon: const Icon(Icons.call),
-        label: const Text("Join Interview"),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        ),
-      );
-    }
-
-    // Show complete and disconnect buttons when connected
+    // Desktop: Side by side buttons
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Complete Interview Button (Primary action)
-        ElevatedButton.icon(
-          onPressed: onComplete,
-          icon: const Icon(Icons.check_circle_outline),
-          label: const Text("Complete Interview"),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        Flexible(
+          child: AppButton(
+            onPress: onComplete,
+            color: Colors.green,
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.check_circle_outline, size: 20.sp),
+                addWidth(8),
+                Text(
+                  'Complete Interview',
+                  style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(width: 16),
-        // Disconnect Button (Secondary action)
-        OutlinedButton.icon(
-          onPressed: onDisconnect,
-          icon: const Icon(Icons.call_end),
-          label: const Text("Cancel"),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        addWidth(16),
+        Flexible(
+          child: OutlinedAppButton(
+            onPress: onDisconnect,
+            borderColor: AppColors.errorBorderColor,
+            textColor: AppColors.errorBorderColor,
+            height: 50,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.call_end,
+                  size: 20.sp,
+                  color: AppColors.errorBorderColor,
+                ),
+                addWidth(8),
+                Text('Cancel'),
+              ],
+            ),
           ),
         ),
       ],

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -34,5 +36,11 @@ extension StringExtension on String? {
       return 'Passwords do not match';
     }
     return null; // Return null if input is valid
+  }
+}
+
+extension AppPlatform on Platform {
+  static bool get isApple {
+    return Platform.isIOS || Platform.isMacOS;
   }
 }

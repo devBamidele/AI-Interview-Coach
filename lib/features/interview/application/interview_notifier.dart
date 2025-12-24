@@ -4,6 +4,7 @@ import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/models/room_connection_params.dart';
+import '../data/models/token_response_dto.dart';
 import '../data/repositories/interview_analysis_repository_impl.dart';
 import '../data/repositories/livekit_repository_impl.dart';
 import '../domain/repositories/interview_analysis_repository.dart';
@@ -42,6 +43,8 @@ class InterviewNotifier extends _$InterviewNotifier {
     return const InterviewState.disconnected();
   }
 
+  TokenResponseDto? _currentTokens; // Store tokens for transcription service
+
   Future<void> connect(RoomConnectionParams params) async {
     // Step 1: Get token
     state = const InterviewState.connecting('Requesting token...');
@@ -53,11 +56,14 @@ class InterviewNotifier extends _$InterviewNotifier {
         state = InterviewState.failed(failure.toString());
       },
       (token) async {
+        // Store tokens for later use (transcription service needs them)
+        _currentTokens = token;
+
         // Step 2: Connect to room
         state = const InterviewState.connecting('Connecting to LiveKit...');
 
         final roomResult = await _repository.connectToRoom(
-          token.token,
+          token.livekitToken, // Updated field name
           token.url,
         );
 
@@ -116,22 +122,18 @@ class InterviewNotifier extends _$InterviewNotifier {
   }
 
   Future<void> _startTranscription() async {
-    if (_room == null) return;
+    if (_room == null || _currentTokens == null) return;
 
     try {
       final transcriptionNotifier = ref.read(transcriptionProvider.notifier);
 
-      // Connect to transcription service
-      await transcriptionNotifier.connect();
-
-      // Start transcription for this room and participant
-      final identity = _room?.localParticipant?.identity;
-      if (identity != null) {
-        transcriptionNotifier.startTranscription(
-          roomName: _room!.name ?? '',
-          participantIdentity: identity,
-        );
-      }
+      // Connect to transcription service with JWT token
+      // Use server-provided roomName and participantIdentity from tokens
+      await transcriptionNotifier.connectWithToken(
+        transcriptionToken: _currentTokens!.transcriptionToken,
+        roomName: _currentTokens!.roomName,
+        participantIdentity: _currentTokens!.participantIdentity,
+      );
     } catch (e) {
       // Transcription is not critical, continue without it
       // ignore: avoid_print

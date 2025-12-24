@@ -1,5 +1,4 @@
-import 'dart:io' show Platform;
-
+import 'package:ai_interview_mvp/common/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class LoadingIndicator extends StatelessWidget {
@@ -21,7 +20,7 @@ class LoadingIndicator extends StatelessWidget {
         child: SizedBox.square(
           dimension: size,
           child: CircularProgressIndicator.adaptive(
-            backgroundColor: Platform.isIOS ? color : Colors.transparent,
+            backgroundColor: AppPlatform.isApple ? color : Colors.transparent,
             strokeWidth: 2.5,
             value: value,
           ),

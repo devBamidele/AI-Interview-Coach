@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants/colors.dart';
 import '../../styles/component_style.dart';
 import '../../styles/text_style.dart';
-import '../../utils/app_utils.dart';
 
 class AppButton extends StatelessWidget {
   final VoidCallback? onPress;
@@ -49,14 +48,7 @@ class AppButton extends StatelessWidget {
       child: loading
           ? const LoadingIndicator()
           : child ??
-                Text(
-                  text ?? '',
-                  style:
-                      textStyle ??
-                      TextStyles.buttonText.copyWith(
-                        fontSize: AppUtils.scale(18),
-                      ),
-                ),
+                Text(text ?? '', style: textStyle ?? TextStyles.buttonText),
     );
 
     if (gradient != null) {

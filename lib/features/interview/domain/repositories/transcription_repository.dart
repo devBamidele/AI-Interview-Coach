@@ -15,8 +15,16 @@ class SessionCompleteData {
 
 /// Repository interface for transcription operations
 abstract class TranscriptionRepository {
-  /// Connect to transcription service
+  /// Connect to transcription service (legacy - without JWT)
   Future<Either<Failure, void>> connect();
+
+  /// Connect to transcription service with JWT authentication
+  /// Automatically starts transcription with server-provided values
+  Future<Either<Failure, void>> connectWithToken({
+    required String transcriptionToken,
+    required String roomName,
+    required String participantIdentity,
+  });
 
   /// Start transcription for a room and participant
   Either<Failure, void> start({

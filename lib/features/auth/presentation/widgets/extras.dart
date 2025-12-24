@@ -74,3 +74,33 @@ IconButton passwordVisibilityIcon({
     onPressed: onToggle,
   );
 }
+
+/// Ghost icon button for anonymous login
+Widget ghostIconButton({required VoidCallback onTap}) {
+  return Material(
+    color: Colors.transparent,
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.r, vertical: 8.r),
+
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/icons/ghost.png', width: 20.r, height: 20.r),
+            addHeight(4),
+            Text(
+              'Guest',
+              style: TextStyles.hintText.copyWith(
+                fontSize: 10,
+                color: AppColors.hintTextColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}

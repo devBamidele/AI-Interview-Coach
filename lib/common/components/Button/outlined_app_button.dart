@@ -57,7 +57,7 @@ class OutlinedAppButton extends StatelessWidget {
                     text!,
                     style: TextStyles.buttonText.copyWith(
                       color: textColor,
-                      fontSize: fontSize,
+                      //  fontSize: fontSize,
                     ),
                   ),
             ),

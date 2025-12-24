@@ -80,6 +80,71 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
   }
 
   @override
+  Future<Either<Failure, void>> connectWithToken({
+    required String transcriptionToken,
+    required String roomName,
+    required String participantIdentity,
+  }) async {
+    try {
+      await dataSource.connectWithToken(
+        url: AppConfig.transcriptionWsUrl,
+        transcriptionToken: transcriptionToken,
+        roomName: roomName,
+        participantIdentity: participantIdentity,
+      );
+
+      // Listen to messages from datasource (same as connect method)
+      _messageSubscription = dataSource.messages.listen(
+        (message) {
+          switch (message.type) {
+            case TranscriptionMessageType.transcript:
+              final model = message.data as TranscriptEventModel;
+              _transcriptController.add(Right(model.toEntity()));
+              break;
+            case TranscriptionMessageType.error:
+              final error = WebSocketFailure(
+                message.errorMessage ?? 'Unknown error',
+              );
+              _transcriptController.add(Left(error));
+              break;
+            case TranscriptionMessageType.sessionComplete:
+              final data = message.data as Map<String, dynamic>;
+              final interviewId = data['interviewId'] as String?;
+              final accessToken = data['accessToken'] as String?;
+
+              if (interviewId != null && accessToken != null) {
+                _sessionCompleteController.add(
+                  SessionCompleteData(
+                    interviewId: interviewId,
+                    accessToken: accessToken,
+                  ),
+                );
+              } else {
+                _sessionCompleteController.add(null);
+              }
+              break;
+            case TranscriptionMessageType.started:
+            case TranscriptionMessageType.stopped:
+              // Status messages - can be logged or ignored
+              break;
+            case TranscriptionMessageType.unknown:
+              // Unknown message types - ignore silently
+              break;
+          }
+        },
+        onError: (error) {
+          final failure = WebSocketFailure(error.toString());
+          _transcriptController.add(Left(failure));
+        },
+      );
+
+      return const Right(null);
+    } catch (e) {
+      return Left(WebSocketFailure(e.toString()));
+    }
+  }
+
+  @override
   Either<Failure, void> start({
     required String roomName,
     required String participantIdentity,

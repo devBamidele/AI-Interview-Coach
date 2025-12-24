@@ -77,6 +77,27 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, AuthSession>> createAnonymousSession(
+    String deviceId,
+  ) {
+    return run(() async {
+      final response = await _remoteDataSource.createAnonymousSession(deviceId);
+
+      // Combine response tokens with user data into session
+      final sessionDto = AuthSessionDto(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+        user: response.user!,
+      );
+
+      // Save session locally
+      await _localDataSource.saveAuthSession(sessionDto);
+
+      return sessionDto.toEntity();
+    }, errorTitle: 'Anonymous Session Creation Failed');
+  }
+
+  @override
   Future<Either<Failure, AuthSession>> refreshToken(String refreshToken) {
     return run(() async {
       final refreshDto = RefreshTokenDto(refreshToken: refreshToken);

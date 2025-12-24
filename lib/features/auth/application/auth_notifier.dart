@@ -43,8 +43,8 @@ class AuthNotifier extends _$AuthNotifier {
       (failure) {
         state = AuthState.error(failure.message);
       },
-      (session) {
-        ref.read(authManagerProvider.notifier).saveAuthSession(session);
+      (session) async {
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
         state = AuthState.authenticated(session.user);
       },
     );
@@ -67,8 +67,26 @@ class AuthNotifier extends _$AuthNotifier {
       (failure) {
         state = AuthState.error(failure.message);
       },
-      (session) {
-        ref.read(authManagerProvider.notifier).saveAuthSession(session);
+      (session) async {
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
+        state = AuthState.authenticated(session.user);
+      },
+    );
+  }
+
+  /// Create anonymous session for guest users
+  /// Uses device ID to create persistent anonymous account
+  Future<void> createAnonymousSession(String deviceId) async {
+    state = const AuthState.loading();
+
+    final result = await _repository.createAnonymousSession(deviceId);
+
+    result.fold(
+      (failure) {
+        state = AuthState.error(failure.message);
+      },
+      (session) async {
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
         state = AuthState.authenticated(session.user);
       },
     );

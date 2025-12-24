@@ -15,7 +15,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserDto {
 
- String get id; String get email; String get name; String? get createdAt;
+ String get id; String? get email;// Optional - null for anonymous users
+ String get name; String? get participantIdentity;// For anonymous users
+ String? get userType;// "authenticated" or "anonymous"
+ String? get createdAt;
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +31,16 @@ $UserDtoCopyWith<UserDto> get copyWith => _$UserDtoCopyWithImpl<UserDto>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserDto&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserDto&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,createdAt);
+int get hashCode => Object.hash(runtimeType,id,email,name,participantIdentity,userType,createdAt);
 
 @override
 String toString() {
-  return 'UserDto(id: $id, email: $email, name: $name, createdAt: $createdAt)';
+  return 'UserDto(id: $id, email: $email, name: $name, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +51,7 @@ abstract mixin class $UserDtoCopyWith<$Res>  {
   factory $UserDtoCopyWith(UserDto value, $Res Function(UserDto) _then) = _$UserDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String email, String name, String? createdAt
+ String id, String? email, String name, String? participantIdentity, String? userType, String? createdAt
 });
 
 
@@ -65,12 +68,14 @@ class _$UserDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? name = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
+as String?,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String name,  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserDto() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
+return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt);case _:
   return orElse();
 
 }
@@ -174,10 +179,10 @@ return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String name,  String? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  String? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserDto():
-return $default(_that.id,_that.email,_that.name,_that.createdAt);}
+return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,10 +196,10 @@ return $default(_that.id,_that.email,_that.name,_that.createdAt);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String name,  String? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  String? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserDto() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
+return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt);case _:
   return null;
 
 }
@@ -206,12 +211,17 @@ return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
 @JsonSerializable()
 
 class _UserDto extends UserDto {
-  const _UserDto({required this.id, required this.email, required this.name, this.createdAt}): super._();
+  const _UserDto({required this.id, this.email, required this.name, this.participantIdentity, this.userType, this.createdAt}): super._();
   factory _UserDto.fromJson(Map<String, dynamic> json) => _$UserDtoFromJson(json);
 
 @override final  String id;
-@override final  String email;
+@override final  String? email;
+// Optional - null for anonymous users
 @override final  String name;
+@override final  String? participantIdentity;
+// For anonymous users
+@override final  String? userType;
+// "authenticated" or "anonymous"
 @override final  String? createdAt;
 
 /// Create a copy of UserDto
@@ -227,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserDto&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserDto&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,createdAt);
+int get hashCode => Object.hash(runtimeType,id,email,name,participantIdentity,userType,createdAt);
 
 @override
 String toString() {
-  return 'UserDto(id: $id, email: $email, name: $name, createdAt: $createdAt)';
+  return 'UserDto(id: $id, email: $email, name: $name, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt)';
 }
 
 
@@ -247,7 +257,7 @@ abstract mixin class _$UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
   factory _$UserDtoCopyWith(_UserDto value, $Res Function(_UserDto) _then) = __$UserDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String email, String name, String? createdAt
+ String id, String? email, String name, String? participantIdentity, String? userType, String? createdAt
 });
 
 
@@ -264,12 +274,14 @@ class __$UserDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? name = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,}) {
   return _then(_UserDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
+as String?,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

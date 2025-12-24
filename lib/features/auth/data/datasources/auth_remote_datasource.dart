@@ -22,6 +22,7 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseDto> signup(SignupDto signupDto);
   Future<AuthResponseDto> refreshToken(RefreshTokenDto refreshDto);
   Future<void> logout(String? refreshToken);
+  Future<AuthResponseDto> createAnonymousSession(String deviceId);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -87,5 +88,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     if (!response.isSuccess) {
       throw ServerException('Logout failed');
     }
+  }
+
+  @override
+  Future<AuthResponseDto> createAnonymousSession(String deviceId) async {
+    final response = await networkRequest.post(
+      Endpoints.anonymousSession,
+      body: {'deviceId': deviceId},
+    );
+
+    if (!response.isSuccess) {
+      final message = response.data is Map
+          ? (response.data['message'] ?? 'Anonymous session creation failed')
+          : 'Anonymous session creation failed';
+      throw ServerException(message);
+    }
+
+    return AuthResponseDto.fromJson(response.data);
   }
 }

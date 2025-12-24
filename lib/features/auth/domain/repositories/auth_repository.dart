@@ -16,6 +16,8 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<Either<Failure, AuthSession>> createAnonymousSession(String deviceId);
+
   Future<Either<Failure, AuthSession>> refreshToken(String refreshToken);
 
   Future<Either<Failure, void>> logout(String? refreshToken);

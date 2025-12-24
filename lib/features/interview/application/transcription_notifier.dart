@@ -47,7 +47,7 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
     return const TranscriptionState();
   }
 
-  /// Connect to transcription service
+  /// Connect to transcription service (legacy - without JWT)
   Future<void> connect() async {
     if (_repository == null) return;
 
@@ -59,6 +59,49 @@ class TranscriptionNotifier extends _$TranscriptionNotifier {
       },
       (_) {
         state = state.copyWith(isConnected: true, error: null);
+
+        // Subscribe to transcript stream
+        _transcriptSubscription = _repository!.transcriptStream.listen((
+          either,
+        ) {
+          either.fold(
+            (failure) {
+              state = state.copyWith(error: failure.toString());
+            },
+            (transcript) {
+              _handleTranscript(transcript);
+            },
+          );
+        });
+      },
+    );
+  }
+
+  /// Connect to transcription service with JWT authentication
+  /// Automatically starts transcription with server-provided values
+  Future<void> connectWithToken({
+    required String transcriptionToken,
+    required String roomName,
+    required String participantIdentity,
+  }) async {
+    if (_repository == null) return;
+
+    final result = await _repository!.connectWithToken(
+      transcriptionToken: transcriptionToken,
+      roomName: roomName,
+      participantIdentity: participantIdentity,
+    );
+
+    result.fold(
+      (failure) {
+        state = state.copyWith(isConnected: false, error: failure.toString());
+      },
+      (_) {
+        state = state.copyWith(
+          isConnected: true,
+          isTranscribing: true, // Already started by connectWithToken
+          error: null,
+        );
 
         // Subscribe to transcript stream
         _transcriptSubscription = _repository!.transcriptStream.listen((
