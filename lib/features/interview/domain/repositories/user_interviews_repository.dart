@@ -5,8 +5,6 @@ import '../entities/user_interview.dart';
 
 /// Repository interface for user interviews operations
 abstract class UserInterviewsRepository {
-  /// Get all interviews for a user using access token
-  Future<Either<Failure, UserInterviewsResponse>> getUserInterviews(
-    String accessToken,
-  );
+  /// Get all interviews for a user
+  Future<Either<Failure, UserInterviewsResponse>> getUserInterviews();
 }

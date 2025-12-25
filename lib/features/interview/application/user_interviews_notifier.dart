@@ -3,7 +3,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/repositories/user_interviews_repository_impl.dart';
 import '../domain/entities/user_interview.dart';
 import '../domain/repositories/user_interviews_repository.dart';
-import 'interview_token_store.dart';
 
 part 'user_interviews_notifier.g.dart';
 
@@ -17,24 +16,11 @@ class UserInterviewsNotifier extends _$UserInterviewsNotifier {
     return const AsyncValue.data(null);
   }
 
-  /// Fetch user interviews using any available access token
-  /// The token gives access to all interviews for the user
+  /// Fetch user interviews using JWT authentication
   Future<void> fetchUserInterviews() async {
     state = const AsyncValue.loading();
 
-    // Get any available access token
-    final tokenStore = ref.read(interviewTokenStoreProvider);
-    final accessToken = await tokenStore.getAnyToken();
-
-    if (accessToken == null) {
-      state = AsyncValue.error(
-        'No interview access token found. Please complete an interview first.',
-        StackTrace.current,
-      );
-      return;
-    }
-
-    final result = await _repository.getUserInterviews(accessToken);
+    final result = await _repository.getUserInterviews();
 
     result.fold(
       (failure) {

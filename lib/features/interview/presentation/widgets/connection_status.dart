@@ -44,7 +44,7 @@ class ConnectionStatusWidget extends StatelessWidget {
             Text(
               'Status: $status',
               style: TextStyles.text.copyWith(
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -55,7 +55,7 @@ class ConnectionStatusWidget extends StatelessWidget {
         if (errorMessage.isNotEmpty) ...[
           addHeight(12),
           Container(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppColors.errorBorderColor.withValues(alpha: 0.1),
               border: Border.all(
@@ -68,7 +68,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                 Icon(
                   Icons.error_outline,
                   color: AppColors.errorBorderColor,
-                  size: 20.sp,
+                  size: 20,
                 ),
                 addWidth(8),
                 Expanded(
@@ -76,7 +76,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                     errorMessage,
                     style: TextStyles.text.copyWith(
                       color: AppColors.errorBorderColor,
-                      fontSize: 12.sp,
+                      fontSize: 14,
                     ),
                   ),
                 ),

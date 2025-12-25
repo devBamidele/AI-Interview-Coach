@@ -64,7 +64,7 @@ class InterviewControlsWidget extends StatelessWidget {
         Text(
           state.statusText,
           style: TextStyles.text.copyWith(
-            fontSize: 14.sp,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
           textAlign: TextAlign.center,
@@ -84,24 +84,20 @@ class InterviewControlsWidget extends StatelessWidget {
             color: Colors.green.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 48.sp,
-          ),
+          child: Icon(Icons.check_circle, color: Colors.green, size: 48),
         ),
         addHeight(16),
         Text(
           'Interview Complete!',
           style: TextStyles.fieldHeader.copyWith(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         addHeight(8),
         Text(
           'Your analysis is ready',
-          style: TextStyles.hintThemeText.copyWith(fontSize: 14.sp),
+          style: TextStyles.hintThemeText.copyWith(fontSize: 14),
         ),
         addHeight(24),
         AppButton(
@@ -116,11 +112,11 @@ class InterviewControlsWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.assessment_rounded, size: 20.sp),
+              Icon(Icons.assessment_rounded, size: 20),
               addWidth(8),
               Text(
                 'View Results',
-                style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+                style: TextStyles.buttonText.copyWith(fontSize: 16),
               ),
             ],
           ),
@@ -136,11 +132,11 @@ class InterviewControlsWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.call, size: 20.sp),
+          Icon(Icons.call, size: 20),
           addWidth(8),
           Text(
             'Join Interview',
-            style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+            style: TextStyles.buttonText.copyWith(fontSize: 16),
           ),
         ],
       ),
@@ -159,11 +155,11 @@ class InterviewControlsWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check_circle_outline, size: 20.sp),
+                Icon(Icons.check_circle_outline, size: 20),
                 addWidth(8),
                 Text(
                   'Complete Interview',
-                  style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+                  style: TextStyles.buttonText.copyWith(fontSize: 16),
                 ),
               ],
             ),
@@ -180,7 +176,7 @@ class InterviewControlsWidget extends StatelessWidget {
               children: [
                 Icon(
                   Icons.call_end,
-                  size: 20.sp,
+                  size: 20,
                   color: AppColors.errorBorderColor,
                 ),
                 addWidth(8),
@@ -204,11 +200,11 @@ class InterviewControlsWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check_circle_outline, size: 20.sp),
+                Icon(Icons.check_circle_outline, size: 20),
                 addWidth(8),
                 Text(
                   'Complete Interview',
-                  style: TextStyles.buttonText.copyWith(fontSize: 16.sp),
+                  style: TextStyles.buttonText.copyWith(fontSize: 16),
                 ),
               ],
             ),
@@ -227,7 +223,7 @@ class InterviewControlsWidget extends StatelessWidget {
               children: [
                 Icon(
                   Icons.call_end,
-                  size: 20.sp,
+                  size: 20,
                   color: AppColors.errorBorderColor,
                 ),
                 addWidth(8),

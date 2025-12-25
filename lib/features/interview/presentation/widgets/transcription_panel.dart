@@ -38,9 +38,7 @@ class TranscriptionPanel extends ConsumerWidget {
           ),
 
           // Transcript content
-          Expanded(
-            child: _buildContent(context, state),
-          ),
+          Expanded(child: _buildContent(context, state)),
 
           // Error display
           if (state.error != null) _buildError(state.error!),
@@ -66,23 +64,20 @@ class TranscriptionPanel extends ConsumerWidget {
             color: state.isTranscribing
                 ? AppColors.errorBorderColor
                 : AppColors.hintTextColor,
-            size: 20.sp,
+            size: 20,
           ),
           addWidth(8),
           Text(
             state.isTranscribing ? 'Live Transcription' : 'Transcription',
             style: TextStyles.fieldHeader.copyWith(
               fontWeight: FontWeight.w600,
-              fontSize: 15.sp,
+              fontSize: 16,
             ),
           ),
           const Spacer(),
           if (state.isTranscribing)
             Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 5.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               decoration: BoxDecoration(
                 color: AppColors.errorBorderColor,
                 borderRadius: BorderRadius.circular(12.r),
@@ -110,15 +105,13 @@ class TranscriptionPanel extends ConsumerWidget {
           children: [
             Icon(
               state.isTranscribing ? Icons.mic : Icons.text_snippet_outlined,
-              size: 48.sp,
+              size: 48,
               color: AppColors.hintTextColor.withValues(alpha: 0.5),
             ),
             addHeight(12),
             Text(
               state.isTranscribing ? 'Listening...' : 'No transcript yet',
-              style: TextStyles.hintThemeText.copyWith(
-                fontSize: 14.sp,
-              ),
+              style: TextStyles.hintThemeText.copyWith(fontSize: 15),
             ),
           ],
         ),
@@ -129,10 +122,7 @@ class TranscriptionPanel extends ConsumerWidget {
       padding: EdgeInsets.all(16.w),
       child: SelectableText(
         state.fullTranscript,
-        style: TextStyles.text.copyWith(
-          fontSize: 14.sp,
-          height: 1.5,
-        ),
+        style: TextStyles.text.copyWith(fontSize: 14.sp, height: 1.5),
       ),
     );
   }

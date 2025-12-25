@@ -11,7 +11,6 @@ import '../domain/repositories/interview_analysis_repository.dart';
 import '../domain/repositories/livekit_repository.dart';
 import '../domain/repositories/transcription_repository.dart';
 import 'interview_state.dart';
-import 'interview_token_store.dart';
 import 'network_quality_notifier.dart';
 import 'transcription_notifier.dart';
 
@@ -159,13 +158,6 @@ class InterviewNotifier extends _$InterviewNotifier {
         return;
       }
 
-      // Store the access token
-      final tokenStore = ref.read(interviewTokenStoreProvider);
-      await tokenStore.storeToken(
-        sessionData.interviewId,
-        sessionData.accessToken,
-      );
-
       // Disconnect from LiveKit
       await _repository.disconnect(_room);
       _room = null;
@@ -173,9 +165,9 @@ class InterviewNotifier extends _$InterviewNotifier {
       // Start analyzing
       state = InterviewState.analyzing(sessionData.interviewId);
 
-      // Poll for analysis with exponential backoff using the access token
+      // Poll for analysis with exponential backoff using the interview ID
       final analysisResult = await _analysisRepository.pollForAnalysis(
-        sessionData.accessToken,
+        sessionData.interviewId,
       );
 
       analysisResult.fold(

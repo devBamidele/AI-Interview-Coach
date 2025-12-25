@@ -25,16 +25,16 @@ class InterviewAnalysisRepositoryImpl extends ServiceRunner
       super(ref.read(networkInfoProvider));
 
   @override
-  Future<Either<Failure, InterviewAnalysis>> getAnalysis(String accessToken) {
+  Future<Either<Failure, InterviewAnalysis>> getAnalysis(String interviewId) {
     return run(() async {
-      final dto = await _remoteDataSource.getAnalysis(accessToken);
+      final dto = await _remoteDataSource.getAnalysis(interviewId);
       return dto.toEntity();
     }, errorTitle: 'Analysis Fetch Failed');
   }
 
   @override
   Future<Either<Failure, InterviewAnalysis>> pollForAnalysis(
-    String accessToken,
+    String interviewId,
   ) async {
     // Exponential backoff: 1s, 2s, 3s, 5s, 5s, 5s, 10s, 10s, 10s, 15s (total ~66s)
     const delays = [1, 2, 3, 5, 5, 5, 10, 10, 10, 15];
@@ -46,7 +46,7 @@ class InterviewAnalysisRepositoryImpl extends ServiceRunner
         await Future.delayed(Duration(seconds: delays[i - 1]));
       }
 
-      final result = await getAnalysis(accessToken);
+      final result = await getAnalysis(interviewId);
 
       // Check if we got the analysis
       final shouldContinue = await result.fold(

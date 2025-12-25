@@ -17,7 +17,7 @@ InterviewAnalysisRemoteDataSource interviewAnalysisRemoteDataSource(Ref ref) {
 }
 
 abstract class InterviewAnalysisRemoteDataSource {
-  Future<InterviewAnalysisDto> getAnalysis(String accessToken);
+  Future<InterviewAnalysisDto> getAnalysis(String interviewId);
 }
 
 class InterviewAnalysisRemoteDataSourceImpl
@@ -31,21 +31,18 @@ class InterviewAnalysisRemoteDataSourceImpl
   });
 
   @override
-  Future<InterviewAnalysisDto> getAnalysis(String accessToken) async {
-    final url = Endpoints.getInterviewAnalysis;
+  Future<InterviewAnalysisDto> getAnalysis(String interviewId) async {
+    final url = Endpoints.getInterviewAnalysis(interviewId);
 
     final response = await networkRetry.networkRetry(
-      () => networkRequest.get(
-        url,
-        headers: {'x-interview-token': accessToken},
-      ),
+      () => networkRequest.get(url),
     );
 
     if (!response.isSuccess) {
-      // Handle 401 Unauthorized (invalid/missing token)
+      // Handle 401 Unauthorized (invalid/expired credentials)
       if (response.statusCode == 401) {
         throw ServerException(
-          'Invalid or expired interview access token',
+          'Invalid or expired credentials',
         );
       }
       // Handle 404 Not Found (interview deleted)
