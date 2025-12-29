@@ -6,46 +6,6 @@ part of 'interview_analysis_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_InterviewAnalysisDto _$InterviewAnalysisDtoFromJson(
-  Map<String, dynamic> json,
-) => _InterviewAnalysisDto(
-  id: json['id'] as String,
-  userId: json['userId'],
-  createdAt: json['createdAt'] as String,
-  status: json['status'] as String,
-  transcript: json['transcript'] as String,
-  duration: (json['duration'] as num).toDouble(),
-  recordingUrl: json['recordingUrl'] as String?,
-  metrics: MetricsDto.fromJson(json['metrics'] as Map<String, dynamic>),
-  aiAnalysis: json['aiAnalysis'] == null
-      ? null
-      : AIAnalysisDto.fromJson(json['aiAnalysis'] as Map<String, dynamic>),
-  caseQuestion: json['caseQuestion'] as String?,
-  difficulty: json['difficulty'] as String?,
-  candidateAnswer: json['candidateAnswer'] as String?,
-  caseAnalysis: json['caseAnalysis'] == null
-      ? null
-      : CaseAnalysisDto.fromJson(json['caseAnalysis'] as Map<String, dynamic>),
-);
-
-Map<String, dynamic> _$InterviewAnalysisDtoToJson(
-  _InterviewAnalysisDto instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'userId': instance.userId,
-  'createdAt': instance.createdAt,
-  'status': instance.status,
-  'transcript': instance.transcript,
-  'duration': instance.duration,
-  'recordingUrl': instance.recordingUrl,
-  'metrics': instance.metrics,
-  'aiAnalysis': instance.aiAnalysis,
-  'caseQuestion': instance.caseQuestion,
-  'difficulty': instance.difficulty,
-  'candidateAnswer': instance.candidateAnswer,
-  'caseAnalysis': instance.caseAnalysis,
-};
-
 _MetricsDto _$MetricsDtoFromJson(Map<String, dynamic> json) => _MetricsDto(
   averagePace: (json['averagePace'] as num).toInt(),
   totalWords: (json['totalWords'] as num).toInt(),

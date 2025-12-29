@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../common/styles/text_style.dart';
+import '../../../../constants/colors.dart';
 import '../../application/interview_detail_notifier.dart';
+import '../../application/interview_notifier.dart';
+import '../../application/interview_state.dart';
 import '../../domain/entities/interview_analysis.dart';
 import '../widgets/analysis_highlights_card.dart';
 import '../widgets/analysis_improvements_card.dart';
@@ -18,36 +22,60 @@ import '../widgets/case_priority_improvements_card.dart';
 
 @RoutePage()
 class InterviewDetailPage extends HookConsumerWidget {
-  final String interviewId;
+  final String? interviewId;
 
   const InterviewDetailPage({
     super.key,
-    @PathParam('interviewId') required this.interviewId,
+    @PathParam('interviewId') this.interviewId,
   });
+
+  /// Converts current interview session state to AsyncValue for consistent handling
+  AsyncValue<InterviewAnalysis?> _getCurrentSessionAnalysis(WidgetRef ref) {
+    final state = ref.watch(interviewProvider);
+
+    // Use the extension methods to check state and get analysis
+    if (state.isAnalysisComplete) {
+      return AsyncValue.data(state.analysis);
+    } else if (state.isAnalyzing || state.isCompleting || state.isConnecting) {
+      return const AsyncValue.loading();
+    } else if (state.isFailed) {
+      return AsyncValue.error(state.errorMessage, StackTrace.current);
+    } else {
+      return const AsyncValue.data(null);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final analysisState = ref.watch(interviewDetailProvider(interviewId));
+    // If no interviewId provided, get analysis from current interview session
+    // Otherwise, fetch historical interview from backend
+    final analysisState = interviewId == null
+        ? _getCurrentSessionAnalysis(ref)
+        : ref.watch(interviewDetailProvider(interviewId!));
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.black,
+            size: 20,
+          ),
           onPressed: () => context.router.maybePop(),
         ),
-        title: const Text(
-          'Interview Analysis',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+
+        title: const Text('Interview Analysis', style: TextStyles.appBarTitle),
       ),
       body: analysisState.when(
         data: (analysis) => analysis == null
             ? _buildEmptyState(context)
             : _buildAnalysisContent(context, analysis),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () =>
+            Center(child: LoadingIndicator(color: AppColors.primaryColor)),
         error: (error, stack) => _buildErrorState(context, error.toString()),
       ),
     );
@@ -55,59 +83,101 @@ class InterviewDetailPage extends HookConsumerWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.assessment_outlined,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
-          addHeight(16),
-          Text(
-            'No analysis available',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.assessment_outlined,
+                size: 64,
+                color: Colors.grey.shade400,
+              ),
             ),
-          ),
-          addHeight(8),
-          Text(
-            'Analysis not found or still processing',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
-          ),
-        ],
+            addHeight(24),
+            Text(
+              'No analysis available',
+              style: TextStyle(
+                fontSize: 22,
+                fontFamily: 'SF Pro Rounded',
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade800,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            addHeight(12),
+            Text(
+              'Analysis not found or still processing',
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: 'SF Pro Rounded',
+                color: Colors.grey.shade600,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildErrorState(BuildContext context, String error) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline_rounded,
-            size: 80,
-            color: Colors.red.shade300,
-          ),
-          addHeight(16),
-          Text(
-            'Failed to load analysis',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline_rounded,
+                size: 64,
+                color: Colors.red.shade400,
+              ),
             ),
-          ),
-          addHeight(8),
-          Text(
-            error,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            addHeight(24),
+            Text(
+              'Failed to load analysis',
+              style: TextStyle(
+                fontSize: 22,
+                fontFamily: 'SF Pro Rounded',
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade800,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            addHeight(12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                error,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'SF Pro Rounded',
+                  color: Colors.red.shade700,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -187,15 +257,28 @@ class InterviewDetailPage extends HookConsumerWidget {
           ],
 
           // Section Header
-          Text(
-            'Detailed Evaluation',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade800,
+          Container(
+            padding: const EdgeInsets.only(bottom: 4),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: AppColors.primaryColor.withValues(alpha: 0.2),
+                  width: 2,
+                ),
+              ),
+            ),
+            child: Text(
+              'Detailed Evaluation',
+              style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'SF Pro Rounded',
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
-          addHeight(16),
+          addHeight(20),
 
           // 1. Structured Problem-Solving (30%)
           CaseDimensionCard(
@@ -258,22 +341,38 @@ class InterviewDetailPage extends HookConsumerWidget {
               ]),
               if (caseAnalysis.businessJudgment.assumptionQuality.isNotEmpty)
                 Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.indigo.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.indigo.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.indigo.withValues(alpha: 0.2),
+                      color: Colors.indigo.withValues(alpha: 0.25),
+                      width: 1.5,
                     ),
                   ),
-                  child: Text(
-                    caseAnalysis.businessJudgment.assumptionQuality,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.grey.shade700,
-                    ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        size: 18,
+                        color: Colors.indigo.shade600,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          caseAnalysis.businessJudgment.assumptionQuality,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'SF Pro Rounded',
+                            fontStyle: FontStyle.italic,
+                            color: Colors.indigo.shade800,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
             ],
@@ -355,15 +454,28 @@ class InterviewDetailPage extends HookConsumerWidget {
           ),
 
           // Metrics Grid
-          Text(
-            'Speech Metrics',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade800,
+          Container(
+            padding: const EdgeInsets.only(bottom: 4),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: AppColors.primaryColor.withValues(alpha: 0.2),
+                  width: 2,
+                ),
+              ),
+            ),
+            child: Text(
+              'Speech Metrics',
+              style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'SF Pro Rounded',
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
-          addHeight(16),
+          addHeight(20),
           AnalysisMetricsGridWidget(metrics: analysis.metrics),
 
           addHeight(24),
@@ -377,40 +489,64 @@ class InterviewDetailPage extends HookConsumerWidget {
 
   Widget _buildInfoChips(List<_InfoChip> chips) {
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: 10,
+      runSpacing: 10,
       children: chips
           .map(
-            (chip) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    chip.icon,
-                    size: 14,
-                    color: chip.icon == Icons.check_circle_rounded
-                        ? Colors.green
-                        : chip.icon == Icons.cancel_rounded
-                        ? Colors.red
-                        : Colors.grey.shade600,
+            (chip) {
+              final isPositive = chip.icon == Icons.check_circle_rounded;
+              final isNegative = chip.icon == Icons.cancel_rounded;
+
+              Color chipColor;
+              Color iconColor;
+              Color textColor;
+
+              if (isPositive) {
+                chipColor = Colors.green.shade50;
+                iconColor = Colors.green.shade600;
+                textColor = Colors.green.shade800;
+              } else if (isNegative) {
+                chipColor = Colors.red.shade50;
+                iconColor = Colors.red.shade600;
+                textColor = Colors.red.shade800;
+              } else {
+                chipColor = Colors.blue.shade50;
+                iconColor = Colors.blue.shade600;
+                textColor = Colors.blue.shade800;
+              }
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: chipColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: iconColor.withValues(alpha: 0.2),
+                    width: 1,
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    chip.label,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade700,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      chip.icon,
+                      size: 16,
+                      color: iconColor,
                     ),
-                  ),
-                ],
-              ),
-            ),
+                    const SizedBox(width: 8),
+                    Text(
+                      chip.label,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: 'SF Pro Rounded',
+                        fontWeight: FontWeight.w600,
+                        color: textColor,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           )
           .toList(),
     );
@@ -420,15 +556,28 @@ class InterviewDetailPage extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'AI Insights',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey.shade800,
+        Container(
+          padding: const EdgeInsets.only(bottom: 4),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.primaryColor.withValues(alpha: 0.2),
+                width: 2,
+              ),
+            ),
+          ),
+          child: Text(
+            'AI Insights',
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'SF Pro Rounded',
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade900,
+              letterSpacing: -0.5,
+            ),
           ),
         ),
-        addHeight(16),
+        addHeight(20),
 
         // Pace Analysis
         if (aiAnalysis.paceAnalysis.isNotEmpty)

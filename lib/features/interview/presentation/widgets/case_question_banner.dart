@@ -1,31 +1,31 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:livekit_client/livekit_client.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/Box/box.dart';
 import '../../../../common/styles/text_style.dart';
 import '../../../../constants/colors.dart';
+import '../../application/interview_notifier.dart';
+import '../../application/interview_state.dart';
 
-class CaseQuestionBanner extends HookWidget {
-  final Room? room;
-
-  const CaseQuestionBanner({
-    super.key,
-    required this.room,
-  });
+class CaseQuestionBanner extends HookConsumerWidget {
+  const CaseQuestionBanner({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isCollapsed = useState(false);
+    final interviewState = ref.watch(interviewProvider);
+    final metadata = interviewState.roomMetadata;
 
-    if (room == null || room!.metadata == null || room!.metadata!.isEmpty) {
+    if (metadata == null || metadata.isEmpty) {
       return const SizedBox.shrink();
     }
 
     try {
-      final metadataJson = jsonDecode(room!.metadata!);
+      final metadataJson = jsonDecode(metadata);
       final caseQuestion = metadataJson['caseQuestion'] as String?;
       final difficulty = metadataJson['difficulty'] as String?;
 
@@ -104,11 +104,7 @@ class CaseQuestionBanner extends HookWidget {
             // Question content (collapsible)
             if (!isCollapsed.value)
               Padding(
-                padding: EdgeInsets.only(
-                  left: 16.w,
-                  right: 16.w,
-                  bottom: 16.h,
-                ),
+                padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
                 child: Container(
                   width: double.infinity,
                   constraints: BoxConstraints(maxHeight: 200.h),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/repositories/user_interviews_repository_impl.dart';
@@ -13,6 +15,12 @@ class UserInterviewsNotifier extends _$UserInterviewsNotifier {
   @override
   AsyncValue<UserInterviewsResponse?> build() {
     _repository = ref.read(userInterviewsRepositoryProvider);
+
+    // Keep the provider alive for 5 minutes after last listener is removed
+    // This prevents unnecessary refetching when navigating back to the page
+    final link = ref.keepAlive();
+    Timer(const Duration(minutes: 10), link.close);
+
     return const AsyncValue.data(null);
   }
 

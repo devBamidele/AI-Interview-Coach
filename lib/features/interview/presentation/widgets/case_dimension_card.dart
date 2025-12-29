@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../common/utils/text_formatter.dart';
+
 class CaseDimensionCard extends StatelessWidget {
   final String title;
   final int score;
@@ -45,16 +47,18 @@ class CaseDimensionCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: color, size: 24),
+                child: Icon(icon, color: color, size: 22),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
+                    fontSize: 17,
+                    fontFamily: 'SF Pro Rounded',
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade900,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ),
@@ -63,9 +67,11 @@ class CaseDimensionCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            feedback,
+            formatFeedbackWithParagraphs(feedback),
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 15,
+              fontFamily: 'SF Pro Rounded',
+              fontWeight: FontWeight.w500,
               height: 1.6,
               color: Colors.grey.shade700,
             ),
@@ -92,7 +98,7 @@ class CaseDimensionCard extends StatelessWidget {
           Text(
             score.toString(),
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.bold,
               color: _getScoreColor(),
             ),
@@ -100,7 +106,7 @@ class CaseDimensionCard extends StatelessWidget {
           Text(
             ' / 5',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
             ),

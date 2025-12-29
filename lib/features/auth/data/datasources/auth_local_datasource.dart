@@ -61,6 +61,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 }
 
 @riverpod
-AuthLocalDataSource authLocalDataSource(_) {
+AuthLocalDataSource authLocalDataSource(Ref ref) {
   return AuthLocalDataSourceImpl();
 }

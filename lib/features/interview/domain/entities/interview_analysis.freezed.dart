@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InterviewAnalysis {
 
- String get id; dynamic get userId; String get createdAt; String get status; String get transcript; double get duration; String? get recordingUrl; Metrics get metrics;// Generic interview (existing)
+ String get id; String? get userId; String get createdAt; String get status; String get transcript; double get duration; String? get recordingUrl; Metrics get metrics;// Generic interview (existing)
  AIAnalysis? get aiAnalysis;// Market sizing specific fields
  String? get caseQuestion; String? get difficulty; String? get candidateAnswer; CaseAnalysis? get caseAnalysis;
 /// Create a copy of InterviewAnalysis
@@ -27,12 +27,12 @@ $InterviewAnalysisCopyWith<InterviewAnalysis> get copyWith => _$InterviewAnalysi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewAnalysis&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.userId, userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.transcript, transcript) || other.transcript == transcript)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysis, caseAnalysis) || other.caseAnalysis == caseAnalysis));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewAnalysis&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.transcript, transcript) || other.transcript == transcript)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysis, caseAnalysis) || other.caseAnalysis == caseAnalysis));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(userId),createdAt,status,transcript,duration,recordingUrl,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysis);
+int get hashCode => Object.hash(runtimeType,id,userId,createdAt,status,transcript,duration,recordingUrl,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysis);
 
 @override
 String toString() {
@@ -47,7 +47,7 @@ abstract mixin class $InterviewAnalysisCopyWith<$Res>  {
   factory $InterviewAnalysisCopyWith(InterviewAnalysis value, $Res Function(InterviewAnalysis) _then) = _$InterviewAnalysisCopyWithImpl;
 @useResult
 $Res call({
- String id, dynamic userId, String createdAt, String status, String transcript, double duration, String? recordingUrl, Metrics metrics, AIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, CaseAnalysis? caseAnalysis
+ String id, String? userId, String createdAt, String status, String transcript, double duration, String? recordingUrl, Metrics metrics, AIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, CaseAnalysis? caseAnalysis
 });
 
 
@@ -68,7 +68,7 @@ class _$InterviewAnalysisCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as dynamic,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,transcript: null == transcript ? _self.transcript : transcript // ignore: cast_nullable_to_non_nullable
 as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
@@ -194,7 +194,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  dynamic userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InterviewAnalysis() when $default != null:
 return $default(_that.id,_that.userId,_that.createdAt,_that.status,_that.transcript,_that.duration,_that.recordingUrl,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysis);case _:
@@ -215,7 +215,7 @@ return $default(_that.id,_that.userId,_that.createdAt,_that.status,_that.transcr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  dynamic userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)  $default,) {final _that = this;
 switch (_that) {
 case _InterviewAnalysis():
 return $default(_that.id,_that.userId,_that.createdAt,_that.status,_that.transcript,_that.duration,_that.recordingUrl,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysis);}
@@ -232,7 +232,7 @@ return $default(_that.id,_that.userId,_that.createdAt,_that.status,_that.transcr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  dynamic userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? userId,  String createdAt,  String status,  String transcript,  double duration,  String? recordingUrl,  Metrics metrics,  AIAnalysis? aiAnalysis,  String? caseQuestion,  String? difficulty,  String? candidateAnswer,  CaseAnalysis? caseAnalysis)?  $default,) {final _that = this;
 switch (_that) {
 case _InterviewAnalysis() when $default != null:
 return $default(_that.id,_that.userId,_that.createdAt,_that.status,_that.transcript,_that.duration,_that.recordingUrl,_that.metrics,_that.aiAnalysis,_that.caseQuestion,_that.difficulty,_that.candidateAnswer,_that.caseAnalysis);case _:
@@ -251,7 +251,7 @@ class _InterviewAnalysis extends InterviewAnalysis {
   
 
 @override final  String id;
-@override final  dynamic userId;
+@override final  String? userId;
 @override final  String createdAt;
 @override final  String status;
 @override final  String transcript;
@@ -276,12 +276,12 @@ _$InterviewAnalysisCopyWith<_InterviewAnalysis> get copyWith => __$InterviewAnal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewAnalysis&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.userId, userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.transcript, transcript) || other.transcript == transcript)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysis, caseAnalysis) || other.caseAnalysis == caseAnalysis));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewAnalysis&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.transcript, transcript) || other.transcript == transcript)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.recordingUrl, recordingUrl) || other.recordingUrl == recordingUrl)&&(identical(other.metrics, metrics) || other.metrics == metrics)&&(identical(other.aiAnalysis, aiAnalysis) || other.aiAnalysis == aiAnalysis)&&(identical(other.caseQuestion, caseQuestion) || other.caseQuestion == caseQuestion)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.candidateAnswer, candidateAnswer) || other.candidateAnswer == candidateAnswer)&&(identical(other.caseAnalysis, caseAnalysis) || other.caseAnalysis == caseAnalysis));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(userId),createdAt,status,transcript,duration,recordingUrl,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysis);
+int get hashCode => Object.hash(runtimeType,id,userId,createdAt,status,transcript,duration,recordingUrl,metrics,aiAnalysis,caseQuestion,difficulty,candidateAnswer,caseAnalysis);
 
 @override
 String toString() {
@@ -296,7 +296,7 @@ abstract mixin class _$InterviewAnalysisCopyWith<$Res> implements $InterviewAnal
   factory _$InterviewAnalysisCopyWith(_InterviewAnalysis value, $Res Function(_InterviewAnalysis) _then) = __$InterviewAnalysisCopyWithImpl;
 @override @useResult
 $Res call({
- String id, dynamic userId, String createdAt, String status, String transcript, double duration, String? recordingUrl, Metrics metrics, AIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, CaseAnalysis? caseAnalysis
+ String id, String? userId, String createdAt, String status, String transcript, double duration, String? recordingUrl, Metrics metrics, AIAnalysis? aiAnalysis, String? caseQuestion, String? difficulty, String? candidateAnswer, CaseAnalysis? caseAnalysis
 });
 
 
@@ -317,7 +317,7 @@ class __$InterviewAnalysisCopyWithImpl<$Res>
   return _then(_InterviewAnalysis(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as dynamic,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,transcript: null == transcript ? _self.transcript : transcript // ignore: cast_nullable_to_non_nullable
 as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable

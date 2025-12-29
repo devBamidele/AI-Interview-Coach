@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../common/utils/text_formatter.dart';
 import '../../domain/entities/case_analysis.dart';
 
 class CasePriorityImprovementsCard extends StatelessWidget {
   final List<PriorityImprovement> improvements;
 
-  const CasePriorityImprovementsCard({
-    super.key,
-    required this.improvements,
-  });
+  const CasePriorityImprovementsCard({super.key, required this.improvements});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +38,7 @@ class CasePriorityImprovementsCard extends StatelessWidget {
                 child: const Icon(
                   Icons.trending_up_rounded,
                   color: Colors.orange,
-                  size: 24,
+                  size: 22,
                 ),
               ),
               const SizedBox(width: 12),
@@ -49,8 +47,10 @@ class CasePriorityImprovementsCard extends StatelessWidget {
                   'Priority Improvements',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'SF Pro Rounded',
+                    fontWeight: FontWeight.w700,
                     color: Colors.grey.shade800,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ),
@@ -118,17 +118,20 @@ class CasePriorityImprovementsCard extends StatelessWidget {
                             improvement.timestamp,
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontFamily: 'SF Pro Rounded',
+                              fontWeight: FontWeight.w700,
                               color: Colors.blue.shade700,
                             ),
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          improvement.feedback,
+                          formatFeedbackWithParagraphs(improvement.feedback),
                           style: TextStyle(
-                            fontSize: 14,
-                            height: 1.5,
+                            fontSize: 15,
+                            fontFamily: 'SF Pro Rounded',
+                            fontWeight: FontWeight.w500,
+                            height: 1.6,
                             color: Colors.grey.shade700,
                           ),
                         ),

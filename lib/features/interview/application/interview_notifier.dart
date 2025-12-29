@@ -23,6 +23,7 @@ class InterviewNotifier extends _$InterviewNotifier {
   late final LiveKitRepository _repository;
   late final InterviewAnalysisRepository _analysisRepository;
   StreamSubscription? _transcriptionSubscription;
+  EventsListener<RoomEvent>? _roomEventListener;
 
   /// Public getter for the room
   Room? get room => _room;
@@ -109,15 +110,38 @@ class InterviewNotifier extends _$InterviewNotifier {
     // Start transcription service
     await _startTranscription();
 
-    // Update to connected state
+    // Set up room metadata listener
+    _setupRoomMetadataListener();
+
+    // Update to connected state with initial metadata
     final identity = _room?.localParticipant?.identity;
+    final metadata = _room?.metadata;
     state = InterviewState.connected(
       localVideoTrack: videoTrack,
       participantIdentity: identity,
+      roomMetadata: metadata,
     );
 
     // Start network quality monitoring
     ref.read(networkQualityProvider.notifier).startMonitoring(_room!);
+  }
+
+  void _setupRoomMetadataListener() {
+    if (_room == null) return;
+
+    // Listen for room metadata changes
+    _roomEventListener = _room!.createListener();
+    _roomEventListener!.on<RoomMetadataChangedEvent>((event) {
+      // Update state with new metadata when it changes
+      if (state is Connected) {
+        final currentState = state as Connected;
+        state = InterviewState.connected(
+          localVideoTrack: currentState.localVideoTrack,
+          participantIdentity: currentState.participantIdentity,
+          roomMetadata: event.metadata,
+        );
+      }
+    });
   }
 
   Future<void> _startTranscription() async {
@@ -251,6 +275,8 @@ class InterviewNotifier extends _$InterviewNotifier {
 
   void _disposeRoom() {
     if (_room != null) {
+      _roomEventListener?.dispose();
+      _roomEventListener = null;
       _room!.disconnect();
       _room = null;
     }

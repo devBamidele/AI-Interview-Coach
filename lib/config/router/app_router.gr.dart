@@ -11,22 +11,6 @@
 part of 'app_router.dart';
 
 /// generated route for
-/// [AnalysisResultsPage]
-class AnalysisResultsRoute extends PageRouteInfo<void> {
-  const AnalysisResultsRoute({List<PageRouteInfo>? children})
-    : super(AnalysisResultsRoute.name, initialChildren: children);
-
-  static const String name = 'AnalysisResultsRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const AnalysisResultsPage();
-    },
-  );
-}
-
-/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -47,7 +31,7 @@ class HomeRoute extends PageRouteInfo<void> {
 class InterviewDetailRoute extends PageRouteInfo<InterviewDetailRouteArgs> {
   InterviewDetailRoute({
     Key? key,
-    required String interviewId,
+    String? interviewId,
     List<PageRouteInfo>? children,
   }) : super(
          InterviewDetailRoute.name,
@@ -64,7 +48,7 @@ class InterviewDetailRoute extends PageRouteInfo<InterviewDetailRouteArgs> {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<InterviewDetailRouteArgs>(
         orElse: () => InterviewDetailRouteArgs(
-          interviewId: pathParams.getString('interviewId'),
+          interviewId: pathParams.optString('interviewId'),
         ),
       );
       return InterviewDetailPage(key: args.key, interviewId: args.interviewId);
@@ -73,11 +57,11 @@ class InterviewDetailRoute extends PageRouteInfo<InterviewDetailRouteArgs> {
 }
 
 class InterviewDetailRouteArgs {
-  const InterviewDetailRouteArgs({this.key, required this.interviewId});
+  const InterviewDetailRouteArgs({this.key, this.interviewId});
 
   final Key? key;
 
-  final String interviewId;
+  final String? interviewId;
 
   @override
   String toString() {

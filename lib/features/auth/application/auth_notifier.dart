@@ -97,18 +97,12 @@ class AuthNotifier extends _$AuthNotifier {
 
     final authManager = ref.read(authManagerProvider.notifier);
     final refreshToken = authManager.refreshToken;
-    final result = await _repository.logout(refreshToken);
 
-    result.fold(
-      (failure) {
-        // Even if API call fails, clear local session
-        authManager.logout();
-        state = const AuthState.unauthenticated();
-      },
-      (_) {
-        authManager.logout();
-        state = const AuthState.unauthenticated();
-      },
-    );
+    // Clear local session first before API call
+    await authManager.logout();
+
+    // Then make API call to invalidate tokens on server
+    // This is fire-and-forget - we don't care if it fails since local session is already cleared
+    await _repository.logout(refreshToken);
   }
 }

@@ -12,7 +12,7 @@ sealed class InterviewAnalysisDto with _$InterviewAnalysisDto {
 
   const factory InterviewAnalysisDto({
     required String id,
-    dynamic userId,
+    String? userId,
     required String createdAt,
     required String status,
     required String transcript,
@@ -28,8 +28,37 @@ sealed class InterviewAnalysisDto with _$InterviewAnalysisDto {
     CaseAnalysisDto? caseAnalysis,
   }) = _InterviewAnalysisDto;
 
-  factory InterviewAnalysisDto.fromJson(Map<String, dynamic> json) =>
-      _$InterviewAnalysisDtoFromJson(json);
+  /// Custom fromJson that handles userId as either String, Object, or null
+  factory InterviewAnalysisDto.fromJson(Map<String, dynamic> json) {
+    // Handle userId field - can be String, Object with _id, or null
+    String? userId;
+    final userIdJson = json['userId'];
+    if (userIdJson is String) {
+      userId = userIdJson;
+    } else if (userIdJson is Map<String, dynamic>) {
+      userId = userIdJson['_id'] as String?;
+    }
+
+    return InterviewAnalysisDto(
+      id: json['id'] as String,
+      userId: userId,
+      createdAt: json['createdAt'] as String,
+      status: json['status'] as String,
+      transcript: json['transcript'] as String,
+      duration: (json['duration'] as num).toDouble(),
+      recordingUrl: json['recordingUrl'] as String?,
+      metrics: MetricsDto.fromJson(json['metrics'] as Map<String, dynamic>),
+      aiAnalysis: json['aiAnalysis'] == null
+          ? null
+          : AIAnalysisDto.fromJson(json['aiAnalysis'] as Map<String, dynamic>),
+      caseQuestion: json['caseQuestion'] as String?,
+      difficulty: json['difficulty'] as String?,
+      candidateAnswer: json['candidateAnswer'] as String?,
+      caseAnalysis: json['caseAnalysis'] == null
+          ? null
+          : CaseAnalysisDto.fromJson(json['caseAnalysis'] as Map<String, dynamic>),
+    );
+  }
 
   InterviewAnalysis toEntity() => InterviewAnalysis(
         id: id,

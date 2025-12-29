@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../common/components/components.dart';
+import '../../../../common/utils/text_formatter.dart';
 
 class AnalysisInsightCardWidget extends StatelessWidget {
   final String title;
@@ -58,7 +59,7 @@ class AnalysisInsightCardWidget extends StatelessWidget {
           ),
           addHeight(12),
           Text(
-            content,
+            formatFeedbackWithParagraphs(content),
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade700,

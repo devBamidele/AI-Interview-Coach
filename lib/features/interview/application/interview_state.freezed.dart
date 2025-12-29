@@ -140,12 +140,12 @@ return failed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  disconnected,TResult Function( String status)?  connecting,TResult Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity)?  connected,TResult Function( String status)?  completing,TResult Function( String interviewId)?  analyzing,TResult Function( InterviewAnalysis analysis,  String interviewId)?  analysisComplete,TResult Function( String errorMessage)?  analysisFailed,TResult Function( String errorMessage)?  failed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  disconnected,TResult Function( String status)?  connecting,TResult Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity,  String? roomMetadata)?  connected,TResult Function( String status)?  completing,TResult Function( String interviewId)?  analyzing,TResult Function( InterviewAnalysis analysis,  String interviewId)?  analysisComplete,TResult Function( String errorMessage)?  analysisFailed,TResult Function( String errorMessage)?  failed,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Disconnected() when disconnected != null:
 return disconnected();case Connecting() when connecting != null:
 return connecting(_that.status);case Connected() when connected != null:
-return connected(_that.localVideoTrack,_that.participantIdentity);case Completing() when completing != null:
+return connected(_that.localVideoTrack,_that.participantIdentity,_that.roomMetadata);case Completing() when completing != null:
 return completing(_that.status);case Analyzing() when analyzing != null:
 return analyzing(_that.interviewId);case AnalysisComplete() when analysisComplete != null:
 return analysisComplete(_that.analysis,_that.interviewId);case AnalysisFailed() when analysisFailed != null:
@@ -168,12 +168,12 @@ return failed(_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  disconnected,required TResult Function( String status)  connecting,required TResult Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity)  connected,required TResult Function( String status)  completing,required TResult Function( String interviewId)  analyzing,required TResult Function( InterviewAnalysis analysis,  String interviewId)  analysisComplete,required TResult Function( String errorMessage)  analysisFailed,required TResult Function( String errorMessage)  failed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  disconnected,required TResult Function( String status)  connecting,required TResult Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity,  String? roomMetadata)  connected,required TResult Function( String status)  completing,required TResult Function( String interviewId)  analyzing,required TResult Function( InterviewAnalysis analysis,  String interviewId)  analysisComplete,required TResult Function( String errorMessage)  analysisFailed,required TResult Function( String errorMessage)  failed,}) {final _that = this;
 switch (_that) {
 case Disconnected():
 return disconnected();case Connecting():
 return connecting(_that.status);case Connected():
-return connected(_that.localVideoTrack,_that.participantIdentity);case Completing():
+return connected(_that.localVideoTrack,_that.participantIdentity,_that.roomMetadata);case Completing():
 return completing(_that.status);case Analyzing():
 return analyzing(_that.interviewId);case AnalysisComplete():
 return analysisComplete(_that.analysis,_that.interviewId);case AnalysisFailed():
@@ -195,12 +195,12 @@ return failed(_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  disconnected,TResult? Function( String status)?  connecting,TResult? Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity)?  connected,TResult? Function( String status)?  completing,TResult? Function( String interviewId)?  analyzing,TResult? Function( InterviewAnalysis analysis,  String interviewId)?  analysisComplete,TResult? Function( String errorMessage)?  analysisFailed,TResult? Function( String errorMessage)?  failed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  disconnected,TResult? Function( String status)?  connecting,TResult? Function( LocalVideoTrack? localVideoTrack,  String? participantIdentity,  String? roomMetadata)?  connected,TResult? Function( String status)?  completing,TResult? Function( String interviewId)?  analyzing,TResult? Function( InterviewAnalysis analysis,  String interviewId)?  analysisComplete,TResult? Function( String errorMessage)?  analysisFailed,TResult? Function( String errorMessage)?  failed,}) {final _that = this;
 switch (_that) {
 case Disconnected() when disconnected != null:
 return disconnected();case Connecting() when connecting != null:
 return connecting(_that.status);case Connected() when connected != null:
-return connected(_that.localVideoTrack,_that.participantIdentity);case Completing() when completing != null:
+return connected(_that.localVideoTrack,_that.participantIdentity,_that.roomMetadata);case Completing() when completing != null:
 return completing(_that.status);case Analyzing() when analyzing != null:
 return analyzing(_that.interviewId);case AnalysisComplete() when analysisComplete != null:
 return analysisComplete(_that.analysis,_that.interviewId);case AnalysisFailed() when analysisFailed != null:
@@ -315,11 +315,12 @@ as String,
 
 
 class Connected implements InterviewState {
-  const Connected({this.localVideoTrack, this.participantIdentity});
+  const Connected({this.localVideoTrack, this.participantIdentity, this.roomMetadata});
   
 
  final  LocalVideoTrack? localVideoTrack;
  final  String? participantIdentity;
+ final  String? roomMetadata;
 
 /// Create a copy of InterviewState
 /// with the given fields replaced by the non-null parameter values.
@@ -331,16 +332,16 @@ $ConnectedCopyWith<Connected> get copyWith => _$ConnectedCopyWithImpl<Connected>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Connected&&(identical(other.localVideoTrack, localVideoTrack) || other.localVideoTrack == localVideoTrack)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Connected&&(identical(other.localVideoTrack, localVideoTrack) || other.localVideoTrack == localVideoTrack)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.roomMetadata, roomMetadata) || other.roomMetadata == roomMetadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,localVideoTrack,participantIdentity);
+int get hashCode => Object.hash(runtimeType,localVideoTrack,participantIdentity,roomMetadata);
 
 @override
 String toString() {
-  return 'InterviewState.connected(localVideoTrack: $localVideoTrack, participantIdentity: $participantIdentity)';
+  return 'InterviewState.connected(localVideoTrack: $localVideoTrack, participantIdentity: $participantIdentity, roomMetadata: $roomMetadata)';
 }
 
 
@@ -351,7 +352,7 @@ abstract mixin class $ConnectedCopyWith<$Res> implements $InterviewStateCopyWith
   factory $ConnectedCopyWith(Connected value, $Res Function(Connected) _then) = _$ConnectedCopyWithImpl;
 @useResult
 $Res call({
- LocalVideoTrack? localVideoTrack, String? participantIdentity
+ LocalVideoTrack? localVideoTrack, String? participantIdentity, String? roomMetadata
 });
 
 
@@ -368,10 +369,11 @@ class _$ConnectedCopyWithImpl<$Res>
 
 /// Create a copy of InterviewState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? localVideoTrack = freezed,Object? participantIdentity = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? localVideoTrack = freezed,Object? participantIdentity = freezed,Object? roomMetadata = freezed,}) {
   return _then(Connected(
 localVideoTrack: freezed == localVideoTrack ? _self.localVideoTrack : localVideoTrack // ignore: cast_nullable_to_non_nullable
 as LocalVideoTrack?,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
+as String?,roomMetadata: freezed == roomMetadata ? _self.roomMetadata : roomMetadata // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

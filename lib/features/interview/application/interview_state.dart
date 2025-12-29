@@ -15,6 +15,7 @@ class InterviewState with _$InterviewState {
   const factory InterviewState.connected({
     LocalVideoTrack? localVideoTrack,
     String? participantIdentity,
+    String? roomMetadata,
   }) = Connected;
 
   const factory InterviewState.completing(String status) = Completing;
@@ -45,7 +46,7 @@ extension InterviewStateX on InterviewState {
   String get statusText => when(
     disconnected: () => 'Disconnected',
     connecting: (status) => status,
-    connected: (_, _) => 'Connected',
+    connected: (_, _, _) => 'Connected',
     completing: (status) => status,
     analyzing: (_) => 'Analyzing your interview...',
     analysisComplete: (_, _) => 'Analysis Complete',
@@ -56,7 +57,7 @@ extension InterviewStateX on InterviewState {
   String get errorMessage => when(
     disconnected: () => '',
     connecting: (_) => '',
-    connected: (_, _) => '',
+    connected: (_, _, _) => '',
     completing: (_) => '',
     analyzing: (_) => '',
     analysisComplete: (_, _) => '',
@@ -67,7 +68,7 @@ extension InterviewStateX on InterviewState {
   LocalVideoTrack? get videoTrack => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (track, _) => track,
+    connected: (track, _, _) => track,
     completing: (_) => null,
     analyzing: (_) => null,
     analysisComplete: (_, _) => null,
@@ -78,7 +79,7 @@ extension InterviewStateX on InterviewState {
   String? get participantIdentity => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (_, identity) => identity,
+    connected: (_, identity, _) => identity,
     completing: (_) => null,
     analyzing: (_) => null,
     analysisComplete: (_, _) => null,
@@ -89,7 +90,7 @@ extension InterviewStateX on InterviewState {
   InterviewAnalysis? get analysis => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (_, _) => null,
+    connected: (_, _, _) => null,
     completing: (_) => null,
     analyzing: (_) => null,
     analysisComplete: (analysis, _) => analysis,
@@ -100,10 +101,21 @@ extension InterviewStateX on InterviewState {
   String? get interviewId => when(
     disconnected: () => null,
     connecting: (_) => null,
-    connected: (_, _) => null,
+    connected: (_, _, _) => null,
     completing: (_) => null,
     analyzing: (id) => id,
     analysisComplete: (_, id) => id,
+    analysisFailed: (_) => null,
+    failed: (_) => null,
+  );
+
+  String? get roomMetadata => when(
+    disconnected: () => null,
+    connecting: (_) => null,
+    connected: (_, _, metadata) => metadata,
+    completing: (_) => null,
+    analyzing: (_) => null,
+    analysisComplete: (_, _) => null,
     analysisFailed: (_) => null,
     failed: (_) => null,
   );

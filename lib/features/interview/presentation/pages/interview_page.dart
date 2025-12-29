@@ -1,6 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/components/components.dart';
@@ -44,7 +44,6 @@ class InterviewPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final interviewState = ref.watch(interviewProvider);
-    final notifier = ref.read(interviewProvider.notifier);
     final isMobile = ResponsiveUtils.isMobile(context);
 
     return GestureDetector(
@@ -56,8 +55,7 @@ class InterviewPage extends HookConsumerWidget {
           child: Column(
             children: [
               // Case Question Banner (collapsible)
-              if (interviewState.isConnected)
-                CaseQuestionBanner(room: notifier.room),
+              if (interviewState.isConnected) const CaseQuestionBanner(),
 
               // Countdown Timer (collapsible)
               if (interviewState.isConnected)
@@ -82,14 +80,17 @@ class InterviewPage extends HookConsumerWidget {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      surfaceTintColor: Colors.transparent,
-      title: Text(
-        'AI Interview',
-        style: TextStyles.text.copyWith(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.white,
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: AppColors.black,
+          size: 20,
         ),
+        onPressed: () => context.router.maybePop(),
       ),
+      title: const Text('AI Interview', style: TextStyles.appBarTitle),
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 16.w),
@@ -131,10 +132,7 @@ class InterviewPage extends HookConsumerWidget {
           addHeight(24),
 
           // Transcription Panel (bottom on mobile, full width)
-          SizedBox(
-            height: 400.h,
-            child: const TranscriptionPanel(),
-          ),
+          SizedBox(height: 400.h, child: const TranscriptionPanel()),
 
           addHeight(24),
         ],

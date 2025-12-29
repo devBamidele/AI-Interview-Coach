@@ -74,8 +74,6 @@ class InterviewControlsWidget extends StatelessWidget {
   }
 
   Widget _buildCompleteState(BuildContext context) {
-    final interviewId = state.interviewId;
-
     return Column(
       children: [
         Container(
@@ -101,13 +99,11 @@ class InterviewControlsWidget extends StatelessWidget {
         ),
         addHeight(24),
         AppButton(
-          onPress: interviewId != null
-              ? () {
-                  context.router.push(
-                    InterviewDetailRoute(interviewId: interviewId),
-                  );
-                }
-              : null,
+          onPress: () {
+            // Navigate to InterviewDetailPage without interviewId
+            // This will show the current session's analysis
+            context.router.push(InterviewDetailRoute());
+          },
           height: 50,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

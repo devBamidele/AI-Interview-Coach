@@ -48,7 +48,7 @@ final class UserInterviewsNotifierProvider
 }
 
 String _$userInterviewsNotifierHash() =>
-    r'66b60dfece2c38871e9d63840bae7e328b05f419';
+    r'a7b7915f59ae5173ef537301b3d36e61bbb69422';
 
 abstract class _$UserInterviewsNotifier
     extends $Notifier<AsyncValue<UserInterviewsResponse?>> {

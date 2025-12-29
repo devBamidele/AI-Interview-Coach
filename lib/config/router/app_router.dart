@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
-import '../../features/interview/presentation/pages/analysis_results_page.dart';
 import '../../features/interview/presentation/pages/home_page.dart';
 import '../../features/interview/presentation/pages/interview_detail_page.dart';
 import '../../features/interview/presentation/pages/interview_list_page.dart';
@@ -35,11 +34,13 @@ class AppRouter extends RootStackRouter {
     // Public routes (accessible to anonymous users)
     AutoRoute(page: HomeRoute.page),
     AutoRoute(page: InterviewRoute.page),
-    AutoRoute(page: AnalysisResultsRoute.page),
+
+    // Analysis results - supports both current session (no ID) and historical (with ID)
+    // Public route for current session analysis (anonymous users)
+    AutoRoute(page: InterviewDetailRoute.page),
 
     // Protected routes (authenticated users only)
     AutoRoute(page: InterviewListRoute.page, guards: [_authGuard]),
-    AutoRoute(page: InterviewDetailRoute.page, guards: [_authGuard]),
   ];
 }
 
