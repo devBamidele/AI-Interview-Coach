@@ -298,7 +298,7 @@ as String?,
 /// @nodoc
 mixin _$UserInterviewsResponseDto {
 
- List<UserInterviewDto> get interviews; int get total;
+ List<UserInterviewDto> get interviews; int get total; int get page; int get limit; int get totalPages; bool get hasNextPage; bool get hasPrevPage;
 /// Create a copy of UserInterviewsResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -311,16 +311,16 @@ $UserInterviewsResponseDtoCopyWith<UserInterviewsResponseDto> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewsResponseDto&&const DeepCollectionEquality().equals(other.interviews, interviews)&&(identical(other.total, total) || other.total == total));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewsResponseDto&&const DeepCollectionEquality().equals(other.interviews, interviews)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNextPage, hasNextPage) || other.hasNextPage == hasNextPage)&&(identical(other.hasPrevPage, hasPrevPage) || other.hasPrevPage == hasPrevPage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interviews),total);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interviews),total,page,limit,totalPages,hasNextPage,hasPrevPage);
 
 @override
 String toString() {
-  return 'UserInterviewsResponseDto(interviews: $interviews, total: $total)';
+  return 'UserInterviewsResponseDto(interviews: $interviews, total: $total, page: $page, limit: $limit, totalPages: $totalPages, hasNextPage: $hasNextPage, hasPrevPage: $hasPrevPage)';
 }
 
 
@@ -331,7 +331,7 @@ abstract mixin class $UserInterviewsResponseDtoCopyWith<$Res>  {
   factory $UserInterviewsResponseDtoCopyWith(UserInterviewsResponseDto value, $Res Function(UserInterviewsResponseDto) _then) = _$UserInterviewsResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- List<UserInterviewDto> interviews, int total
+ List<UserInterviewDto> interviews, int total, int page, int limit, int totalPages, bool hasNextPage, bool hasPrevPage
 });
 
 
@@ -348,11 +348,16 @@ class _$UserInterviewsResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewsResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? interviews = null,Object? total = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? interviews = null,Object? total = null,Object? page = null,Object? limit = null,Object? totalPages = null,Object? hasNextPage = null,Object? hasPrevPage = null,}) {
   return _then(_self.copyWith(
 interviews: null == interviews ? _self.interviews : interviews // ignore: cast_nullable_to_non_nullable
 as List<UserInterviewDto>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int,
+as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNextPage: null == hasNextPage ? _self.hasNextPage : hasNextPage // ignore: cast_nullable_to_non_nullable
+as bool,hasPrevPage: null == hasPrevPage ? _self.hasPrevPage : hasPrevPage // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -434,10 +439,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<UserInterviewDto> interviews,  int total)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<UserInterviewDto> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponseDto() when $default != null:
-return $default(_that.interviews,_that.total);case _:
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);case _:
   return orElse();
 
 }
@@ -455,10 +460,10 @@ return $default(_that.interviews,_that.total);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<UserInterviewDto> interviews,  int total)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<UserInterviewDto> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponseDto():
-return $default(_that.interviews,_that.total);}
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -472,10 +477,10 @@ return $default(_that.interviews,_that.total);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<UserInterviewDto> interviews,  int total)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<UserInterviewDto> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)?  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponseDto() when $default != null:
-return $default(_that.interviews,_that.total);case _:
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);case _:
   return null;
 
 }
@@ -487,7 +492,7 @@ return $default(_that.interviews,_that.total);case _:
 @JsonSerializable()
 
 class _UserInterviewsResponseDto extends UserInterviewsResponseDto {
-  const _UserInterviewsResponseDto({required final  List<UserInterviewDto> interviews, required this.total}): _interviews = interviews,super._();
+  const _UserInterviewsResponseDto({required final  List<UserInterviewDto> interviews, required this.total, required this.page, required this.limit, required this.totalPages, required this.hasNextPage, required this.hasPrevPage}): _interviews = interviews,super._();
   factory _UserInterviewsResponseDto.fromJson(Map<String, dynamic> json) => _$UserInterviewsResponseDtoFromJson(json);
 
  final  List<UserInterviewDto> _interviews;
@@ -498,6 +503,11 @@ class _UserInterviewsResponseDto extends UserInterviewsResponseDto {
 }
 
 @override final  int total;
+@override final  int page;
+@override final  int limit;
+@override final  int totalPages;
+@override final  bool hasNextPage;
+@override final  bool hasPrevPage;
 
 /// Create a copy of UserInterviewsResponseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -512,16 +522,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewsResponseDto&&const DeepCollectionEquality().equals(other._interviews, _interviews)&&(identical(other.total, total) || other.total == total));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewsResponseDto&&const DeepCollectionEquality().equals(other._interviews, _interviews)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNextPage, hasNextPage) || other.hasNextPage == hasNextPage)&&(identical(other.hasPrevPage, hasPrevPage) || other.hasPrevPage == hasPrevPage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interviews),total);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interviews),total,page,limit,totalPages,hasNextPage,hasPrevPage);
 
 @override
 String toString() {
-  return 'UserInterviewsResponseDto(interviews: $interviews, total: $total)';
+  return 'UserInterviewsResponseDto(interviews: $interviews, total: $total, page: $page, limit: $limit, totalPages: $totalPages, hasNextPage: $hasNextPage, hasPrevPage: $hasPrevPage)';
 }
 
 
@@ -532,7 +542,7 @@ abstract mixin class _$UserInterviewsResponseDtoCopyWith<$Res> implements $UserI
   factory _$UserInterviewsResponseDtoCopyWith(_UserInterviewsResponseDto value, $Res Function(_UserInterviewsResponseDto) _then) = __$UserInterviewsResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- List<UserInterviewDto> interviews, int total
+ List<UserInterviewDto> interviews, int total, int page, int limit, int totalPages, bool hasNextPage, bool hasPrevPage
 });
 
 
@@ -549,11 +559,16 @@ class __$UserInterviewsResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewsResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? interviews = null,Object? total = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? interviews = null,Object? total = null,Object? page = null,Object? limit = null,Object? totalPages = null,Object? hasNextPage = null,Object? hasPrevPage = null,}) {
   return _then(_UserInterviewsResponseDto(
 interviews: null == interviews ? _self._interviews : interviews // ignore: cast_nullable_to_non_nullable
 as List<UserInterviewDto>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int,
+as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNextPage: null == hasNextPage ? _self.hasNextPage : hasNextPage // ignore: cast_nullable_to_non_nullable
+as bool,hasPrevPage: null == hasPrevPage ? _self.hasPrevPage : hasPrevPage // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -16,7 +16,7 @@ final class UserInterviewsNotifierProvider
     extends
         $NotifierProvider<
           UserInterviewsNotifier,
-          AsyncValue<UserInterviewsResponse?>
+          AsyncValue<UserInterviewsState?>
         > {
   const UserInterviewsNotifierProvider._()
     : super(
@@ -37,10 +37,10 @@ final class UserInterviewsNotifierProvider
   UserInterviewsNotifier create() => UserInterviewsNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<UserInterviewsResponse?> value) {
+  Override overrideWithValue(AsyncValue<UserInterviewsState?> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AsyncValue<UserInterviewsResponse?>>(
+      providerOverride: $SyncValueProvider<AsyncValue<UserInterviewsState?>>(
         value,
       ),
     );
@@ -48,11 +48,11 @@ final class UserInterviewsNotifierProvider
 }
 
 String _$userInterviewsNotifierHash() =>
-    r'a7b7915f59ae5173ef537301b3d36e61bbb69422';
+    r'a47174a150e8aa32a95bdc3e28519e33cbb9c9a9';
 
 abstract class _$UserInterviewsNotifier
-    extends $Notifier<AsyncValue<UserInterviewsResponse?>> {
-  AsyncValue<UserInterviewsResponse?> build();
+    extends $Notifier<AsyncValue<UserInterviewsState?>> {
+  AsyncValue<UserInterviewsState?> build();
   @$mustCallSuper
   @override
   void runBuild() {
@@ -60,17 +60,17 @@ abstract class _$UserInterviewsNotifier
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<UserInterviewsResponse?>,
-              AsyncValue<UserInterviewsResponse?>
+              AsyncValue<UserInterviewsState?>,
+              AsyncValue<UserInterviewsState?>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<UserInterviewsResponse?>,
-                AsyncValue<UserInterviewsResponse?>
+                AsyncValue<UserInterviewsState?>,
+                AsyncValue<UserInterviewsState?>
               >,
-              AsyncValue<UserInterviewsResponse?>,
+              AsyncValue<UserInterviewsState?>,
               Object?,
               Object?
             >;

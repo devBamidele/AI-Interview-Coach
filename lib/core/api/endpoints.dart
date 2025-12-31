@@ -22,9 +22,10 @@ class Endpoints {
 
   /// Get all interviews for a user - SUMMARY ONLY (GET)
   /// Optimized endpoint with 80-90% smaller payload
+  /// Supports pagination with optional page and limit parameters
   /// Requires JWT authentication
-  static String get getUserInterviewsSummary {
-    return '${AppConfig.backendUrl}/api/interviews/my-interviews/summary';
+  static String getUserInterviewsSummary({int page = 1, int limit = 20}) {
+    return '${AppConfig.backendUrl}/api/interviews/my-interviews/summary?page=$page&limit=$limit';
   }
 
   // Authentication endpoints

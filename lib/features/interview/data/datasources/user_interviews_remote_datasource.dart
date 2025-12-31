@@ -17,7 +17,10 @@ UserInterviewsRemoteDataSource userInterviewsRemoteDataSource(Ref ref) {
 }
 
 abstract class UserInterviewsRemoteDataSource {
-  Future<UserInterviewsResponseDto> getUserInterviews();
+  Future<UserInterviewsResponseDto> getUserInterviews({
+    int page = 1,
+    int limit = 20,
+  });
 }
 
 class UserInterviewsRemoteDataSourceImpl
@@ -31,9 +34,12 @@ class UserInterviewsRemoteDataSourceImpl
   });
 
   @override
-  Future<UserInterviewsResponseDto> getUserInterviews() async {
+  Future<UserInterviewsResponseDto> getUserInterviews({
+    int page = 1,
+    int limit = 20,
+  }) async {
     // Use optimized summary endpoint (80-90% smaller payload)
-    final url = Endpoints.getUserInterviewsSummary;
+    final url = Endpoints.getUserInterviewsSummary(page: page, limit: limit);
 
     final response = await networkRetry.networkRetry(
       () => networkRequest.get(url),

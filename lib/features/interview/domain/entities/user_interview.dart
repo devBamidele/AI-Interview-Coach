@@ -26,11 +26,16 @@ sealed class UserInterview with _$UserInterview {
   bool get isMarketSizing => overallWeightedScore != null && overallLabel != null;
 }
 
-/// Response containing list of interviews
+/// Response containing list of interviews with pagination metadata
 @freezed
 sealed class UserInterviewsResponse with _$UserInterviewsResponse {
   const factory UserInterviewsResponse({
     required List<UserInterview> interviews,
     required int total,
+    required int page,
+    required int limit,
+    required int totalPages,
+    required bool hasNextPage,
+    required bool hasPrevPage,
   }) = _UserInterviewsResponse;
 }

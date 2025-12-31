@@ -48,6 +48,11 @@ sealed class UserInterviewsResponseDto with _$UserInterviewsResponseDto {
   const factory UserInterviewsResponseDto({
     required List<UserInterviewDto> interviews,
     required int total,
+    required int page,
+    required int limit,
+    required int totalPages,
+    required bool hasNextPage,
+    required bool hasPrevPage,
   }) = _UserInterviewsResponseDto;
 
   factory UserInterviewsResponseDto.fromJson(Map<String, dynamic> json) =>
@@ -56,5 +61,10 @@ sealed class UserInterviewsResponseDto with _$UserInterviewsResponseDto {
   UserInterviewsResponse toEntity() => UserInterviewsResponse(
     interviews: interviews.map((dto) => dto.toEntity()).toList(),
     total: total,
+    page: page,
+    limit: limit,
+    totalPages: totalPages,
+    hasNextPage: hasNextPage,
+    hasPrevPage: hasPrevPage,
   );
 }

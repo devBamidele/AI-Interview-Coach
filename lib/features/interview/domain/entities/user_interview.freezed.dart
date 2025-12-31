@@ -291,7 +291,7 @@ as String?,
 /// @nodoc
 mixin _$UserInterviewsResponse {
 
- List<UserInterview> get interviews; int get total;
+ List<UserInterview> get interviews; int get total; int get page; int get limit; int get totalPages; bool get hasNextPage; bool get hasPrevPage;
 /// Create a copy of UserInterviewsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -302,16 +302,16 @@ $UserInterviewsResponseCopyWith<UserInterviewsResponse> get copyWith => _$UserIn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewsResponse&&const DeepCollectionEquality().equals(other.interviews, interviews)&&(identical(other.total, total) || other.total == total));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserInterviewsResponse&&const DeepCollectionEquality().equals(other.interviews, interviews)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNextPage, hasNextPage) || other.hasNextPage == hasNextPage)&&(identical(other.hasPrevPage, hasPrevPage) || other.hasPrevPage == hasPrevPage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interviews),total);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(interviews),total,page,limit,totalPages,hasNextPage,hasPrevPage);
 
 @override
 String toString() {
-  return 'UserInterviewsResponse(interviews: $interviews, total: $total)';
+  return 'UserInterviewsResponse(interviews: $interviews, total: $total, page: $page, limit: $limit, totalPages: $totalPages, hasNextPage: $hasNextPage, hasPrevPage: $hasPrevPage)';
 }
 
 
@@ -322,7 +322,7 @@ abstract mixin class $UserInterviewsResponseCopyWith<$Res>  {
   factory $UserInterviewsResponseCopyWith(UserInterviewsResponse value, $Res Function(UserInterviewsResponse) _then) = _$UserInterviewsResponseCopyWithImpl;
 @useResult
 $Res call({
- List<UserInterview> interviews, int total
+ List<UserInterview> interviews, int total, int page, int limit, int totalPages, bool hasNextPage, bool hasPrevPage
 });
 
 
@@ -339,11 +339,16 @@ class _$UserInterviewsResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewsResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? interviews = null,Object? total = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? interviews = null,Object? total = null,Object? page = null,Object? limit = null,Object? totalPages = null,Object? hasNextPage = null,Object? hasPrevPage = null,}) {
   return _then(_self.copyWith(
 interviews: null == interviews ? _self.interviews : interviews // ignore: cast_nullable_to_non_nullable
 as List<UserInterview>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int,
+as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNextPage: null == hasNextPage ? _self.hasNextPage : hasNextPage // ignore: cast_nullable_to_non_nullable
+as bool,hasPrevPage: null == hasPrevPage ? _self.hasPrevPage : hasPrevPage // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -425,10 +430,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<UserInterview> interviews,  int total)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<UserInterview> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponse() when $default != null:
-return $default(_that.interviews,_that.total);case _:
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);case _:
   return orElse();
 
 }
@@ -446,10 +451,10 @@ return $default(_that.interviews,_that.total);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<UserInterview> interviews,  int total)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<UserInterview> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponse():
-return $default(_that.interviews,_that.total);}
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -463,10 +468,10 @@ return $default(_that.interviews,_that.total);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<UserInterview> interviews,  int total)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<UserInterview> interviews,  int total,  int page,  int limit,  int totalPages,  bool hasNextPage,  bool hasPrevPage)?  $default,) {final _that = this;
 switch (_that) {
 case _UserInterviewsResponse() when $default != null:
-return $default(_that.interviews,_that.total);case _:
+return $default(_that.interviews,_that.total,_that.page,_that.limit,_that.totalPages,_that.hasNextPage,_that.hasPrevPage);case _:
   return null;
 
 }
@@ -478,7 +483,7 @@ return $default(_that.interviews,_that.total);case _:
 
 
 class _UserInterviewsResponse implements UserInterviewsResponse {
-  const _UserInterviewsResponse({required final  List<UserInterview> interviews, required this.total}): _interviews = interviews;
+  const _UserInterviewsResponse({required final  List<UserInterview> interviews, required this.total, required this.page, required this.limit, required this.totalPages, required this.hasNextPage, required this.hasPrevPage}): _interviews = interviews;
   
 
  final  List<UserInterview> _interviews;
@@ -489,6 +494,11 @@ class _UserInterviewsResponse implements UserInterviewsResponse {
 }
 
 @override final  int total;
+@override final  int page;
+@override final  int limit;
+@override final  int totalPages;
+@override final  bool hasNextPage;
+@override final  bool hasPrevPage;
 
 /// Create a copy of UserInterviewsResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -500,16 +510,16 @@ _$UserInterviewsResponseCopyWith<_UserInterviewsResponse> get copyWith => __$Use
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewsResponse&&const DeepCollectionEquality().equals(other._interviews, _interviews)&&(identical(other.total, total) || other.total == total));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserInterviewsResponse&&const DeepCollectionEquality().equals(other._interviews, _interviews)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNextPage, hasNextPage) || other.hasNextPage == hasNextPage)&&(identical(other.hasPrevPage, hasPrevPage) || other.hasPrevPage == hasPrevPage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interviews),total);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_interviews),total,page,limit,totalPages,hasNextPage,hasPrevPage);
 
 @override
 String toString() {
-  return 'UserInterviewsResponse(interviews: $interviews, total: $total)';
+  return 'UserInterviewsResponse(interviews: $interviews, total: $total, page: $page, limit: $limit, totalPages: $totalPages, hasNextPage: $hasNextPage, hasPrevPage: $hasPrevPage)';
 }
 
 
@@ -520,7 +530,7 @@ abstract mixin class _$UserInterviewsResponseCopyWith<$Res> implements $UserInte
   factory _$UserInterviewsResponseCopyWith(_UserInterviewsResponse value, $Res Function(_UserInterviewsResponse) _then) = __$UserInterviewsResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<UserInterview> interviews, int total
+ List<UserInterview> interviews, int total, int page, int limit, int totalPages, bool hasNextPage, bool hasPrevPage
 });
 
 
@@ -537,11 +547,16 @@ class __$UserInterviewsResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserInterviewsResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? interviews = null,Object? total = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? interviews = null,Object? total = null,Object? page = null,Object? limit = null,Object? totalPages = null,Object? hasNextPage = null,Object? hasPrevPage = null,}) {
   return _then(_UserInterviewsResponse(
 interviews: null == interviews ? _self._interviews : interviews // ignore: cast_nullable_to_non_nullable
 as List<UserInterview>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int,
+as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNextPage: null == hasNextPage ? _self.hasNextPage : hasNextPage // ignore: cast_nullable_to_non_nullable
+as bool,hasPrevPage: null == hasPrevPage ? _self.hasPrevPage : hasPrevPage // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

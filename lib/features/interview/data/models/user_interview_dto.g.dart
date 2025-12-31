@@ -39,6 +39,11 @@ _UserInterviewsResponseDto _$UserInterviewsResponseDtoFromJson(
       .map((e) => UserInterviewDto.fromJson(e as Map<String, dynamic>))
       .toList(),
   total: (json['total'] as num).toInt(),
+  page: (json['page'] as num).toInt(),
+  limit: (json['limit'] as num).toInt(),
+  totalPages: (json['totalPages'] as num).toInt(),
+  hasNextPage: json['hasNextPage'] as bool,
+  hasPrevPage: json['hasPrevPage'] as bool,
 );
 
 Map<String, dynamic> _$UserInterviewsResponseDtoToJson(
@@ -46,4 +51,9 @@ Map<String, dynamic> _$UserInterviewsResponseDtoToJson(
 ) => <String, dynamic>{
   'interviews': instance.interviews,
   'total': instance.total,
+  'page': instance.page,
+  'limit': instance.limit,
+  'totalPages': instance.totalPages,
+  'hasNextPage': instance.hasNextPage,
+  'hasPrevPage': instance.hasPrevPage,
 };
