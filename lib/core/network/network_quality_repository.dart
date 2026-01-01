@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:ai_interview_mvp/core/error/failures.dart';
-import 'package:ai_interview_mvp/core/network/network_quality.dart';
-import 'package:ai_interview_mvp/core/network/network_quality_datasource.dart';
+import 'package:rehearsecoach/core/error/failures.dart';
+import 'package:rehearsecoach/core/network/network_quality.dart';
+import 'package:rehearsecoach/core/network/network_quality_datasource.dart';
 
 /// Abstract repository interface for network quality operations
 abstract class NetworkQualityRepository {

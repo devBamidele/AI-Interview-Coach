@@ -16,7 +16,9 @@
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(lsof:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(file:*)",
+      "Bash(keytool -genkey:*)"
     ],
     "deny": [],
     "ask": []

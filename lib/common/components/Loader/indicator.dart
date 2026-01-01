@@ -1,4 +1,4 @@
-import 'package:ai_interview_mvp/common/utils/extensions.dart';
+import 'package:rehearsecoach/common/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class LoadingIndicator extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:ai_interview_mvp/common/components/Box/box.dart';
+import 'package:rehearsecoach/common/components/Box/box.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

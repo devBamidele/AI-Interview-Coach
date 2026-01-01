@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,9 +6,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'config/router/app_router.dart';
 import 'config/theme/app_theme.dart';
+import 'core/config/app_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔍 Check environment on startup
+  if (kDebugMode) {
+    debugPrint('═══════════════════════════════════════');
+    debugPrint('🚀 Environment: ${AppConfig.environmentName}');
+    debugPrint('🌐 Backend: ${AppConfig.backendUrl}');
+    debugPrint('═══════════════════════════════════════');
+  }
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

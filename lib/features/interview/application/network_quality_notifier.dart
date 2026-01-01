@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:ai_interview_mvp/core/constants/app_config.dart';
-import 'package:ai_interview_mvp/core/constants/network_config.dart';
-import 'package:ai_interview_mvp/core/network/network_quality.dart';
-import 'package:ai_interview_mvp/core/network/network_quality_datasource.dart';
-import 'package:ai_interview_mvp/core/network/network_quality_repository.dart';
-import 'package:ai_interview_mvp/features/interview/application/network_quality_state.dart';
+import 'package:rehearsecoach/core/config/app_config.dart';
+import 'package:rehearsecoach/core/constants/network_config.dart';
+import 'package:rehearsecoach/core/network/network_quality.dart';
+import 'package:rehearsecoach/core/network/network_quality_datasource.dart';
+import 'package:rehearsecoach/core/network/network_quality_repository.dart';
+import 'package:rehearsecoach/features/interview/application/network_quality_state.dart';
 
 part 'network_quality_notifier.g.dart';
 

@@ -1,4 +1,4 @@
-import 'package:ai_interview_mvp/features/auth/application/auth_manager.dart';
+import 'package:rehearsecoach/features/auth/application/auth_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -1,4 +1,4 @@
-# Rehearse - AI Interview Practice MVP
+# RehearseCoach - AI Interview Practice MVP
 
 An AI-powered video interview practice application built with Flutter. Practice your interview skills through real-time conversations with an AI interviewer, complete with live transcription, speech analysis, and performance feedback.
 

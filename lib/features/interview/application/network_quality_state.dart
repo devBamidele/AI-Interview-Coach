@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ai_interview_mvp/core/network/network_quality.dart';
+import 'package:rehearsecoach/core/network/network_quality.dart';
 
 part 'network_quality_state.freezed.dart';
 

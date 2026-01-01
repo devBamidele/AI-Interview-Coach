@@ -1,6 +1,6 @@
-import 'package:ai_interview_mvp/config/router/app_router.dart';
-import 'package:ai_interview_mvp/constants/colors.dart';
-import 'package:ai_interview_mvp/features/auth/application/auth_manager.dart';
+import 'package:rehearsecoach/config/router/app_router.dart';
+import 'package:rehearsecoach/constants/colors.dart';
+import 'package:rehearsecoach/features/auth/application/auth_manager.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

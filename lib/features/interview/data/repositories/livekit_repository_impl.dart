@@ -1,4 +1,4 @@
-import 'package:ai_interview_mvp/features/interview/data/models/token_response_dto.dart';
+import 'package:rehearsecoach/features/interview/data/models/token_response_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

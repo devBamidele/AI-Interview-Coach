@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:ai_interview_mvp/core/network/network_quality.dart';
-import 'package:ai_interview_mvp/features/interview/application/network_quality_notifier.dart';
-import 'package:ai_interview_mvp/features/interview/application/network_quality_state.dart';
+import 'package:rehearsecoach/core/network/network_quality.dart';
+import 'package:rehearsecoach/features/interview/application/network_quality_notifier.dart';
+import 'package:rehearsecoach/features/interview/application/network_quality_state.dart';
 
 /// A widget that displays the current network quality with signal bars and connection type icon
 class NetworkStrengthIndicator extends ConsumerWidget {

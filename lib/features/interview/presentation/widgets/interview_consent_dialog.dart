@@ -1,28 +1,30 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../common/components/components.dart';
-import '../../../../common/styles/text_style.dart';
-import '../../../../config/router/app_router.dart';
-import '../../../auth/application/auth_manager.dart';
-import '../../../auth/data/repositories/auth_repository_impl.dart'
-    show authRepositoryProvider;
-import '../../application/interviews_cache_provider.dart';
-import '../../application/user_interviews_notifier.dart';
+import '../../../../constants/colors.dart';
 
-class HomeHeaderWidget extends ConsumerWidget {
-  const HomeHeaderWidget({super.key});
+class InterviewConsentDialog extends StatelessWidget {
+  const InterviewConsentDialog({super.key});
 
-  Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
+  static Future<bool?> show(BuildContext context) {
+    return showDialog<bool>(
       context: context,
       barrierDismissible: true,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 8,
-        backgroundColor: Colors.white,
+      builder: (context) => const InterviewConsentDialog(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final dialogWidth = screenWidth > 600 ? 500.0 : screenWidth * 0.9;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 8,
+      backgroundColor: Colors.white,
+      child: Container(
+        width: dialogWidth,
+        constraints: const BoxConstraints(maxWidth: 500),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -32,13 +34,13 @@ class HomeHeaderWidget extends ConsumerWidget {
               Container(
                 width: 48,
                 height: 48,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFEE2E2),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.logout,
-                  color: Color(0xFFDC2626),
+                  Icons.privacy_tip_outlined,
+                  color: AppColors.primaryColor,
                   size: 24,
                 ),
               ),
@@ -47,7 +49,7 @@ class HomeHeaderWidget extends ConsumerWidget {
 
               // Title
               const Text(
-                'Logout',
+                'Before We Begin',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -61,8 +63,7 @@ class HomeHeaderWidget extends ConsumerWidget {
 
               // Content
               const Text(
-                'Are you sure you want to logout?\nYour session will end.',
-                textAlign: TextAlign.center,
+                'Rehearse Coach needs your permission to:',
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'SF Pro Rounded',
@@ -71,12 +72,46 @@ class HomeHeaderWidget extends ConsumerWidget {
                 ),
               ),
 
+              const SizedBox(height: 12),
+
+              // Permissions List
+              _buildPermissionItem(
+                icon: Icons.videocam_rounded,
+                text: 'Record video & audio',
+              ),
+              const SizedBox(height: 8),
+              _buildPermissionItem(
+                icon: Icons.analytics_outlined,
+                text: 'Analyze with AI & provide feedback',
+              ),
+
+              const SizedBox(height: 14),
+
+              // Purpose Section
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text(
+                  'Your data is stored securely and used only for interview practice.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'SF Pro Rounded',
+                    color: Color(0xFF8a8a8e),
+                    height: 1.3,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
               const SizedBox(height: 18),
 
               // Buttons
               Row(
                 children: [
-                  // Cancel Button
+                  // Decline Button
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(false),
@@ -92,7 +127,7 @@ class HomeHeaderWidget extends ConsumerWidget {
                         foregroundColor: const Color(0xff121212),
                       ),
                       child: const Text(
-                        'Cancel',
+                        'Decline',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -104,13 +139,13 @@ class HomeHeaderWidget extends ConsumerWidget {
 
                   const SizedBox(width: 12),
 
-                  // Logout Button
+                  // Accept Button
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(true),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        backgroundColor: const Color(0xFFDC2626),
+                        backgroundColor: AppColors.primaryColor,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -118,7 +153,7 @@ class HomeHeaderWidget extends ConsumerWidget {
                         ),
                       ),
                       child: const Text(
-                        'Logout',
+                        'Accept',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -134,60 +169,31 @@ class HomeHeaderWidget extends ConsumerWidget {
         ),
       ),
     );
-
-    if (confirmed == true && context.mounted) {
-      // Clear interview caches
-      ref.read(interviewsCacheProvider.notifier).clear();
-      ref.read(userInterviewsProvider.notifier).clear();
-
-      // Get auth manager and refresh token
-      final authManager = ref.read(authManagerProvider.notifier);
-      final refreshToken = authManager.refreshToken;
-
-      // First, invalidate tokens on server (while we still have access token)
-      if (refreshToken != null) {
-        try {
-          await ref.read(authRepositoryProvider).logout(refreshToken);
-        } catch (e) {
-          // Ignore errors - we'll clear local session anyway
-        }
-      }
-
-      // Then clear local auth session
-      await authManager.logout();
-
-      // Navigate to login page
-      if (context.mounted) {
-        context.router.replaceAll([const LoginRoute()]);
-      }
-    }
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+  Widget _buildPermissionItem({required IconData icon, required String text}) {
+    return Row(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Welcome Back', style: TextStyles.title),
-                addHeight(8),
-                Text(
-                  'Practice. Improve. Succeed.',
-                  style: TextStyles.hintThemeText,
-                ),
-              ],
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: AppColors.primaryColor, size: 18),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: 'SF Pro Rounded',
+              color: Color(0xff121212),
+              fontWeight: FontWeight.w500,
             ),
-
-            IconButton(
-              icon: const Icon(Icons.logout, color: Colors.black87),
-              tooltip: 'Logout',
-              onPressed: () => _handleLogout(context, ref),
-            ),
-          ],
+          ),
         ),
       ],
     );

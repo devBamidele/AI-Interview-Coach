@@ -1,7 +1,7 @@
-name: ai_interview_mvp
-description: "A new Flutter project."
+name: rehearsecoach
+description: "RehearseCoach - AI-powered interview practice app with real-time feedback"
 publish_to: 'none'
-version: 1.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ^3.8.1

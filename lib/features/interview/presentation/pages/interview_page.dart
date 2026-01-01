@@ -15,6 +15,7 @@ import '../../application/interview_state.dart';
 import '../widgets/case_question_banner.dart';
 import '../widgets/connection_status.dart';
 import '../widgets/countdown_timer_widget.dart';
+import '../widgets/interview_consent_dialog.dart';
 import '../widgets/interview_controls.dart';
 import '../widgets/network_strength_indicator.dart';
 import '../widgets/transcription_panel.dart';
@@ -24,7 +25,14 @@ import '../widgets/video_preview.dart';
 class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
 
-  Future<void> _connectToInterview(WidgetRef ref) async {
+  Future<void> _connectToInterview(BuildContext context, WidgetRef ref) async {
+    // Show consent dialog before connecting
+    final consent = await InterviewConsentDialog.show(context);
+
+    // Only proceed if user accepted
+    if (consent != true) return;
+
+    // User accepted, proceed with connection
     final authState = ref.read(authProvider);
     final paramsBuilder = ref.read(connectionParamsBuilderProvider);
 
@@ -124,7 +132,7 @@ class InterviewPage extends HookConsumerWidget {
           // Interview Controls
           InterviewControlsWidget(
             state: state,
-            onConnect: () => _connectToInterview(ref),
+            onConnect: () => _connectToInterview(context, ref),
             onDisconnect: () => _disconnectFromInterview(ref),
             onComplete: () => _completeInterview(ref),
           ),
@@ -161,7 +169,7 @@ class InterviewPage extends HookConsumerWidget {
                   addHeight(20),
                   InterviewControlsWidget(
                     state: state,
-                    onConnect: () => _connectToInterview(ref),
+                    onConnect: () => _connectToInterview(context, ref),
                     onDisconnect: () => _disconnectFromInterview(ref),
                     onComplete: () => _completeInterview(ref),
                   ),

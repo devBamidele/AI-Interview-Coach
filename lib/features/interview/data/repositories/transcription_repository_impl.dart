@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ai_interview_mvp/core/constants/app_config.dart';
+import 'package:rehearsecoach/core/config/app_config.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';

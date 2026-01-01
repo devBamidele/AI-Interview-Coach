@@ -26,7 +26,7 @@ final class AuthLocalDataSourceProvider
         argument: null,
         retry: null,
         name: r'authLocalDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -55,4 +55,4 @@ final class AuthLocalDataSourceProvider
 }
 
 String _$authLocalDataSourceHash() =>
-    r'f28d447c0de8bc28b70a84c9bea5a099791a93ba';
+    r'bd0fe1445f6153dd1ea7706a4327608d35bd807f';

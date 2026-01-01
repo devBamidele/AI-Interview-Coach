@@ -1,4 +1,4 @@
-import 'package:ai_interview_mvp/common/components/Loader/indicator.dart';
+import 'package:rehearsecoach/common/components/Loader/indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

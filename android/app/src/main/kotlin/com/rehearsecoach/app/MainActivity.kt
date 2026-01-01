@@ -1,4 +1,4 @@
-package com.example.ai_interview_mvp
+package com.rehearsecoach.app
 
 import io.flutter.embedding.android.FlutterActivity
 
