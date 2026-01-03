@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/user.dart';
+import 'user_metadata_dto.dart';
 
 part 'user_dto.freezed.dart';
 part 'user_dto.g.dart';
@@ -18,6 +19,7 @@ sealed class UserDto with _$UserDto {
     String? participantIdentity, // For anonymous users
     String? userType, // "authenticated" or "anonymous"
     String? createdAt,
+    UserMetadataDto? metadata, // User metadata including consent status
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
@@ -25,11 +27,12 @@ sealed class UserDto with _$UserDto {
 
   /// Convert DTO to domain entity
   User toEntity() => User(
-    id: id,
-    email: email,
-    name: name,
-    participantIdentity: participantIdentity,
-    userType: userType,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
-  );
+        id: id,
+        email: email,
+        name: name,
+        participantIdentity: participantIdentity,
+        userType: userType,
+        createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+        metadata: metadata?.toEntity(),
+      );
 }

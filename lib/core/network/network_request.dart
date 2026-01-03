@@ -24,6 +24,12 @@ abstract class NetworkRequest {
     Map<String, String>? headers,
     Object? body,
   });
+
+  Future<Response> patch(
+    String url, {
+    Map<String, String>? headers,
+    Object? body,
+  });
 }
 
 class NetworkRequestImpl implements NetworkRequest {
@@ -69,6 +75,19 @@ class NetworkRequestImpl implements NetworkRequest {
     Object? body,
   }) {
     return _dio.post(
+      url,
+      data: body,
+      options: Options(headers: headers),
+    );
+  }
+
+  @override
+  Future<Response> patch(
+    String url, {
+    Map<String, String>? headers,
+    Object? body,
+  }) {
+    return _dio.patch(
       url,
       data: body,
       options: Options(headers: headers),

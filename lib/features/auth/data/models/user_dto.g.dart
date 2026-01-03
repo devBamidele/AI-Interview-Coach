@@ -13,6 +13,9 @@ _UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
   participantIdentity: json['participantIdentity'] as String?,
   userType: json['userType'] as String?,
   createdAt: json['createdAt'] as String?,
+  metadata: json['metadata'] == null
+      ? null
+      : UserMetadataDto.fromJson(json['metadata'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
@@ -22,4 +25,5 @@ Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
   'participantIdentity': instance.participantIdentity,
   'userType': instance.userType,
   'createdAt': instance.createdAt,
+  'metadata': instance.metadata,
 };

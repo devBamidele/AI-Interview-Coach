@@ -10,6 +10,7 @@ import '../../../../common/utils/responsive_utils.dart';
 import '../../../../constants/colors.dart';
 import '../../../auth/application/auth_notifier.dart';
 import '../../application/connection_params_builder.dart';
+import '../../application/consent_manager.dart';
 import '../../application/interview_notifier.dart';
 import '../../application/interview_state.dart';
 import '../widgets/case_question_banner.dart';
@@ -26,17 +27,34 @@ class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
 
   Future<void> _connectToInterview(BuildContext context, WidgetRef ref) async {
-    // Show consent dialog before connecting
-    final consent = await InterviewConsentDialog.show(context);
+    // Check if consent already granted
+    final hasConsent = ref.read(consentManagerProvider.notifier).hasConsent();
 
-    // Only proceed if user accepted
-    if (consent != true) return;
+    if (!hasConsent) {
+      // Show consent dialog only if not granted before
+      final consent = await InterviewConsentDialog.show(context);
 
-    // User accepted, proceed with connection
+      if (consent != true) return; // User declined
+
+      // User accepted - save consent immediately (fire-and-forget, will complete even if page unmounts)
+      // This must happen before mounted check to ensure consent is always saved when user accepts
+      ref.read(consentManagerProvider.notifier).grantConsent();
+
+      // Check if still mounted after async dialog
+      if (!context.mounted) return;
+    }
+
+    // Check if still mounted after potential async operations
+    if (!context.mounted) return;
+
+    // Proceed with connection (whether consent was just granted or already existed)
     final authState = ref.read(authProvider);
     final paramsBuilder = ref.read(connectionParamsBuilderProvider);
 
     final params = await paramsBuilder.buildParams(authState: authState);
+
+    // Check if still mounted before connecting
+    if (!context.mounted) return;
 
     await ref.read(interviewProvider.notifier).connect(params);
   }

@@ -7,6 +7,8 @@ import '../models/auth_response_dto.dart';
 import '../models/login_dto.dart';
 import '../models/refresh_token_dto.dart';
 import '../models/signup_dto.dart';
+import '../models/user_dto.dart';
+import '../models/user_metadata_dto.dart';
 
 part 'auth_remote_datasource.g.dart';
 
@@ -23,6 +25,7 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseDto> refreshToken(RefreshTokenDto refreshDto);
   Future<void> logout(String? refreshToken);
   Future<AuthResponseDto> createAnonymousSession(String deviceId);
+  Future<UserDto> updateUserMetadata(UserMetadataDto metadata);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -105,5 +108,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
 
     return AuthResponseDto.fromJson(response.data);
+  }
+
+  @override
+  Future<UserDto> updateUserMetadata(UserMetadataDto metadata) async {
+    final response = await networkRequest.patch(
+      Endpoints.updateMetadata,
+      body: {'metadata': metadata.toJson()},
+    );
+
+    if (!response.isSuccess) {
+      final message = response.data is Map
+          ? (response.data['message'] ?? 'Metadata update failed')
+          : 'Metadata update failed';
+      throw ServerException(message);
+    }
+
+    // Extract user from response
+    final userData = response.data['user'] as Map<String, dynamic>;
+    return UserDto.fromJson(userData);
   }
 }

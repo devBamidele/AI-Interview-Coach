@@ -73,6 +73,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Debug signing is handled automatically by Android
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
             // Code shrinking, obfuscation, and optimization

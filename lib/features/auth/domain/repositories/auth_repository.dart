@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
 import '../entities/auth_session.dart';
+import '../entities/user.dart';
+import '../entities/user_metadata.dart';
 
 /// Repository interface for authentication operations
 abstract class AuthRepository {
@@ -23,4 +25,6 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> logout(String? refreshToken);
 
   Future<Either<Failure, AuthSession?>> getCurrentSession();
+
+  Future<Either<Failure, User>> updateUserMetadata(UserMetadata metadata);
 }

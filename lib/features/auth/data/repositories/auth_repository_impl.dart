@@ -5,6 +5,8 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/runner/service_runner.dart';
 import '../../domain/entities/auth_session.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/entities/user_metadata.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
@@ -12,6 +14,7 @@ import '../models/auth_session_dto.dart';
 import '../models/login_dto.dart';
 import '../models/refresh_token_dto.dart';
 import '../models/signup_dto.dart';
+import '../models/user_metadata_dto.dart';
 
 part 'auth_repository_impl.g.dart';
 
@@ -77,9 +80,7 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthSession>> createAnonymousSession(
-    String deviceId,
-  ) {
+  Future<Either<Failure, AuthSession>> createAnonymousSession(String deviceId) {
     return run(() async {
       final response = await _remoteDataSource.createAnonymousSession(deviceId);
 
@@ -135,5 +136,34 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
       final sessionDto = await _localDataSource.getAuthSession();
       return sessionDto?.toEntity();
     }, errorTitle: 'Session Retrieval Failed');
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserMetadata(UserMetadata metadata) {
+    return run(() async {
+      // Convert entity to DTO for API call
+      final metadataDto = UserMetadataDto(
+        hasGrantedInterviewConsent: metadata.hasGrantedInterviewConsent,
+      );
+
+      // Call API to update metadata
+      final updatedUserDto = await _remoteDataSource.updateUserMetadata(
+        metadataDto,
+      );
+
+      // Get current session from storage
+      final currentSession = await _localDataSource.getAuthSession();
+      if (currentSession == null) {
+        throw Exception('No active session');
+      }
+
+      // Create updated session with new user data
+      final updatedSession = currentSession.copyWith(user: updatedUserDto);
+
+      // Save updated session locally
+      await _localDataSource.saveAuthSession(updatedSession);
+
+      return updatedUserDto.toEntity();
+    }, errorTitle: 'Metadata Update Failed');
   }
 }

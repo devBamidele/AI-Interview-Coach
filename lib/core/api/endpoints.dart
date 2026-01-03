@@ -50,4 +50,8 @@ class Endpoints {
   static String upgradeAccount(String participantIdentity) {
     return '$base/api/auth/upgrade/$participantIdentity';
   }
+
+  /// Update user metadata endpoint (PATCH)
+  /// Updates user metadata including consent status
+  static String get updateMetadata => '$base/api/auth/metadata';
 }
