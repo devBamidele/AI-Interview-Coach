@@ -2,14 +2,12 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/transcript_event.dart';
 
-/// Session complete data containing interview ID and access token
+/// Session complete data containing interview ID
 class SessionCompleteData {
   final String interviewId;
-  final String accessToken;
 
   const SessionCompleteData({
     required this.interviewId,
-    required this.accessToken,
   });
 }
 

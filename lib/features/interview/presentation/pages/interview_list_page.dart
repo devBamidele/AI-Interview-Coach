@@ -182,22 +182,22 @@ class InterviewListPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Show total count
-          if (response.total > 0)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-              child: Text(
-                '${response.total} interview${response.total == 1 ? '' : 's'}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+          // if (response.total > 0)
+          //   Padding(
+          //     padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+          //     child: Text(
+          //       '${response.total} interview${response.total == 1 ? '' : 's'}',
+          //       style: TextStyle(
+          //         fontSize: 14,
+          //         color: Colors.grey.shade600,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //     ),
+          //   ),
           Expanded(
             child: ListView.builder(
               controller: scrollController,
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
               itemCount: itemCount,
               itemBuilder: (context, index) {
                 // Show interview items

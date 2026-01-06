@@ -51,7 +51,6 @@ class TranscriptionMessage {
           data: {
             'message': json['message'] as String,
             'interviewId': json['interviewId'] as String,
-            'accessToken': json['accessToken'] as String,
           },
         );
       default:

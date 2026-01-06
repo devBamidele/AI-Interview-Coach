@@ -44,14 +44,12 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
               break;
             case TranscriptionMessageType.sessionComplete:
               final data = message.data as Map<String, dynamic>;
-              final interviewId = data['interviewId'] as String?;
-              final accessToken = data['accessToken'] as String?;
+              final interviewId = data['interviewId'];
 
-              if (interviewId != null && accessToken != null) {
+              if (interviewId is String) {
                 _sessionCompleteController.add(
                   SessionCompleteData(
                     interviewId: interviewId,
-                    accessToken: accessToken,
                   ),
                 );
               } else {
@@ -109,14 +107,12 @@ class TranscriptionRepositoryImpl implements TranscriptionRepository {
               break;
             case TranscriptionMessageType.sessionComplete:
               final data = message.data as Map<String, dynamic>;
-              final interviewId = data['interviewId'] as String?;
-              final accessToken = data['accessToken'] as String?;
+              final interviewId = data['interviewId'];
 
-              if (interviewId != null && accessToken != null) {
+              if (interviewId is String) {
                 _sessionCompleteController.add(
                   SessionCompleteData(
                     interviewId: interviewId,
-                    accessToken: accessToken,
                   ),
                 );
               } else {

@@ -6,60 +6,54 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=dev"
-      ],
-      "flutterMode": "debug"
+      "args": ["--dart-define=ENV=dev"],
+      "flutterMode": "debug",
+      "flutterBuildFlavor": "dev"
     },
     {
       "name": "Staging (Debug)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=staging"
-      ],
-      "flutterMode": "debug"
+      "args": ["--dart-define=ENV=staging"],
+      "flutterMode": "debug",
+      "flutterBuildFlavor": "staging"
     },
     {
       "name": "Production (Debug - Testing Only)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=prod"
-      ],
-      "flutterMode": "debug"
+      "args": ["--dart-define=ENV=prod"],
+      "flutterMode": "debug",
+      "flutterBuildFlavor": "prod"
     },
     {
       "name": "Dev (Profile)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=dev"
-      ],
-      "flutterMode": "profile"
+      "args": ["--dart-define=ENV=dev"],
+      "flutterMode": "profile",
+      "flutterBuildFlavor": "dev"
     },
     {
       "name": "Staging (Profile)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=staging"
-      ],
-      "flutterMode": "profile"
+      "args": ["--dart-define=ENV=staging"],
+      "flutterMode": "profile",
+      "flutterBuildFlavor": "staging"
     },
     {
       "name": "Production (Release - Testing Only)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--dart-define=ENV=prod"
-      ],
-      "flutterMode": "release"
+      "args": ["--dart-define=ENV=prod"],
+      "flutterMode": "release",
+      "flutterBuildFlavor": "prod"
     }
   ]
 }

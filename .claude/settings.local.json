@@ -18,7 +18,9 @@
       "Bash(lsof:*)",
       "Bash(mkdir:*)",
       "Bash(file:*)",
-      "Bash(keytool -genkey:*)"
+      "Bash(keytool -genkey:*)",
+      "Bash(adb devices:*)",
+      "Bash(adb -s emulator-5556 shell ps:*)"
     ],
     "deny": [],
     "ask": []

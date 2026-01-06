@@ -18,6 +18,7 @@ import '../widgets/connection_status.dart';
 import '../widgets/countdown_timer_widget.dart';
 import '../widgets/interview_consent_dialog.dart';
 import '../widgets/interview_controls.dart';
+import '../widgets/interview_exit_dialog.dart';
 import '../widgets/network_strength_indicator.dart';
 import '../widgets/transcription_panel.dart';
 import '../widgets/video_preview.dart';
@@ -25,6 +26,9 @@ import '../widgets/video_preview.dart';
 @RoutePage()
 class InterviewPage extends HookConsumerWidget {
   const InterviewPage({super.key});
+
+  // Configuration: Set to false to disable auto-completion when timer expires
+  static const bool _autoCompleteOnTimeExpiry = true;
 
   Future<void> _connectToInterview(BuildContext context, WidgetRef ref) async {
     // Check if consent already granted
@@ -67,42 +71,73 @@ class InterviewPage extends HookConsumerWidget {
     await ref.read(interviewProvider.notifier).completeInterview();
   }
 
+  void _handleTimeExpiry(BuildContext context, WidgetRef ref) {
+    // Show notification that time is up
+    _showTimeUpSnackbar(context);
+
+    // Auto-complete interview if enabled
+    if (_autoCompleteOnTimeExpiry) {
+      _completeInterview(ref);
+    }
+  }
+
+  Future<bool> _handlePopAttempt(BuildContext context, InterviewState state) async {
+    // Only show dialog if interview is connected/active
+    if (state.isConnected) {
+      final shouldLeave = await InterviewExitDialog.show(context);
+      return shouldLeave ?? false;
+    }
+    // Allow navigation if not connected
+    return true;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final interviewState = ref.watch(interviewProvider);
     final isMobile = ResponsiveUtils.isMobile(context);
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: _buildAppBar(context),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Case Question Banner (collapsible)
-              if (interviewState.isConnected) const CaseQuestionBanner(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
 
-              // Countdown Timer (collapsible)
-              if (interviewState.isConnected)
-                CountdownTimerWidget(
-                  onComplete: () => _showTimeUpSnackbar(context),
+        final shouldPop = await _handlePopAttempt(context, interviewState);
+        if (shouldPop && context.mounted) {
+          context.router.maybePop();
+        }
+      },
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: _buildAppBar(context, ref),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Case Question Banner (collapsible)
+                if (interviewState.isConnected) const CaseQuestionBanner(),
+
+                // Countdown Timer (collapsible)
+                if (interviewState.isConnected)
+                  CountdownTimerWidget(
+                    onComplete: () => _handleTimeExpiry(context, ref),
+                  ),
+
+                // Main content - responsive layout
+                Expanded(
+                  child: isMobile
+                      ? _buildMobileLayout(context, interviewState, ref)
+                      : _buildDesktopLayout(context, interviewState, ref),
                 ),
-
-              // Main content - responsive layout
-              Expanded(
-                child: isMobile
-                    ? _buildMobileLayout(context, interviewState, ref)
-                    : _buildDesktopLayout(context, interviewState, ref),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -114,7 +149,13 @@ class InterviewPage extends HookConsumerWidget {
           color: AppColors.black,
           size: 20,
         ),
-        onPressed: () => context.router.maybePop(),
+        onPressed: () async {
+          final interviewState = ref.read(interviewProvider);
+          final shouldPop = await _handlePopAttempt(context, interviewState);
+          if (shouldPop && context.mounted) {
+            context.router.maybePop();
+          }
+        },
       ),
       title: const Text('AI Interview', style: TextStyles.appBarTitle),
       actions: [
