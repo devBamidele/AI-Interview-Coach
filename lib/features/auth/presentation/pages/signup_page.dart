@@ -1,9 +1,9 @@
-import 'package:rehearsecoach/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rehearsecoach/common/utils/extensions.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../common/styles/component_style.dart';
@@ -77,10 +77,31 @@ class SignupPage extends HookConsumerWidget {
         },
         error: (message) {
           final messenger = ScaffoldMessenger.of(context);
-
           messenger.clearSnackBars(); // <- dismiss existing ones
+
+          // Check if this is an "account already exists" error
+          final isAccountExists = message.contains('already exists');
+
           messenger.showSnackBar(
-            SnackBar(content: Text(message), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text(
+                message,
+                style: TextStyles.fieldHeader.copyWith(color: Colors.white),
+              ),
+              backgroundColor: isAccountExists ? Colors.orange : Colors.red,
+              action: isAccountExists
+                  ? SnackBarAction(
+                      label: 'Login',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        context.router.replace(const LoginRoute());
+                      },
+                    )
+                  : null,
+              duration: isAccountExists
+                  ? const Duration(seconds: 5)
+                  : const Duration(seconds: 4),
+            ),
           );
         },
         orElse: () {},

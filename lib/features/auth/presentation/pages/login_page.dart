@@ -1,9 +1,9 @@
-import 'package:rehearsecoach/common/utils/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rehearsecoach/common/utils/extensions.dart';
 
 import '../../../../common/components/components.dart';
 import '../../../../common/styles/component_style.dart';
@@ -44,22 +44,35 @@ class LoginPage extends HookConsumerWidget {
         },
         error: (message) {
           final messenger = ScaffoldMessenger.of(context);
-
           messenger.clearSnackBars(); // <- dismiss existing ones
 
           // Check if this is a "no account found" error
-          final isNoAccountError = message.toLowerCase().contains('no account found');
+          final isNoAccountError = message.toLowerCase().contains(
+            'no account found',
+          );
 
           messenger.showSnackBar(
             SnackBar(
               content: Text(
                 isNoAccountError
-                  ? 'No account found. Would you like to sign up?'
-                  : message,
+                    ? 'No account found. Would you like to sign up?'
+                    : message,
+
+                style: TextStyles.fieldHeader.copyWith(color: Colors.white),
               ),
-              backgroundColor: isNoAccountError
-                ? Colors.orange
-                : Colors.red,
+              backgroundColor: isNoAccountError ? Colors.orange : Colors.red,
+              action: isNoAccountError
+                  ? SnackBarAction(
+                      label: 'Sign Up',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        context.router.push(const SignupRoute());
+                      },
+                    )
+                  : null,
+              duration: isNoAccountError
+                  ? const Duration(seconds: 5)
+                  : const Duration(seconds: 4),
             ),
           );
         },

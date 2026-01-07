@@ -113,14 +113,6 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
           clientId: clientId,
           serverClientId: AppConfig.googleWebClientId,
         );
-
-        // Clear any existing sign-in state to avoid "reauth failed" errors
-        // This helps when there's cached credentials that are causing issues
-        try {
-          await googleSignIn.signOut();
-        } catch (signOutError) {
-          // Ignore errors if user wasn't signed in
-        }
       } catch (e, stackTrace) {
         developer.log(
           '❌ Failed to initialize Google Sign-In',
@@ -131,28 +123,43 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
         rethrow;
       }
 
-      // Use interactive authentication
+      // Try lightweight authentication first (silent, no UI)
+      // This provides better UX for returning users
+      GoogleSignInAccount? account;
       try {
-        await googleSignIn.authenticate();
-      } catch (e, stackTrace) {
-        final errorString = e.toString();
+        account = await googleSignIn.attemptLightweightAuthentication();
+      } catch (e) {
+        // Lightweight auth failed, will try interactive
+        developer.log(
+          'Lightweight auth failed, will use interactive auth',
+          name: 'auth_repository',
+        );
+      }
 
-        // Provide detailed error information for common issues
-        if (errorString.contains('Account reauth failed')) {
-          developer.log(
-            '❌ Account re-authentication failed - Check SHA-1 fingerprint and OAuth client ID configuration',
-            name: 'auth_repository',
-            error: e,
-          );
-        } else {
-          developer.log(
-            '❌ Google authentication failed',
-            name: 'auth_repository',
-            error: e,
-            stackTrace: stackTrace,
-          );
+      // If lightweight authentication returns null, use interactive authentication
+      if (account == null) {
+        try {
+          await googleSignIn.authenticate();
+        } catch (e, stackTrace) {
+          final errorString = e.toString();
+
+          // Provide detailed error information for common issues
+          if (errorString.contains('Account reauth failed')) {
+            developer.log(
+              '❌ Account re-authentication failed - Check SHA-1 fingerprint and OAuth client ID configuration',
+              name: 'auth_repository',
+              error: e,
+            );
+          } else {
+            developer.log(
+              '❌ Google authentication failed',
+              name: 'auth_repository',
+              error: e,
+              stackTrace: stackTrace,
+            );
+          }
+          rethrow;
         }
-        rethrow;
       }
 
       // Request server authorization to get auth code for backend

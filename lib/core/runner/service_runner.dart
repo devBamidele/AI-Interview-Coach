@@ -28,7 +28,9 @@ class ServiceRunner {
       return Right(result);
     } on GoogleSignInException catch (e) {
       // Handle Google Sign-In cancellation silently
-      if (e.code == GoogleSignInExceptionCode.canceled) {
+      // Check for both canceled code and "Cancelled by user" in error message
+      if (e.code == GoogleSignInExceptionCode.canceled ||
+          e.toString().contains('Cancelled by user')) {
         return const Left(CancellationFailure('Sign in was cancelled'));
       }
       return Left(UnexpectedFailure(e.toString()));
@@ -92,6 +94,8 @@ class ServiceRunner {
         return ServerFailure(message);
       case 404:
         return ServerFailure(message);
+      case 409:
+        return AccountExistsFailure(message);
       case 429:
         return const ServerFailure(
           'Too many requests. Please wait and try again.',

@@ -144,6 +144,11 @@ class AuthNotifier extends _$AuthNotifier {
         if (failure.runtimeType.toString() == 'CancellationFailure') {
           developer.log('User cancelled Google signup', name: 'auth_notifier');
           state = const AuthState.unauthenticated();
+        } else if (failure.runtimeType.toString() == 'AccountExistsFailure') {
+          // Provide helpful message for existing accounts
+          state = const AuthState.error(
+            'This account already exists. Please use the login page to sign in.',
+          );
         } else {
           state = AuthState.error(failure.message);
         }
@@ -199,12 +204,17 @@ class AuthNotifier extends _$AuthNotifier {
     final authManager = ref.read(authManagerProvider.notifier);
     final refreshToken = authManager.refreshToken;
 
-    // Sign out from Google if user was authenticated with Google
+    // Disconnect from Google to clear account selection cache
+    // This ensures account picker shows on next sign-in
     try {
-      await GoogleSignIn.instance.signOut();
+      await GoogleSignIn.instance.disconnect();
     } catch (e) {
       // Ignore errors - user might not be signed in with Google
       // This is intentional to support users with email/password auth
+      developer.log(
+        'Google disconnect ignored (user may not be signed in with Google)',
+        name: 'auth_notifier',
+      );
     }
 
     // Clear local session first before API call

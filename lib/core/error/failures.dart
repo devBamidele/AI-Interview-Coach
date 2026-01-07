@@ -37,3 +37,8 @@ class UnexpectedFailure extends Failure {
 class CancellationFailure extends Failure {
   const CancellationFailure([super.message = 'Operation was cancelled']);
 }
+
+/// Failure when account already exists (409 Conflict)
+class AccountExistsFailure extends Failure {
+  const AccountExistsFailure([super.message = 'Account already exists']);
+}
