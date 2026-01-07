@@ -87,7 +87,9 @@ class SignupPage extends HookConsumerWidget {
       );
     });
 
-    void signUpWithGoogle() {}
+    void signUpWithGoogle() {
+      authNotifier.signUpWithGoogle();
+    }
 
     void signUpWithApple() {}
 

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/api/endpoints.dart';
@@ -22,6 +24,12 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 abstract class AuthRemoteDataSource {
   Future<AuthResponseDto> login(LoginDto loginDto);
   Future<AuthResponseDto> signup(SignupDto signupDto);
+  Future<AuthResponseDto> loginWithGoogle(String idToken);
+  Future<AuthResponseDto> signUpWithGoogle(String idToken);
+  Future<AuthResponseDto> upgradeAnonymousWithGoogle(
+    String participantIdentity,
+    String googleAuthCode,
+  );
   Future<AuthResponseDto> refreshToken(RefreshTokenDto refreshDto);
   Future<void> logout(String? refreshToken);
   Future<AuthResponseDto> createAnonymousSession(String deviceId);
@@ -90,6 +98,112 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     if (!response.isSuccess) {
       throw ServerException('Logout failed');
+    }
+  }
+
+  @override
+  Future<AuthResponseDto> loginWithGoogle(String idToken) async {
+    try {
+      final response = await networkRequest.post(
+        Endpoints.googleAuth,
+        body: {
+          'idToken': idToken,
+          'action': 'login',
+        },
+      );
+
+      if (!response.isSuccess) {
+        final message = response.data is Map
+            ? (response.data['message'] ?? 'Google login failed')
+            : 'Google login failed';
+        developer.log(
+          '❌ Google login API failed: $message',
+          name: 'auth_remote_datasource',
+        );
+        throw ServerException(message);
+      }
+
+      return AuthResponseDto.fromJson(response.data);
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Exception during Google login API call',
+        name: 'auth_remote_datasource',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  @override
+  Future<AuthResponseDto> signUpWithGoogle(String idToken) async {
+    try {
+      final response = await networkRequest.post(
+        Endpoints.googleAuth,
+        body: {
+          'idToken': idToken,
+          'action': 'signup',
+        },
+      );
+
+      if (!response.isSuccess) {
+        final message = response.data is Map
+            ? (response.data['message'] ?? 'Google signup failed')
+            : 'Google signup failed';
+        developer.log(
+          '❌ Google signup API failed: $message',
+          name: 'auth_remote_datasource',
+        );
+        throw ServerException(message);
+      }
+
+      return AuthResponseDto.fromJson(response.data);
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Exception during Google signup API call',
+        name: 'auth_remote_datasource',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  @override
+  Future<AuthResponseDto> upgradeAnonymousWithGoogle(
+    String participantIdentity,
+    String googleAuthCode,
+  ) async {
+    final endpoint = Endpoints.upgradeAccount(participantIdentity);
+
+    try {
+      final response = await networkRequest.post(
+        endpoint,
+        body: {
+          'googleAuthCode': googleAuthCode,
+        },
+      );
+
+      if (!response.isSuccess) {
+        final message = response.data is Map
+            ? (response.data['message'] ?? 'Anonymous upgrade with Google failed')
+            : 'Anonymous upgrade with Google failed';
+        developer.log(
+          '❌ Anonymous upgrade API failed: $message',
+          name: 'auth_remote_datasource',
+        );
+        throw ServerException(message);
+      }
+
+      return AuthResponseDto.fromJson(response.data);
+    } catch (e, stackTrace) {
+      developer.log(
+        '❌ Exception during anonymous upgrade API call',
+        name: 'auth_remote_datasource',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
   }
 

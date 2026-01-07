@@ -20,6 +20,14 @@ abstract class AuthRepository {
 
   Future<Either<Failure, AuthSession>> createAnonymousSession(String deviceId);
 
+  Future<Either<Failure, AuthSession>> loginWithGoogle();
+
+  Future<Either<Failure, AuthSession>> signUpWithGoogle();
+
+  Future<Either<Failure, AuthSession>> upgradeAnonymousWithGoogle(
+    String participantIdentity,
+  );
+
   Future<Either<Failure, AuthSession>> refreshToken(String refreshToken);
 
   Future<Either<Failure, void>> logout(String? refreshToken);

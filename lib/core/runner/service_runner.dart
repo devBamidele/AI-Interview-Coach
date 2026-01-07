@@ -77,7 +77,7 @@ class ServiceRunner {
       case 422:
         return ServerFailure(message);
       case 404:
-        return const ServerFailure('Resource not found');
+        return ServerFailure(message);
       case 429:
         return const ServerFailure(
           'Too many requests. Please wait and try again.',

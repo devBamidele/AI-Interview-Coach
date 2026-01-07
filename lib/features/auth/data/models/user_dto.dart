@@ -16,6 +16,7 @@ sealed class UserDto with _$UserDto {
     required String id,
     String? email, // Optional - null for anonymous users
     required String name,
+    String? profilePicture, // Google profile picture URL - optional
     String? participantIdentity, // For anonymous users
     String? userType, // "authenticated" or "anonymous"
     String? createdAt,
@@ -30,6 +31,7 @@ sealed class UserDto with _$UserDto {
         id: id,
         email: email,
         name: name,
+        profilePicture: profilePicture,
         participantIdentity: participantIdentity,
         userType: userType,
         createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,

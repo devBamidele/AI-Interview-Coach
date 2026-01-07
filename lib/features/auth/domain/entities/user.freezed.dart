@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 mixin _$User {
 
  String get id; String? get email;// Optional - null for anonymous users
- String get name; String? get participantIdentity;// For anonymous users
+ String get name; String? get profilePicture;// Google profile picture URL - optional
+ String? get participantIdentity;// For anonymous users
  String? get userType;// "authenticated" or "anonymous"
  DateTime? get createdAt; UserMetadata? get metadata;
 /// Create a copy of User
@@ -28,16 +29,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.metadata, metadata) || other.metadata == metadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,participantIdentity,userType,createdAt,metadata);
+int get hashCode => Object.hash(runtimeType,id,email,name,profilePicture,participantIdentity,userType,createdAt,metadata);
 
 @override
 String toString() {
-  return 'User(id: $id, email: $email, name: $name, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt, metadata: $metadata)';
+  return 'User(id: $id, email: $email, name: $name, profilePicture: $profilePicture, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt, metadata: $metadata)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String? email, String name, String? participantIdentity, String? userType, DateTime? createdAt, UserMetadata? metadata
+ String id, String? email, String name, String? profilePicture, String? participantIdentity, String? userType, DateTime? createdAt, UserMetadata? metadata
 });
 
 
@@ -65,12 +66,13 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,Object? metadata = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? profilePicture = freezed,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,Object? metadata = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
+as String,profilePicture: freezed == profilePicture ? _self.profilePicture : profilePicture // ignore: cast_nullable_to_non_nullable
+as String?,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
 as String?,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
@@ -168,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? profilePicture,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);case _:
+return $default(_that.id,_that.email,_that.name,_that.profilePicture,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);case _:
   return orElse();
 
 }
@@ -189,10 +191,10 @@ return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? email,  String name,  String? profilePicture,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);}
+return $default(_that.id,_that.email,_that.name,_that.profilePicture,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -206,10 +208,10 @@ return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? email,  String name,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? email,  String name,  String? profilePicture,  String? participantIdentity,  String? userType,  DateTime? createdAt,  UserMetadata? metadata)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);case _:
+return $default(_that.id,_that.email,_that.name,_that.profilePicture,_that.participantIdentity,_that.userType,_that.createdAt,_that.metadata);case _:
   return null;
 
 }
@@ -221,13 +223,15 @@ return $default(_that.id,_that.email,_that.name,_that.participantIdentity,_that.
 
 
 class _User implements User {
-  const _User({required this.id, this.email, required this.name, this.participantIdentity, this.userType, this.createdAt, this.metadata});
+  const _User({required this.id, this.email, required this.name, this.profilePicture, this.participantIdentity, this.userType, this.createdAt, this.metadata});
   
 
 @override final  String id;
 @override final  String? email;
 // Optional - null for anonymous users
 @override final  String name;
+@override final  String? profilePicture;
+// Google profile picture URL - optional
 @override final  String? participantIdentity;
 // For anonymous users
 @override final  String? userType;
@@ -245,16 +249,16 @@ _$UserCopyWith<_User> get copyWith => __$UserCopyWithImpl<_User>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.participantIdentity, participantIdentity) || other.participantIdentity == participantIdentity)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.metadata, metadata) || other.metadata == metadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,participantIdentity,userType,createdAt,metadata);
+int get hashCode => Object.hash(runtimeType,id,email,name,profilePicture,participantIdentity,userType,createdAt,metadata);
 
 @override
 String toString() {
-  return 'User(id: $id, email: $email, name: $name, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt, metadata: $metadata)';
+  return 'User(id: $id, email: $email, name: $name, profilePicture: $profilePicture, participantIdentity: $participantIdentity, userType: $userType, createdAt: $createdAt, metadata: $metadata)';
 }
 
 
@@ -265,7 +269,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? email, String name, String? participantIdentity, String? userType, DateTime? createdAt, UserMetadata? metadata
+ String id, String? email, String name, String? profilePicture, String? participantIdentity, String? userType, DateTime? createdAt, UserMetadata? metadata
 });
 
 
@@ -282,12 +286,13 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,Object? metadata = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = freezed,Object? name = null,Object? profilePicture = freezed,Object? participantIdentity = freezed,Object? userType = freezed,Object? createdAt = freezed,Object? metadata = freezed,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
+as String,profilePicture: freezed == profilePicture ? _self.profilePicture : profilePicture // ignore: cast_nullable_to_non_nullable
+as String?,participantIdentity: freezed == participantIdentity ? _self.participantIdentity : participantIdentity // ignore: cast_nullable_to_non_nullable
 as String?,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable

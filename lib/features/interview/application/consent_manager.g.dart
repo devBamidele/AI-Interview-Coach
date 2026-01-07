@@ -41,7 +41,7 @@ final class ConsentManagerProvider
   }
 }
 
-String _$consentManagerHash() => r'a74810292ab39b55e4c84fbb340e162c75965713';
+String _$consentManagerHash() => r'27ac34bd71480ae48cda0a8830abfc51d94b82ac';
 
 abstract class _$ConsentManager extends $Notifier<bool> {
   bool build();

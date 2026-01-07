@@ -36,6 +36,10 @@ class Endpoints {
   /// Signup endpoint (POST)
   static String get signup => '$base/api/auth/signup';
 
+  /// Google authentication endpoint (POST)
+  /// Accepts Google ID token and returns JWT tokens
+  static String get googleAuth => '$base/api/auth/google';
+
   /// Refresh token endpoint (POST)
   static String get refreshToken => '$base/api/auth/refresh';
 

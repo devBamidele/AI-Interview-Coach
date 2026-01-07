@@ -11,6 +11,7 @@ sealed class User with _$User {
     required String id,
     String? email, // Optional - null for anonymous users
     required String name,
+    String? profilePicture, // Google profile picture URL - optional
     String? participantIdentity, // For anonymous users
     String? userType, // "authenticated" or "anonymous"
     DateTime? createdAt,

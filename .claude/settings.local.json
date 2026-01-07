@@ -20,7 +20,9 @@
       "Bash(file:*)",
       "Bash(keytool -genkey:*)",
       "Bash(adb devices:*)",
-      "Bash(adb -s emulator-5556 shell ps:*)"
+      "Bash(adb -s emulator-5556 shell ps:*)",
+      "Bash(keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android)",
+      "Bash(keytool:*)"
     ],
     "deny": [],
     "ask": []

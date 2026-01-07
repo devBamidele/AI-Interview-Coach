@@ -1,6 +1,11 @@
+import 'dart:developer' as developer;
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/runner/service_runner.dart';
@@ -31,6 +36,20 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
     : _remoteDataSource = ref.read(authRemoteDataSourceProvider),
       _localDataSource = ref.read(authLocalDataSourceProvider),
       super(ref.read(networkInfoProvider));
+
+  /// Get platform-specific Google OAuth client ID
+  /// Only supports iOS and Android (mobile-only app)
+  String _getGoogleClientId() {
+    if (Platform.isIOS) {
+      return AppConfig.googleIosClientId;
+    } else if (Platform.isAndroid) {
+      return AppConfig.googleAndroidClientId;
+    }
+    // Should not reach here for mobile-only app
+    throw UnsupportedError(
+      'Google Sign-In is only supported on iOS and Android',
+    );
+  }
 
   @override
   Future<Either<Failure, AuthSession>> login({
@@ -77,6 +96,278 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
 
       return sessionDto.toEntity();
     }, errorTitle: 'Signup Failed');
+  }
+
+  @override
+  Future<Either<Failure, AuthSession>> loginWithGoogle() {
+    return run(() async {
+      // Get GoogleSignIn singleton instance
+      final googleSignIn = GoogleSignIn.instance;
+
+      // Get platform-specific client ID
+      final clientId = _getGoogleClientId();
+
+      // Initialize Google Sign In with platform-specific client IDs
+      try {
+        await googleSignIn.initialize(
+          clientId: clientId,
+          serverClientId: AppConfig.googleWebClientId,
+        );
+
+        // Clear any existing sign-in state to avoid "reauth failed" errors
+        // This helps when there's cached credentials that are causing issues
+        try {
+          await googleSignIn.signOut();
+        } catch (signOutError) {
+          // Ignore errors if user wasn't signed in
+        }
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Failed to initialize Google Sign-In',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+
+      // Try lightweight authentication first, fallback to interactive
+      GoogleSignInAccount? googleUser;
+      try {
+        googleUser = await googleSignIn.attemptLightweightAuthentication();
+      } catch (e) {
+        // Lightweight auth failed, will try interactive
+      }
+
+      // If lightweight authentication fails, use interactive authentication
+      if (googleUser == null) {
+        try {
+          googleUser = await googleSignIn.authenticate();
+        } catch (e, stackTrace) {
+          final errorString = e.toString();
+
+          // Provide detailed error information for common issues
+          if (errorString.contains('Account reauth failed')) {
+            developer.log(
+              '❌ Account re-authentication failed - Check SHA-1 fingerprint and OAuth client ID configuration',
+              name: 'auth_repository',
+              error: e,
+            );
+          } else {
+            developer.log(
+              '❌ Google authentication failed',
+              name: 'auth_repository',
+              error: e,
+              stackTrace: stackTrace,
+            );
+          }
+          rethrow;
+        }
+      }
+
+      // Request server authorization to get auth code for backend
+      final serverAuth = await googleSignIn.authorizationClient.authorizeServer(
+        ['openid', 'email', 'profile'],
+      );
+
+      if (serverAuth == null || serverAuth.serverAuthCode.isEmpty) {
+        developer.log(
+          '❌ Failed to get server auth code',
+          name: 'auth_repository',
+        );
+        throw Exception('Failed to get Google server auth code');
+      }
+
+      // Send server auth code to backend
+      try {
+        final response = await _remoteDataSource.loginWithGoogle(
+          serverAuth.serverAuthCode,
+        );
+
+        // Combine response tokens with user data into session
+        final sessionDto = AuthSessionDto(
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          user: response.user!,
+        );
+
+        // Save session locally
+        await _localDataSource.saveAuthSession(sessionDto);
+
+        return sessionDto.toEntity();
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Backend login failed',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    }, errorTitle: 'Google Login Failed');
+  }
+
+  @override
+  Future<Either<Failure, AuthSession>> signUpWithGoogle() {
+    return run(() async {
+      // Get GoogleSignIn singleton instance
+      final googleSignIn = GoogleSignIn.instance;
+
+      // Get platform-specific client ID
+      final clientId = _getGoogleClientId();
+
+      // Initialize Google Sign In with platform-specific client IDs
+      try {
+        await googleSignIn.initialize(
+          clientId: clientId,
+          serverClientId: AppConfig.googleWebClientId,
+        );
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Failed to initialize Google Sign-In',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+
+      // Use interactive authentication for signup
+      try {
+        await googleSignIn.authenticate();
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Google authentication failed',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+
+      // Request server authorization to get auth code for backend
+      final serverAuth = await googleSignIn.authorizationClient.authorizeServer(
+        [],
+      );
+
+      if (serverAuth == null || serverAuth.serverAuthCode.isEmpty) {
+        developer.log(
+          '❌ Failed to get server auth code',
+          name: 'auth_repository',
+        );
+        throw Exception('Failed to get Google server auth code');
+      }
+
+      // Send server auth code to backend
+      try {
+        final response = await _remoteDataSource.signUpWithGoogle(
+          serverAuth.serverAuthCode,
+        );
+
+        // Combine response tokens with user data into session
+        final sessionDto = AuthSessionDto(
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          user: response.user!,
+        );
+
+        // Save session locally
+        await _localDataSource.saveAuthSession(sessionDto);
+
+        return sessionDto.toEntity();
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Backend signup failed',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    }, errorTitle: 'Google Signup Failed');
+  }
+
+  @override
+  Future<Either<Failure, AuthSession>> upgradeAnonymousWithGoogle(
+    String participantIdentity,
+  ) {
+    return run(() async {
+      // Get GoogleSignIn singleton instance
+      final googleSignIn = GoogleSignIn.instance;
+
+      // Get platform-specific client ID
+      final clientId = _getGoogleClientId();
+
+      // Initialize Google Sign In with platform-specific client IDs
+      try {
+        await googleSignIn.initialize(
+          clientId: clientId,
+          serverClientId: AppConfig.googleWebClientId,
+        );
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Failed to initialize Google Sign-In',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+
+      // Use interactive authentication for upgrade
+      try {
+        await googleSignIn.authenticate();
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Google authentication failed',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+
+      // Request server authorization to get auth code for backend
+      final serverAuth = await googleSignIn.authorizationClient.authorizeServer(
+        [],
+      );
+
+      if (serverAuth == null || serverAuth.serverAuthCode.isEmpty) {
+        developer.log(
+          '❌ Failed to get server auth code',
+          name: 'auth_repository',
+        );
+        throw Exception('Failed to get Google server auth code');
+      }
+
+      // Send server auth code to backend for upgrade
+      try {
+        final response = await _remoteDataSource.upgradeAnonymousWithGoogle(
+          participantIdentity,
+          serverAuth.serverAuthCode,
+        );
+
+        // Combine response tokens with user data into session
+        final sessionDto = AuthSessionDto(
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          user: response.user!,
+        );
+
+        // Save session locally
+        await _localDataSource.saveAuthSession(sessionDto);
+
+        return sessionDto.toEntity();
+      } catch (e, stackTrace) {
+        developer.log(
+          '❌ Backend upgrade failed',
+          name: 'auth_repository',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        rethrow;
+      }
+    }, errorTitle: 'Anonymous Upgrade with Google Failed');
   }
 
   @override

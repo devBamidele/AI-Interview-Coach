@@ -46,8 +46,21 @@ class LoginPage extends HookConsumerWidget {
           final messenger = ScaffoldMessenger.of(context);
 
           messenger.clearSnackBars(); // <- dismiss existing ones
+
+          // Check if this is a "no account found" error
+          final isNoAccountError = message.toLowerCase().contains('no account found');
+
           messenger.showSnackBar(
-            SnackBar(content: Text(message), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text(
+                isNoAccountError
+                  ? 'No account found. Would you like to sign up?'
+                  : message,
+              ),
+              backgroundColor: isNoAccountError
+                ? Colors.orange
+                : Colors.red,
+            ),
           );
         },
         orElse: () {},
@@ -56,7 +69,10 @@ class LoginPage extends HookConsumerWidget {
 
     Future<void> loginWithApple() async {}
 
-    Future<void> loginWithGoogle() async {}
+    Future<void> loginWithGoogle() async {
+      final authNotifier = ref.read(authProvider.notifier);
+      await authNotifier.loginWithGoogle();
+    }
 
     void validate() {
       final isEmailValid = formKey1.currentState?.validate() ?? false;

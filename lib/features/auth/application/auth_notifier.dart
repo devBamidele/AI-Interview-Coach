@@ -1,3 +1,6 @@
+import 'dart:developer' as developer;
+
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/repositories/auth_repository_impl.dart';
@@ -92,11 +95,99 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Login with Google
+  Future<void> loginWithGoogle() async {
+    developer.log('Starting Google login', name: 'auth_notifier');
+    state = const AuthState.loading();
+
+    final result = await _repository.loginWithGoogle();
+
+    result.fold(
+      (failure) {
+        developer.log(
+          'Google login failed: ${failure.message}',
+          name: 'auth_notifier',
+        );
+        state = AuthState.error(failure.message);
+      },
+      (session) async {
+        developer.log(
+          'Google login successful: ${session.user.email}',
+          name: 'auth_notifier',
+        );
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
+        state = AuthState.authenticated(session.user);
+      },
+    );
+  }
+
+  /// Sign up with Google
+  Future<void> signUpWithGoogle() async {
+    developer.log('Starting Google signup', name: 'auth_notifier');
+    state = const AuthState.loading();
+
+    final result = await _repository.signUpWithGoogle();
+
+    result.fold(
+      (failure) {
+        developer.log(
+          'Google signup failed: ${failure.message}',
+          name: 'auth_notifier',
+        );
+        state = AuthState.error(failure.message);
+      },
+      (session) async {
+        developer.log(
+          'Google signup successful: ${session.user.email}',
+          name: 'auth_notifier',
+        );
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
+        state = AuthState.authenticated(session.user);
+      },
+    );
+  }
+
+  /// Upgrade anonymous user to Google account
+  Future<void> upgradeAnonymousWithGoogle(String participantIdentity) async {
+    developer.log('Starting anonymous upgrade', name: 'auth_notifier');
+    state = const AuthState.loading();
+
+    final result = await _repository.upgradeAnonymousWithGoogle(
+      participantIdentity,
+    );
+
+    result.fold(
+      (failure) {
+        developer.log(
+          'Anonymous upgrade failed: ${failure.message}',
+          name: 'auth_notifier',
+        );
+        state = AuthState.error(failure.message);
+      },
+      (session) async {
+        developer.log(
+          'Anonymous upgrade successful: ${session.user.email}',
+          name: 'auth_notifier',
+        );
+        await ref.read(authManagerProvider.notifier).saveAuthSession(session);
+        state = AuthState.authenticated(session.user);
+      },
+    );
+  }
+
   Future<void> logout() async {
     state = const AuthState.loading();
 
     final authManager = ref.read(authManagerProvider.notifier);
     final refreshToken = authManager.refreshToken;
+
+    // Sign out from Google if user was authenticated with Google
+    try {
+      await GoogleSignIn.instance.signOut();
+    } catch (e) {
+      // Ignore errors - user might not be signed in with Google
+      // This is intentional to support users with email/password auth
+    }
 
     // Clear local session first before API call
     await authManager.logout();

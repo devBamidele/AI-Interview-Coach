@@ -81,10 +81,18 @@ class InterviewPage extends HookConsumerWidget {
     }
   }
 
-  Future<bool> _handlePopAttempt(BuildContext context, InterviewState state) async {
+  Future<bool> _handlePopAttempt(
+    BuildContext context,
+    InterviewState state,
+    WidgetRef ref,
+  ) async {
     // Only show dialog if interview is connected/active
     if (state.isConnected) {
       final shouldLeave = await InterviewExitDialog.show(context);
+      if (shouldLeave == true) {
+        // User confirmed they want to leave - disconnect from interview
+        await _disconnectFromInterview(ref);
+      }
       return shouldLeave ?? false;
     }
     // Allow navigation if not connected
@@ -97,11 +105,11 @@ class InterviewPage extends HookConsumerWidget {
     final isMobile = ResponsiveUtils.isMobile(context);
 
     return PopScope(
-      canPop: false,
+      canPop: !interviewState.isConnected,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
 
-        final shouldPop = await _handlePopAttempt(context, interviewState);
+        final shouldPop = await _handlePopAttempt(context, interviewState, ref);
         if (shouldPop && context.mounted) {
           context.router.maybePop();
         }
@@ -149,12 +157,9 @@ class InterviewPage extends HookConsumerWidget {
           color: AppColors.black,
           size: 20,
         ),
-        onPressed: () async {
-          final interviewState = ref.read(interviewProvider);
-          final shouldPop = await _handlePopAttempt(context, interviewState);
-          if (shouldPop && context.mounted) {
-            context.router.maybePop();
-          }
+        onPressed: () {
+          // Trigger system back navigation, which will be handled by PopScope
+          Navigator.of(context).maybePop();
         },
       ),
       title: const Text('AI Interview', style: TextStyles.appBarTitle),
