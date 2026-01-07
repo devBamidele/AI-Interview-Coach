@@ -32,3 +32,8 @@ class DataParsingFailure extends Failure {
 class UnexpectedFailure extends Failure {
   const UnexpectedFailure([super.message = 'An unexpected error occurred']);
 }
+
+/// Failure when user cancels an operation (e.g., Google Sign-In)
+class CancellationFailure extends Failure {
+  const CancellationFailure([super.message = 'Operation was cancelled']);
+}

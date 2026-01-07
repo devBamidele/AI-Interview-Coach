@@ -131,38 +131,28 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
         rethrow;
       }
 
-      // Try lightweight authentication first, fallback to interactive
-      GoogleSignInAccount? googleUser;
+      // Use interactive authentication
       try {
-        googleUser = await googleSignIn.attemptLightweightAuthentication();
-      } catch (e) {
-        // Lightweight auth failed, will try interactive
-      }
+        await googleSignIn.authenticate();
+      } catch (e, stackTrace) {
+        final errorString = e.toString();
 
-      // If lightweight authentication fails, use interactive authentication
-      if (googleUser == null) {
-        try {
-          googleUser = await googleSignIn.authenticate();
-        } catch (e, stackTrace) {
-          final errorString = e.toString();
-
-          // Provide detailed error information for common issues
-          if (errorString.contains('Account reauth failed')) {
-            developer.log(
-              '❌ Account re-authentication failed - Check SHA-1 fingerprint and OAuth client ID configuration',
-              name: 'auth_repository',
-              error: e,
-            );
-          } else {
-            developer.log(
-              '❌ Google authentication failed',
-              name: 'auth_repository',
-              error: e,
-              stackTrace: stackTrace,
-            );
-          }
-          rethrow;
+        // Provide detailed error information for common issues
+        if (errorString.contains('Account reauth failed')) {
+          developer.log(
+            '❌ Account re-authentication failed - Check SHA-1 fingerprint and OAuth client ID configuration',
+            name: 'auth_repository',
+            error: e,
+          );
+        } else {
+          developer.log(
+            '❌ Google authentication failed',
+            name: 'auth_repository',
+            error: e,
+            stackTrace: stackTrace,
+          );
         }
+        rethrow;
       }
 
       // Request server authorization to get auth code for backend
@@ -247,7 +237,7 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
 
       // Request server authorization to get auth code for backend
       final serverAuth = await googleSignIn.authorizationClient.authorizeServer(
-        [],
+        ['openid', 'email', 'profile'],
       );
 
       if (serverAuth == null || serverAuth.serverAuthCode.isEmpty) {
@@ -329,7 +319,7 @@ class AuthRepositoryImpl extends ServiceRunner implements AuthRepository {
 
       // Request server authorization to get auth code for backend
       final serverAuth = await googleSignIn.authorizationClient.authorizeServer(
-        [],
+        ['openid', 'email', 'profile'],
       );
 
       if (serverAuth == null || serverAuth.serverAuthCode.isEmpty) {

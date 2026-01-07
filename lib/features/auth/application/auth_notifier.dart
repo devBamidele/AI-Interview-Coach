@@ -108,7 +108,13 @@ class AuthNotifier extends _$AuthNotifier {
           'Google login failed: ${failure.message}',
           name: 'auth_notifier',
         );
-        state = AuthState.error(failure.message);
+        // Don't show error UI for user cancellations
+        if (failure.runtimeType.toString() == 'CancellationFailure') {
+          developer.log('User cancelled Google login', name: 'auth_notifier');
+          state = const AuthState.unauthenticated();
+        } else {
+          state = AuthState.error(failure.message);
+        }
       },
       (session) async {
         developer.log(
@@ -134,7 +140,13 @@ class AuthNotifier extends _$AuthNotifier {
           'Google signup failed: ${failure.message}',
           name: 'auth_notifier',
         );
-        state = AuthState.error(failure.message);
+        // Don't show error UI for user cancellations
+        if (failure.runtimeType.toString() == 'CancellationFailure') {
+          developer.log('User cancelled Google signup', name: 'auth_notifier');
+          state = const AuthState.unauthenticated();
+        } else {
+          state = AuthState.error(failure.message);
+        }
       },
       (session) async {
         developer.log(
@@ -162,7 +174,13 @@ class AuthNotifier extends _$AuthNotifier {
           'Anonymous upgrade failed: ${failure.message}',
           name: 'auth_notifier',
         );
-        state = AuthState.error(failure.message);
+        // Don't show error UI for user cancellations
+        if (failure.runtimeType.toString() == 'CancellationFailure') {
+          developer.log('User cancelled anonymous upgrade', name: 'auth_notifier');
+          state = const AuthState.unauthenticated();
+        } else {
+          state = AuthState.error(failure.message);
+        }
       },
       (session) async {
         developer.log(

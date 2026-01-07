@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../error/exceptions.dart';
 import '../error/failures.dart';
@@ -24,6 +26,18 @@ class ServiceRunner {
     try {
       final result = await action();
       return Right(result);
+    } on GoogleSignInException catch (e) {
+      // Handle Google Sign-In cancellation silently
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        return const Left(CancellationFailure('Sign in was cancelled'));
+      }
+      return Left(UnexpectedFailure(e.toString()));
+    } on PlatformException catch (e) {
+      // Handle other platform exceptions
+      if (e.code == 'sign_in_canceled' || e.code == 'sign_in_failed') {
+        return Left(CancellationFailure(e.message ?? 'Sign in was cancelled'));
+      }
+      return Left(UnexpectedFailure(e.message ?? 'Platform error occurred'));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     } on DioException catch (e) {
