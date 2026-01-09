@@ -12,6 +12,7 @@ import '../../../../config/router/app_router.dart';
 import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
 import '../../application/auth_state.dart';
+import '../utils/auth_action.dart';
 import '../widgets/extras.dart';
 import '../widgets/social_auth_buttons.dart';
 
@@ -69,13 +70,18 @@ class SignupPage extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
+    // Track which specific action triggered the loading state
+    final currentAction = useState<AuthAction?>(null);
+
     // Listen to auth state changes
     ref.listen(authProvider, (previous, next) {
       next.maybeWhen(
         authenticated: (user) {
+          currentAction.value = null; // Clear action on success
           context.router.replaceAll([const HomeRoute()]);
         },
         error: (message) {
+          currentAction.value = null; // Clear action on error
           final messenger = ScaffoldMessenger.of(context);
           messenger.clearSnackBars(); // <- dismiss existing ones
 
@@ -109,10 +115,14 @@ class SignupPage extends HookConsumerWidget {
     });
 
     void signUpWithGoogle() {
+      currentAction.value = AuthAction.google;
       authNotifier.signUpWithGoogle();
     }
 
-    void signUpWithApple() {}
+    void signUpWithApple() {
+      currentAction.value = AuthAction.apple;
+      // TODO: Implement Apple signup
+    }
 
     void togglePasswordVisibility() {
       // Unfocus everything first, then focus on password field
@@ -146,6 +156,7 @@ class SignupPage extends HookConsumerWidget {
           isEmailValid &&
           isConfirmPasswordValid &&
           allPasswordRequirementsMet) {
+        currentAction.value = AuthAction.emailPassword;
         authNotifier.signup(
           email: emailController.text.trim(),
           name: nameController.text.trim(),
@@ -331,7 +342,7 @@ class SignupPage extends HookConsumerWidget {
                   AppButton(
                     onPress: validate,
                     text: 'Sign Up',
-                    loading: authState.isLoading,
+                    loading: authState.isLoading && currentAction.value == AuthAction.emailPassword,
                   ),
 
                   addHeight(22),
@@ -356,6 +367,8 @@ class SignupPage extends HookConsumerWidget {
                   SocialAuthButtons(
                     onGooglePressed: signUpWithGoogle,
                     onApplePressed: signUpWithApple,
+                    isGoogleLoading: authState.isLoading && currentAction.value == AuthAction.google,
+                    isAppleLoading: authState.isLoading && currentAction.value == AuthAction.apple,
                   ),
 
                   addHeight(MediaQuery.of(context).viewInsets.bottom + 40),

@@ -13,6 +13,7 @@ import '../../../../constants/colors.dart';
 import '../../application/auth_notifier.dart';
 import '../../application/auth_state.dart';
 import '../../application/device_id_manager.dart';
+import '../utils/auth_action.dart';
 import '../widgets/extras.dart';
 import '../widgets/social_auth_buttons.dart';
 
@@ -37,12 +38,17 @@ class LoginPage extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
+    // Track which specific action triggered the loading state
+    final currentAction = useState<AuthAction?>(null);
+
     ref.listen(authProvider, (_, next) {
       next.maybeWhen(
         authenticated: (user) {
+          currentAction.value = null; // Clear action on success
           context.router.replaceAll([const HomeRoute()]);
         },
         error: (message) {
+          currentAction.value = null; // Clear action on error
           final messenger = ScaffoldMessenger.of(context);
           messenger.clearSnackBars(); // <- dismiss existing ones
 
@@ -80,9 +86,13 @@ class LoginPage extends HookConsumerWidget {
       );
     });
 
-    Future<void> loginWithApple() async {}
+    Future<void> loginWithApple() async {
+      currentAction.value = AuthAction.apple;
+      // TODO: Implement Apple login
+    }
 
     Future<void> loginWithGoogle() async {
+      currentAction.value = AuthAction.google;
       final authNotifier = ref.read(authProvider.notifier);
       await authNotifier.loginWithGoogle();
     }
@@ -92,6 +102,7 @@ class LoginPage extends HookConsumerWidget {
       final isPasswordValid = formKey2.currentState?.validate() ?? false;
 
       if (isEmailValid && isPasswordValid) {
+        currentAction.value = AuthAction.emailPassword;
         authNotifier.login(
           email: emailController.text.trim(),
           password: passwordController.text,
@@ -183,7 +194,9 @@ class LoginPage extends HookConsumerWidget {
                 AppButton(
                   onPress: validate,
                   text: 'Sign In',
-                  loading: authState.isLoading,
+                  loading:
+                      authState.isLoading &&
+                      currentAction.value == AuthAction.emailPassword,
                 ),
 
                 Padding(
@@ -216,6 +229,12 @@ class LoginPage extends HookConsumerWidget {
                 SocialAuthButtons(
                   onGooglePressed: loginWithGoogle,
                   onApplePressed: loginWithApple,
+                  isGoogleLoading:
+                      authState.isLoading &&
+                      currentAction.value == AuthAction.google,
+                  isAppleLoading:
+                      authState.isLoading &&
+                      currentAction.value == AuthAction.apple,
                 ),
 
                 addHeight(24),
@@ -225,6 +244,7 @@ class LoginPage extends HookConsumerWidget {
                     onPressed: authState.isLoading
                         ? null
                         : () async {
+                            currentAction.value = AuthAction.guest;
                             // Get or create device ID
                             final deviceIdManager = ref.read(
                               deviceIdManagerProvider,
@@ -238,11 +258,12 @@ class LoginPage extends HookConsumerWidget {
                             // Navigation is handled by authProvider listener
                             // which will redirect to HomeRoute when authenticated
                           },
-                    child: authState.isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                    child:
+                        (authState.isLoading &&
+                            currentAction.value == AuthAction.guest)
+                        ? const LoadingIndicator(
+                            size: 20,
+                            color: AppColors.outlinedColor,
                           )
                         : Text(
                             'Continue as Guest',

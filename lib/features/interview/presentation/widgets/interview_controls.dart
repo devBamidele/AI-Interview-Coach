@@ -52,13 +52,9 @@ class InterviewControlsWidget extends StatelessWidget {
   Widget _buildLoadingState(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 40.h,
-          width: 40.w,
-          child: CircularProgressIndicator(
-            strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.buttonColor),
-          ),
+        LoadingIndicator(
+          size: 40.w,
+          color: AppColors.buttonColor,
         ),
         addHeight(16),
         Text(

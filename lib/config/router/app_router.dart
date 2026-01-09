@@ -9,18 +9,14 @@ import '../../features/interview/presentation/pages/interview_detail_page.dart';
 import '../../features/interview/presentation/pages/interview_list_page.dart';
 import '../../features/interview/presentation/pages/interview_page.dart';
 import '../../features/splash/presentation/pages/splash_screen.dart';
-import 'auth_guard.dart';
 
 part 'app_router.gr.dart';
 
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
   final Ref ref;
-  late final AuthGuard _authGuard;
 
-  AppRouter(this.ref) {
-    _authGuard = AuthGuard(ref);
-  }
+  AppRouter(this.ref);
 
   @override
   List<AutoRoute> get routes => [
@@ -39,8 +35,7 @@ class AppRouter extends RootStackRouter {
     // Public route for current session analysis (anonymous users)
     AutoRoute(page: InterviewDetailRoute.page),
 
-    // Protected routes (authenticated users only)
-    AutoRoute(page: InterviewListRoute.page, guards: [_authGuard]),
+    AutoRoute(page: InterviewListRoute.page),
   ];
 }
 

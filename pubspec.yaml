@@ -1,7 +1,7 @@
 name: rehearsecoach
 description: "RehearseCoach - AI-powered interview practice app with real-time feedback"
 publish_to: 'none'
-version: 0.1.0+5
+version: 0.1.0+6
 
 environment:
   sdk: ^3.8.1

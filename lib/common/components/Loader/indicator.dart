@@ -1,5 +1,5 @@
-import 'package:rehearsecoach/common/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:rehearsecoach/common/utils/extensions.dart';
 
 class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({
@@ -9,7 +9,7 @@ class LoadingIndicator extends StatelessWidget {
     this.value,
   });
   final double size;
-  final Color color;
+  final Color? color;
   final double? value;
 
   @override

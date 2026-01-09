@@ -1,6 +1,6 @@
-import 'package:rehearsecoach/common/components/Loader/indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rehearsecoach/common/components/Loader/indicator.dart';
 
 import '../../../constants/colors.dart';
 import '../../styles/component_style.dart';
@@ -16,6 +16,7 @@ class OutlinedAppButton extends StatelessWidget {
   final String? text;
   final Color textColor;
   final Widget? child;
+  final Color? loaderColor;
 
   const OutlinedAppButton({
     super.key,
@@ -27,6 +28,7 @@ class OutlinedAppButton extends StatelessWidget {
     this.textColor = AppColors.hintTextColor,
     this.child,
     this.width = 86,
+    this.loaderColor,
   }) : assert(
          text != null || child != null,
          'Either text or child must be provided.',
@@ -45,7 +47,7 @@ class OutlinedAppButton extends StatelessWidget {
         shape: circularBorder,
       ),
       child: loading
-          ? const LoadingIndicator()
+          ? LoadingIndicator(color: loaderColor)
           : DefaultTextStyle(
               style: TextStyles.buttonText.copyWith(
                 color: textColor,
